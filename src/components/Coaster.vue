@@ -38,6 +38,9 @@ export default {
       background-color: rgb(67, 97, 154);
     }
   }
+  button {
+    // display: none;
+  }
 
 
 </style>

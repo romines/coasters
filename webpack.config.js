@@ -15,10 +15,6 @@ module.exports = {
   module: {
     loaders: [
       {
-        sass: 'style!css!sass?indentedSyntax',
-        scss: 'style!css!sass'
-      },
-      {
         test: /\.vue$/,
         loader: 'vue'
       },
@@ -40,7 +36,13 @@ module.exports = {
     historyApiFallback: true,
     noInfo: true
   },
-  devtool: '#eval-source-map'
+  devtool: '#eval-source-map',
+  vue: {
+    loaders: {
+      sass: 'style!css!sass?indentedSyntax',
+      scss: 'style!css!sass'
+    }
+  }
 }
 
 if (process.env.NODE_ENV === 'production') {
