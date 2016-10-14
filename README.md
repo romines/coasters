@@ -15,4 +15,21 @@ npm run dev
 npm run build
 ```
 
-For detailed explanation on how things work, consult the [docs for vue-loader](http://vuejs.github.io/vue-loader).
+Forked from [webpack-simple](https://github.com/vuejs-templates/webpack-simple).
+
+To create your own webpack simple fire, add some firebase credentials to src/firebase.js
+
+```javascript
+import firebase from 'firebase'
+
+let config = {
+    apiKey: "apiKey",
+    authDomain: "projectId.firebaseapp.com",
+    databaseURL: "https://databaseName.firebaseio.com",
+    storageBucket: "bucket.appspot.com"
+  };
+
+export default {
+  fb: firebase.initializeApp(config)
+}
+```
