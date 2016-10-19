@@ -5,7 +5,7 @@
     <select v-model="shiftType">
       <option value="Serve">Serve</option>
       <option value="Bus">Bus</option>
-      <option value="Bar Back">Bar back</option>
+      <option value="Barback">Bar back</option>
       <option value="Bartend">Bartend</option>
       <option value="Host">Host</option>
     </select>
