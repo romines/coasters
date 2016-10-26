@@ -1,51 +1,72 @@
 <template>
   <div id="app">
     <img src="../assets/logo.png">
-    <input v-model="parentMessage" @keyup.enter="addCoaster">
-    <list @interEvent="handleChildEvent($event)" :coasters="coasters" :my-message="parentMessage"></list>
+    <list @interEvent="handleChildEvent($event)" :coasters="coasters"></list>
+    <detail :coasters="coasters" :coasterKey="currDetailKey"></detail>
     <new @new="newCoaster($event)"></new>
+    <!-- <pre>
+      {{selected}}
+    </pre> -->
   </div>
 </template>
 
 <script>
 import List from './List.vue'
 import New from './New.vue'
+import Detail from './Detail.vue'
 import firebase from '../firebase'
 let db = firebase.fb.database()
+var coastersRef = db.ref('data/coasters')
 
 
 export default {
   firebase: {
-    coasters: db.ref('data/coasters')
+    coasters: coastersRef
   },
   components: {
     List,
-    New
+    New,
+    Detail
   },
-  data: function () {
+  data () {
     return {
-      parentMessage: ''
+      currDetailKey: '-KTMpVIPjvNdOo65U4pV',
+      currentDetail: {
+        time: 'time',
+        date: 'date',
+        comment: 'comment',
+        shiftType: 'shiftType'
+      }
     }
   },
   methods: {
-    addCoaster (text) {
-      console.log(text);
-      if (text) {
-        this.$firebaseRefs.coasters.push({
-          text: text.trim()
-        })
-        this.parentMessage = ''
-      }
+    handleChildEvent (event) {
+      console.log(event)
+      // if (event) console.log("Hey! An action happened..", event)
+      // if (event.action === 'MAKE_DETAIL') {
+      //   // console.log(event.key)
+      //   this.makeDetail(event.key)
+      // }
+
+
+    },
+    makeDetail (key) {
+      console.log(key);
+      // console.log(this.coasters)
+      // console.log(db.ref('data/coasters/' + key))
+      console.log(coastersRef.child(key));
+      this.currentDetail = coastersRef.child(key)
     },
     newCoaster (event) {
       console.log('to app component')
       console.log(event)
       this.$firebaseRefs.coasters.push(event[1])
-    },
-    handleChildEvent (event) {
-      console.log("Hey! A 'remove' event happened..", event);
-
-      // this.$firebaseRefs.coasters.child(key).remove()
+    }
+  },
+  computed: {
+    selected: function () {
+      console.log('wha wha wha', coastersRef.child(this.currDetailKey));
+      return coastersRef.child(this.currDetailKey)
     }
   }
 }

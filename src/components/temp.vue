@@ -14,7 +14,6 @@
     <div class="actions">
       <div class="in-contain">
         <button class="pick-up" @click="removeCoaster(coaster['.key'])">Pick Up</button>
-        <button class="detail" @click="selectForDetailView(coaster['.key'])">Details</button>
         <!-- <button @click="removeCoaster(coaster['.key'])">Pick Up</button> -->
       </div>
     </div>
@@ -32,28 +31,18 @@ export default {
         return '../assets/Serve.svg';
     }
   },
-  beforeUpdate () {
-    // console.log('coaster', this.coaster);
+  ready () {
+    console.log('coaster', this.coaster);
   },
-  mounted () {
-    console.log('coaster', this.coaster['.key']);
-  },
+  attached () {},
   methods: {
     loadSvg (imgName) {
       return require('../assets/' + imgName + '.svg')
     },
     removeCoaster (key) {
-      console.log(key)
-      this.$emit('action', [event.target, key, 'foo', {bar: 'baz'}])
+      this.$emit('remove', [event.target, key, 'foo', {bar: 'baz'}])
       // this.$firebaseRefs.coasters.child(key).remove()
     },
-    selectForDetailView (key) {
-      this.$emit('action', {
-        action: 'MAKE_DETAIL',
-        key: key,
-        target: event.target
-      })
-    }
   },
   components: {}
 }

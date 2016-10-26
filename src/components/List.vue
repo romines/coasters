@@ -6,7 +6,7 @@
     <button @click="addCoaster">Add</button>
     <h3>newCoasterText: {{newCoasterText}}</h3>
     <ul>
-      <coaster @remove="handleChildEvent($event)" v-for="coaster in coasters" :coaster="coaster"></coaster>
+      <coaster @action="handleChildEvent($event)" v-for="coaster in coasters" :coaster="coaster"></coaster>
     </ul>
   </div>
 
@@ -19,11 +19,6 @@ export default {
     return {
       newCoasterText: ''
     }
-  },
-  created: function () {
-    this.$on('remove', function () {
-      console.log('an event!');
-    })
   },
   props: ['myMessage', 'coasters'],
 

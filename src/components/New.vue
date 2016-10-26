@@ -31,7 +31,7 @@ export default {
     }
   },
   created () {
-    console.log('new component in the house');
+    // console.log('new component in the house');
   },
   computed: {
     reversedMessage () {
