@@ -1,10 +1,8 @@
 <template lang="html">
   <div class="detail">
     <h1>This is the Detail component</h1>
-    <h2>{{coasterKey}}</h2>
+    <h2>coasterDate: {{coasterDate}}</h2>
     <!-- <coaster :coaster="coaster"></coaster> -->
-    <coaster  v-for="coaster in coasters" :coaster="coaster"></coaster>
-
 
   </div>
 </template>
@@ -13,12 +11,12 @@
 import Coaster from './Coaster.vue'
 
 export default {
-  props: ['coasters', 'coasterKey'],
+  props: ['coasterDate'],
   data () {
     return {}
   },
   beforeUpdate () {
-    console.log('coaster', this.coaster);
+    console.log('coasterDate', this.coasterDate);
   },
   computed: {},
   ready () {},

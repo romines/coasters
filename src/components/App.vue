@@ -2,7 +2,7 @@
   <div id="app">
     <img src="../assets/logo.png">
     <list @interEvent="handleChildEvent($event)" :coasters="coasters"></list>
-    <detail :coasters="coasters" :coasterKey="currDetailKey"></detail>
+    <detail :coasterDate="currDetailDate"></detail>
     <new @new="newCoaster($event)"></new>
     <!-- <pre>
       {{selected}}
@@ -17,6 +17,7 @@ import Detail from './Detail.vue'
 import firebase from '../firebase'
 let db = firebase.fb.database()
 var coastersRef = db.ref('data/coasters')
+console.log(coastersRef.child('-KTMpVIPjvNdOo65U4pV'))
 
 
 export default {
@@ -31,31 +32,25 @@ export default {
   data () {
     return {
       currDetailKey: '-KTMpVIPjvNdOo65U4pV',
-      currentDetail: {
-        time: 'time',
-        date: 'date',
-        comment: 'comment',
-        shiftType: 'shiftType'
-      }
+      currentDetailDate: {}
     }
   },
   methods: {
     handleChildEvent (event) {
-      console.log(event)
+      // console.log(event)
       // if (event) console.log("Hey! An action happened..", event)
-      // if (event.action === 'MAKE_DETAIL') {
-      //   // console.log(event.key)
-      //   this.makeDetail(event.key)
-      // }
+      if (event.action === 'MAKE_DETAIL') {
+        // console.log(event.key)
+        this.makeDetail(event.key)
+      }
 
 
     },
     makeDetail (key) {
-      console.log(key);
       // console.log(this.coasters)
       // console.log(db.ref('data/coasters/' + key))
-      console.log(coastersRef.child(key));
-      this.currentDetail = coastersRef.child(key)
+      this.currentDetailDate = coastersRef.child(key).child('date');
+      console.log("coastersRef.child(key).child('date')", coastersRef.child(key).child('date'))
     },
     newCoaster (event) {
       console.log('to app component')
