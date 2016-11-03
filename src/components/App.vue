@@ -2,11 +2,8 @@
   <div id="app">
     <img src="../assets/logo.png">
     <list @interEvent="handleChildEvent($event)" :coasters="coasters"></list>
-    <detail :coasterDate="currDetailDate"></detail>
+    <!-- <detail :coasterDate="currDetailDate"></detail> -->
     <new @new="newCoaster($event)"></new>
-    <!-- <pre>
-      {{selected}}
-    </pre> -->
   </div>
 </template>
 
@@ -15,15 +12,11 @@ import List from './List.vue'
 import New from './New.vue'
 import Detail from './Detail.vue'
 import firebase from '../firebase'
-let db = firebase.fb.database()
+let db = firebase.database()
 var coastersRef = db.ref('data/coasters')
-console.log(coastersRef.child('-KTMpVIPjvNdOo65U4pV'))
-
+const FAVORITE = '-KTMpVIPjvNdOo65U4pV'
 
 export default {
-  firebase: {
-    coasters: coastersRef
-  },
   components: {
     List,
     New,
@@ -31,16 +24,24 @@ export default {
   },
   data () {
     return {
-      currDetailKey: '-KTMpVIPjvNdOo65U4pV',
-      currentDetailDate: {}
+      coasters: []
     }
+  },
+  created () {
+      coastersRef.on('child_added', (snapshot) => {
+          let coaster = {
+              key: snapshot.key,
+              data: snapshot.val()
+          }
+        //   let coaster = snapshot.val()
+          console.log(coaster)
+          this.coasters.unshift(coaster)
+      })
   },
   methods: {
     handleChildEvent (event) {
-      // console.log(event)
-      // if (event) console.log("Hey! An action happened..", event)
+
       if (event.action === 'MAKE_DETAIL') {
-        // console.log(event.key)
         this.makeDetail(event.key)
       }
 
@@ -55,7 +56,6 @@ export default {
     newCoaster (event) {
       console.log('to app component')
       console.log(event)
-      this.$firebaseRefs.coasters.push(event[1])
     }
   },
   computed: {

@@ -1,9 +1,7 @@
 <template lang="html">
   <div class="detail">
     <h1>This is the Detail component</h1>
-    <h2>coasterDate: {{coasterDate}}</h2>
-    <!-- <coaster :coaster="coaster"></coaster> -->
-
+    <coaster :coaster="coaster"></coaster>
   </div>
 </template>
 
@@ -11,17 +9,13 @@
 import Coaster from './Coaster.vue'
 
 export default {
-  props: ['coasterDate'],
+  props: ['coaster'],
   data () {
     return {}
   },
   beforeUpdate () {
-    console.log('coasterDate', this.coasterDate);
+    console.log('beforeUpdate event on the coaster', this.coaster);
   },
-  computed: {},
-  ready () {},
-  attached () {},
-  methods: {},
   components: {
     Coaster
   }

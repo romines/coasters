@@ -1,20 +1,20 @@
 <template lang="html">
   <li class="coaster">
     <div class="type">
-      <img :src="loadSvg(coaster.shiftType)" alt="" />
+      <img :src="loadSvg(coaster.data.shiftType)" alt="" />
       <div class="type-label">
-        {{ coaster.shiftType }}
+        {{ coaster.data.shiftType }}
       </div>
     </div>
     <ul>
-      <li>{{ coaster.date }}</li>
-      <li>{{ coaster.time }}</li>
-      <li>{{ coaster.comment }}</li>
+      <li>{{ coaster.data.date }}</li>
+      <li>{{ coaster.data.time }}</li>
+      <li>{{ coaster.data.comment }}</li>
     </ul>
     <div class="actions">
       <div class="in-contain">
         <button class="pick-up" @click="removeCoaster(coaster['.key'])">Pick Up</button>
-        <button class="detail" @click="selectForDetailView(coaster['.key'])">Details</button>
+        <button class="detail" @click="selectForDetailView(coaster)">Details</button>
         <!-- <button @click="removeCoaster(coaster['.key'])">Pick Up</button> -->
       </div>
     </div>
@@ -35,24 +35,21 @@ export default {
   beforeUpdate () {
     // console.log('coaster', this.coaster);
   },
-  mounted () {
-    console.log('coaster', this.coaster['.key']);
-  },
   methods: {
     loadSvg (imgName) {
       return require('../assets/' + imgName + '.svg')
     },
-    removeCoaster (key) {
-      console.log(key)
-      this.$emit('action', [event.target, key, 'foo', {bar: 'baz'}])
-      // this.$firebaseRefs.coasters.child(key).remove()
+    removeCoaster (coaster) {
+      console.log(coaster.key)
+    //   this.$emit('action', [event.target, coaster.key, 'foo', {bar: 'baz'}])
     },
-    selectForDetailView (key) {
-      this.$emit('action', {
-        action: 'MAKE_DETAIL',
-        key: key,
-        target: event.target
-      })
+    selectForDetailView (coaster) {
+    //   this.$emit('action', {
+    //     action: 'MAKE_DETAIL',
+    //     key: key,
+    //     target: event.target
+    //   })
+    console.log(coaster.key);
     }
   },
   components: {}

@@ -1,12 +1,9 @@
 <template lang="html">
   <div class="list">
-    <h3>Data from the scope of the App component, passed in via prop to List component (me):
-      <span class="message">{{ myMessage }}</span>
-    </h3>
     <button @click="addCoaster">Add</button>
     <h3>newCoasterText: {{newCoasterText}}</h3>
     <ul>
-      <coaster @action="handleChildEvent($event)" v-for="coaster in coasters" :coaster="coaster"></coaster>
+      <coaster @action="bubble($event)" v-for="coaster in coasters" :coaster="coaster"></coaster>
     </ul>
   </div>
 
@@ -20,16 +17,14 @@ export default {
       newCoasterText: ''
     }
   },
-  props: ['myMessage', 'coasters'],
+  props: ['coasters'],
 
   methods: {
     addCoaster () {
       console.log('addCoaster event')
     },
-    handleChildEvent (event) {
-      // console.log("Hey! A 'remove' event happened..", event);
+    bubble (event) {
       this.$emit('interEvent', event)
-      // this.$firebaseRefs.coasters.child(key).remove()
     }
   },
   components: {
