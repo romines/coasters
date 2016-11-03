@@ -10,22 +10,25 @@
 <script>
 import List from './List.vue'
 import New from './New.vue'
-import firebase from '../firebase'
-let db = firebase.fb.database()
+import database from '../firebase'
+let db = database()
 
 
 export default {
-  firebase: {
-    coasters: db.ref('data/coasters')
-  },
   components: {
     List,
     New
   },
-  data: function () {
+  data () {
     return {
-      parentMessage: ''
+      messages: []
     }
+  },
+  ready () {
+    db.child('messages').on('child_added', (snap) => {
+      let message = snap.val()
+      this.messages.unshift(message)
+    })
   },
   methods: {
     addCoaster (text) {
@@ -40,7 +43,6 @@ export default {
     newCoaster (event) {
       console.log('to app component')
       console.log(event)
-      this.$firebaseRefs.coasters.push(event[1])
     },
     handleChildEvent (event) {
       console.log("Hey! A 'remove' event happened..", event);
