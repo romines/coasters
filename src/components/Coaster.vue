@@ -61,9 +61,6 @@ export default {
   border: 1px dashed white;
   padding: 2%;
 }
-ul {
-  display: inline-block;
-}
 div.type, div.type-label {
   display: inline-block;
   text-align: center;

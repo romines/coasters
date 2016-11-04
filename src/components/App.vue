@@ -1,8 +1,7 @@
 <template>
   <div id="app">
-    <img src="../assets/logo.png">
     <list @interEvent="handleChildEvent($event)" :coasters="coasters"></list>
-    <!-- <detail :coasterDate="currDetailDate"></detail> -->
+    <detail v-if:detail :coaster="detail"></detail>
     <new @new="newCoaster($event)"></new>
   </div>
 </template>
@@ -24,7 +23,8 @@ export default {
   },
   data () {
     return {
-      coasters: []
+      coasters: [],
+      detail: null
     }
   },
   created () {
