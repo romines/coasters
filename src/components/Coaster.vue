@@ -13,7 +13,7 @@
     </ul>
     <div class="actions">
       <div class="in-contain">
-        <button class="pick-up" @click="removeCoaster(coaster['.key'])">Pick Up</button>
+        <button class="pick-up" @click="removeCoaster(coaster)">Remove</button>
         <!-- <button @click="removeCoaster(coaster['.key'])">Pick Up</button> -->
       </div>
     </div>
@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import bus from '../bus'
 export default {
   props: ['coaster'],
   data () {
@@ -39,9 +40,8 @@ export default {
     loadSvg (imgName) {
       return require('../assets/' + imgName + '.svg')
     },
-    removeCoaster (key) {
-      this.$emit('remove', [event.target, key, 'foo', {bar: 'baz'}])
-      // this.$firebaseRefs.coasters.child(key).remove()
+    removeCoaster (coaster) {
+      bus.$emit('remove-coaster', coaster)
     },
   },
   components: {}
@@ -54,7 +54,7 @@ export default {
   padding: 2%;
 }
 ul {
-  display: inline-block;
+  max-width: 38em;
 }
 div.type, div.type-label {
   display: inline-block;

@@ -14,12 +14,13 @@
       <option value="PM">PM</option>
     </select>
     <textarea v-model="comment"></textarea>
-    <button @click="bubble">Submit</button>
+    <button @click="newCoaster">Submit</button>
   </div>
 
 </template>
 
 <script>
+import bus from '../bus'
 export default {
   data () {
     return {
@@ -31,7 +32,6 @@ export default {
     }
   },
   created () {
-    console.log('new component in the house');
   },
   computed: {
     reversedMessage () {
@@ -39,15 +39,15 @@ export default {
     }
   },
   methods: {
-    bubble () {
-      console.log('got this far..');
-      this.$emit('new', [
-        event.target,
-        { date: this.date,
+    newCoaster () {
+      console.log('trying..');
+      bus.$emit('new-coaster', {
+          date: this.date,
           time: this.time,
           shiftType: this.shiftType,
-          comment: this.comment }
-      ])
+          comment: this.comment
+      })
+      // TODO: clear fields
     }
   }
 }

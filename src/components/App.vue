@@ -1,22 +1,36 @@
 <template>
   <div id="app">
-    <img src="../assets/logo.png">
-    <input v-model="parentMessage" @keyup.enter="addCoaster">
-    <list @interEvent="handleChildEvent($event)" :coasters="coasters" :my-message="parentMessage"></list>
-    <new @new="newCoaster($event)"></new>
+    <new></new>
+    <list :coasters="coasters"></list>
   </div>
 </template>
 
 <script>
+import bus from '../bus'
 import List from './List.vue'
 import New from './New.vue'
 import firebase from '../firebase'
-let db = firebase.fb.database()
+const db = firebase.fb.database()
 
+const coastersRef = db.ref('data/coasters')
+
+function removeCoaster(key) {
+  coastersRef.child(key).remove()
+}
+
+function attachListeners() {
+  bus.$on('remove-coaster', (coaster) => {
+    removeCoaster(coaster['.key'])
+  })
+  bus.$on('new-coaster', (coasterData) => {
+    if (!coasterData) return
+    coastersRef.push(coasterData)
+  })
+}
 
 export default {
   firebase: {
-    coasters: db.ref('data/coasters')
+    coasters: coastersRef
   },
   components: {
     List,
@@ -28,25 +42,13 @@ export default {
     }
   },
   methods: {
-    addCoaster (text) {
-      console.log(text);
-      if (text) {
-        this.$firebaseRefs.coasters.push({
-          text: text.trim()
-        })
-        this.parentMessage = ''
-      }
-    },
-    newCoaster (event) {
-      console.log('to app component')
-      console.log(event)
-      this.$firebaseRefs.coasters.push(event[1])
-    },
-    handleChildEvent (event) {
-      console.log("Hey! A 'remove' event happened..", event);
-
-      // this.$firebaseRefs.coasters.child(key).remove()
-    }
+    // newCoaster (event) {
+    //   if (!event.payload) return
+    //   coastersRef.push(event.payload)
+    // },
+  },
+  created () {
+    attachListeners()
   }
 }
 </script>

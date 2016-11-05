@@ -6,7 +6,8 @@
     <button @click="addCoaster">Add</button>
     <h3>newCoasterText: {{newCoasterText}}</h3>
     <ul>
-      <coaster @remove="handleChildEvent($event)" v-for="coaster in coasters" :coaster="coaster"></coaster>
+      <coaster v-for="coaster in coasters" :coaster="coaster"></coaster>
+      <!--  @remove="bubble($event)" -->
     </ul>
   </div>
 
@@ -14,6 +15,7 @@
 
 <script>
 import Coaster from './Coaster.vue'
+
 export default {
   data () {
     return {
@@ -31,11 +33,11 @@ export default {
     addCoaster () {
       console.log('addCoaster event')
     },
-    handleChildEvent (event) {
-      // console.log("Hey! A 'remove' event happened..", event);
-      this.$emit('interEvent', event)
-      // this.$firebaseRefs.coasters.child(key).remove()
-    }
+    // bubble (event) {
+    //   console.log("Hey! An event happened..", event);
+    //   this.$emit('myEvent', event)
+    //   // this.$firebaseRefs.coasters.child(key).remove()
+    // }
   },
   components: {
     Coaster
