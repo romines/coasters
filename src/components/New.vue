@@ -40,7 +40,6 @@ export default {
   },
   methods: {
     newCoaster () {
-      console.log('trying..');
       bus.$emit('new-coaster', {
           date: this.date,
           time: this.time,
