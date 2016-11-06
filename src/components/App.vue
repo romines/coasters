@@ -13,14 +13,13 @@ import New from './New.vue'
 import firebase from '../firebase'
 const db = firebase.fb.database()
 
-// const coastersRef = db.ref('data/coasters').orderByKey()
 const coastersRef = db.ref('data/coasters')
 
 function removeCoaster(key) {
   coastersRef.child(key).remove()
 }
 
-function attachListeners() {
+function attachListeners(vm) {
   bus.$on('remove-coaster', (coaster) => {
     removeCoaster(coaster['.key'])
   })
@@ -28,35 +27,42 @@ function attachListeners() {
     if (!coasterData) return
     coastersRef.push(coasterData)
   })
+  bus.$on('msg', (event) => {
+    if (event.type === bus.REVERSE_LIST) {
+      vm.first = (vm.first === 'newest') ? 'oldest' : 'newest'
+    }
+  })
 }
 
 export default {
   firebase: {
     coasters: coastersRef
   },
+  data: function () {
+    return {
+      first: 'newest'
+    }
+  },
   computed: {
     sortedCoasters: function () {
-      console.log('trying to reverse..');
-      return _.sortBy(this.coasters, '.key').reverse()
+      console.log('sorting...');
+      if (this.first === 'newest') {
+        return _.sortBy(this.coasters, '.key').reverse()
+      }
+      else {
+        return _.sortBy(this.coasters, '.key')
+      }
     }
   },
   components: {
     List,
     New
   },
-  data: function () {
-    return {
-      parentMessage: ''
-    }
-  },
   methods: {
-    // newCoaster (event) {
-    //   if (!event.payload) return
-    //   coastersRef.push(event.payload)
-    // },
+
   },
   created () {
-    attachListeners()
+    attachListeners(this)
   }
 }
 </script>

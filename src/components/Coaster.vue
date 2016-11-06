@@ -69,6 +69,9 @@ div.type {
 
 .actions {
   text-align: right;
+  button {
+    min-width: 38%;
+  }
   .in-contain {
     display: inline-block;
     button.pick-up {
