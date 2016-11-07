@@ -1,7 +1,7 @@
 <template lang="html">
   <li class="coaster">
     <div class="type">
-      <img :src="loadSvg(coaster.shiftType)" alt="" />
+      <img v-if="coaster.shiftType" :src="loadSvg(coaster.shiftType)" alt="" />
       <div class="type-label">
         {{ coaster.shiftType }}
       </div>
@@ -13,8 +13,8 @@
     </ul>
     <div class="actions">
       <div class="in-contain">
-        <button class="pick-up" @click="removeCoaster(coaster)">Remove</button>
-        <!-- <button @click="removeCoaster(coaster['.key'])">Pick Up</button> -->
+        <button class="remove" @click="removeCoaster(coaster)">Remove</button>
+        <button @click="makeDetail(coaster)">Pick Up</button>
       </div>
     </div>
   </li>
@@ -28,14 +28,10 @@ export default {
     return {}
   },
   computed: {
-    image: function () {
-        return '../assets/Serve.svg';
+    image () {
+      return '../assets/Serve.svg';
     }
   },
-  ready () {
-    console.log('coaster', this.coaster);
-  },
-  attached () {},
   methods: {
     loadSvg (imgName) {
       return require('../assets/' + imgName + '.svg')
@@ -43,6 +39,12 @@ export default {
     removeCoaster (coaster) {
       bus.$emit('remove-coaster', coaster)
     },
+    makeDetail (coaster) {
+      bus.$emit('msg', {
+        type: bus.MAKE_DETAIL,
+        payload: coaster
+      })
+    }
   },
   components: {}
 }

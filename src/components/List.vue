@@ -3,7 +3,7 @@
     <span class="header">Available Shifts</span>
     <button @click="reverseList">Reverse</button>
     <ul>
-      <coaster v-for="coaster in coasters" :coaster="coaster"></coaster>
+      <coaster v-for="coaster in filteredCoasters" :coaster="coaster"></coaster>
     </ul>
   </div>
 
@@ -12,10 +12,23 @@
 <script>
 import Coaster from './Coaster.vue'
 import bus from '../bus'
+import _ from 'underscore'
 
 export default {
+  props: ['coasters'],
   data () {
     return {
+      order: 'ASC'
+    }
+  },
+  computed: {
+    filteredCoasters () {
+      if (this.order === 'ASC') {
+        return _.sortBy(this.coasters, '.key').reverse()
+      }
+      else {
+        return _.sortBy(this.coasters, '.key')
+      }
     }
   },
   created: function () {
@@ -23,17 +36,10 @@ export default {
       console.log('an event!');
     })
   },
-  props: ['myMessage', 'coasters'],
-
   methods: {
     reverseList () {
-      bus.$emit('msg', {
-        type: bus.REVERSE_LIST,
-        payload: {
-          foo: 'foo',
-          bar: 'bar'
-        }
-      })
+      console.log(this.coasters);
+      this.order = (this.order === 'ASC') ? 'DESC' : 'ASC'
     }
   },
   components: {

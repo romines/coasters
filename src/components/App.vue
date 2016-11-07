@@ -1,7 +1,8 @@
 <template>
   <div id="app">
     <new></new>
-    <list :coasters="sortedCoasters"></list>
+    <detail v-if="detail" :coaster="detail"></detail>
+    <list :coasters="coasters"></list>
   </div>
 </template>
 
@@ -10,6 +11,7 @@ import _ from 'underscore'
 import bus from '../bus'
 import List from './List.vue'
 import New from './New.vue'
+import Detail from './Detail.vue'
 import firebase from '../firebase'
 const db = firebase.fb.database()
 
@@ -28,8 +30,9 @@ function attachListeners(vm) {
     coastersRef.push(coasterData)
   })
   bus.$on('msg', (event) => {
-    if (event.type === bus.REVERSE_LIST) {
-      vm.first = (vm.first === 'newest') ? 'oldest' : 'newest'
+    switch (event.type) {
+      case bus.MAKE_DETAIL:
+        vm.detailKey = event.payload['.key']
     }
   })
 }
@@ -40,30 +43,27 @@ export default {
   },
   data: function () {
     return {
-      first: 'newest'
+      detailKey: null
     }
   },
   computed: {
-    sortedCoasters: function () {
-      console.log('sorting...');
-      if (this.first === 'newest') {
-        return _.sortBy(this.coasters, '.key').reverse()
-      }
-      else {
-        return _.sortBy(this.coasters, '.key')
-      }
+    detail () {
+      let criteria = {}
+      criteria['.key'] = this.detailKey
+      return _.where(this.coasters, criteria)[0]
     }
   },
   components: {
     List,
-    New
+    New,
+    Detail
   },
   methods: {
 
   },
   created () {
     attachListeners(this)
-  }
+  },
 }
 </script>
 

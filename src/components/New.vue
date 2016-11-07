@@ -16,7 +16,6 @@
     <textarea v-model="comment"></textarea>
     <button @click="newCoaster">Submit</button>
   </div>
-
 </template>
 
 <script>
@@ -28,14 +27,6 @@ export default {
       time: 'AM',
       shiftType: 'Serve',
       comment: 'Somebody please help me!',
-
-    }
-  },
-  created () {
-  },
-  computed: {
-    reversedMessage () {
-      return this.message.split('').reverse().join('')
     }
   },
   methods: {
