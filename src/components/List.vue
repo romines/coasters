@@ -10,9 +10,9 @@
 </template>
 
 <script>
-import Coaster from './Coaster.vue'
-import bus from '../bus'
 import _ from 'underscore'
+import bus from '../bus'
+import Coaster from './Coaster.vue'
 
 export default {
   props: ['coasters'],

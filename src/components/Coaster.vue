@@ -1,7 +1,7 @@
 <template lang="html">
   <li class="coaster">
     <div class="type">
-      <img v-if="coaster.shiftType" :src="loadSvg(coaster.shiftType)" alt="" />
+      <img v-if="coaster.shiftType" :src="getSvg(coaster.shiftType)" alt="" />
       <div class="type-label">
         {{ coaster.shiftType }}
       </div>
@@ -33,7 +33,7 @@ export default {
     }
   },
   methods: {
-    loadSvg (imgName) {
+    getSvg (imgName) {
       return require('../assets/' + imgName + '.svg')
     },
     removeCoaster (coaster) {
@@ -81,12 +81,12 @@ div.type {
     }
   }
 }
-  ul {
-    list-style-type: none;
-    li {
-      background-color: rgb(67, 97, 154);
-    }
+ul {
+  list-style-type: none;
+  li {
+    background-color: rgb(67, 97, 154);
   }
+}
 
 
 </style>

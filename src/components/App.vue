@@ -7,14 +7,16 @@
 </template>
 
 <script>
+// libs
 import _ from 'underscore'
 import bus from '../bus'
+// components
 import List from './List.vue'
 import New from './New.vue'
 import Detail from './Detail.vue'
+// firebase
 import firebase from '../firebase'
 const db = firebase.fb.database()
-
 const coastersRef = db.ref('data/coasters')
 
 function removeCoaster(key) {
