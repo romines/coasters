@@ -43,7 +43,7 @@ export default {
   firebase: {
     coasters: coastersRef
   },
-  data: function () {
+  data () {
     return {
       detailKey: null
     }
