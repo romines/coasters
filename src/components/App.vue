@@ -44,46 +44,11 @@ function attachListeners(vm) {
 }
 
 export default {
-<<<<<<< HEAD
-  components: {
-    List,
-    New
-=======
   firebase: {
-    coasters: coastersRef
->>>>>>> wump
+      coasters: coastersRef
   },
   data () {
     return {
-<<<<<<< HEAD
-      messages: []
-    }
-  },
-  ready () {
-    db.child('messages').on('child_added', (snap) => {
-      let message = snap.val()
-      this.messages.unshift(message)
-    })
-  },
-  methods: {
-    addCoaster (text) {
-      console.log(text);
-      if (text) {
-        this.$firebaseRefs.coasters.push({
-          text: text.trim()
-        })
-        this.parentMessage = ''
-      }
-    },
-    newCoaster (event) {
-      console.log('to app component')
-      console.log(event)
-    },
-    handleChildEvent (event) {
-      console.log("Hey! A 'remove' event happened..", event);
-
-      // this.$firebaseRefs.coasters.child(key).remove()
-=======
       detailKey: null,
       currentView: New,
     }
@@ -99,7 +64,6 @@ export default {
       }
 
       return getCoasterByKey(this.detailKey)
->>>>>>> wump
     }
   },
   components: {
@@ -112,6 +76,7 @@ export default {
   },
   created () {
     attachListeners(this)
+    console.log(this.coasters.length);
   },
 }
 </script>
