@@ -22,6 +22,7 @@
 
 <script>
 import bus from '../bus'
+import moment from 'moment'
 export default {
   props: ['coaster'],
   data () {
@@ -29,7 +30,7 @@ export default {
   },
   computed: {
     weekday () {
-      return this.coaster.date;
+      return moment(this.coaster.date).format('dddd');
     }
 
   },
