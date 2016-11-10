@@ -76,4 +76,7 @@ export default {
 body {
   font-family: Helvetica, sans-serif;
 }
+ul {
+  list-style-type: none;
+}
 </style>

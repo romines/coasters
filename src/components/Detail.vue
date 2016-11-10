@@ -1,6 +1,8 @@
 <template lang="html">
   <div class="detail">
-    <coaster :coaster="coaster"></coaster>
+    <ul>
+      <coaster :coaster="coaster"></coaster>
+    </ul>
   </div>
 </template>
 

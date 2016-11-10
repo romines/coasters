@@ -83,11 +83,9 @@ div.type {
     }
   }
 }
-  ul {
-    list-style-type: none;
-    li {
-      background-color: rgb(67, 97, 154);
-    }
+
+  li {
+    background-color: rgb(67, 97, 154);
   }
 
 
