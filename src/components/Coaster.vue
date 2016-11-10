@@ -50,7 +50,7 @@ export default {
     },
     closeDetailView () {
       bus.$emit('msg', {
-        type: 'closeDetail'
+        type: bus.CLOSE_DETAIL
       })
     }
   },

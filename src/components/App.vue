@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <component :is="currentView" :coaster="detail"></component>
+      <div class="dynamic-container">
+          <component :is="currentView" :coaster="detail"></component>
+      </div>
     <!-- <detail v-if="detail" :coaster="detail"></detail> -->
     <list :coasters="coasters"></list>
   </div>
@@ -13,7 +15,7 @@ import List from './List.vue'
 import New from './New.vue'
 import Detail from './Detail.vue'
 import firebase from '../firebase'
-const db = firebase.fb.database()
+const db = firebase.database() // syntax here depends on config in ../firebase.js, which is not in git
 
 const coastersRef = db.ref('data/coasters')
 
@@ -35,7 +37,7 @@ function attachListeners(vm) {
         vm.detailKey = event.payload['.key'],
         vm.currentView = Detail
         break;
-      case 'closeDetail':
+      case bus.CLOSE_DETAIL:
         vm.currentView = New
     }
   })
@@ -84,5 +86,8 @@ body {
 }
 ul {
   list-style-type: none;
+}
+.dynamic-container {
+    height: 17em;
 }
 </style>
