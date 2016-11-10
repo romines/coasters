@@ -1,12 +1,9 @@
 <template lang="html">
   <div class="list">
-    <h3>Data from the scope of the App component, passed in via prop to List component (me):
-      <span class="message">{{ myMessage }}</span>
-    </h3>
-    <button @click="addCoaster">Add</button>
-    <h3>newCoasterText: {{newCoasterText}}</h3>
+    <span class="header">Available Shifts</span>
+    <button @click="reverseList">Reverse</button>
     <ul>
-      <coaster @remove="handleChildEvent($event)" v-for="coaster in coasters" :coaster="coaster"></coaster>
+      <coaster v-for="coaster in filteredCoasters" :coaster="coaster" as:="'LIST'"></coaster>
     </ul>
   </div>
 
@@ -14,10 +11,24 @@
 
 <script>
 import Coaster from './Coaster.vue'
+import bus from '../bus'
+import _ from 'underscore'
+
 export default {
+  props: ['coasters'],
   data () {
     return {
-      newCoasterText: ''
+      order: 'ASC'
+    }
+  },
+  computed: {
+    filteredCoasters () {
+      if (this.order === 'ASC') {
+        return _.sortBy(this.coasters, '.key').reverse()
+      }
+      else {
+        return _.sortBy(this.coasters, '.key')
+      }
     }
   },
   created: function () {
@@ -25,16 +36,10 @@ export default {
       console.log('an event!');
     })
   },
-  props: ['myMessage', 'coasters'],
-
   methods: {
-    addCoaster () {
-      console.log('addCoaster event')
-    },
-    handleChildEvent (event) {
-      // console.log("Hey! A 'remove' event happened..", event);
-      this.$emit('interEvent', event)
-      // this.$firebaseRefs.coasters.child(key).remove()
+    reverseList () {
+      console.log(this.coasters);
+      this.order = (this.order === 'ASC') ? 'DESC' : 'ASC'
     }
   },
   components: {

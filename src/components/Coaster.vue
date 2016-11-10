@@ -1,48 +1,58 @@
 <template lang="html">
   <li class="coaster">
     <div class="type">
-      <img :src="loadSvg(coaster.shiftType)" alt="" />
+      <img v-if="coaster.shiftType" :src="loadSvg(coaster.shiftType)" alt="" />
       <div class="type-label">
         {{ coaster.shiftType }}
       </div>
     </div>
+    <img v-if="as==='DETAIL'" @click="closeDetailView()" class="close" :src="loadSvg('close')" alt="" />
     <ul>
-      <li>{{ coaster.date }}</li>
+      <li>{{ weekday }}</li>
       <li>{{ coaster.time }}</li>
       <li>{{ coaster.comment }}</li>
     </ul>
     <div class="actions">
       <div class="in-contain">
-        <button class="pick-up" @click="removeCoaster(coaster['.key'])">Pick Up</button>
-        <!-- <button @click="removeCoaster(coaster['.key'])">Pick Up</button> -->
+        <button class="remove" @click="removeCoaster(coaster)">Remove</button>
+        <button @click="makeDetail(coaster)">Pick Up</button>
       </div>
     </div>
   </li>
 </template>
 
 <script>
+import bus from '../bus'
+import moment from 'moment'
 export default {
-  props: ['coaster'],
+  props: ['coaster','as'],
   data () {
     return {}
   },
   computed: {
-    image: function () {
-        return '../assets/Serve.svg';
+    weekday () {
+      return moment(this.coaster.date).format('dddd');
     }
+
   },
-  ready () {
-    console.log('coaster', this.coaster);
-  },
-  attached () {},
   methods: {
     loadSvg (imgName) {
       return require('../assets/' + imgName + '.svg')
     },
-    removeCoaster (key) {
-      this.$emit('remove', [event.target, key, 'foo', {bar: 'baz'}])
-      // this.$firebaseRefs.coasters.child(key).remove()
+    removeCoaster (coaster) {
+      bus.$emit('remove-coaster', coaster)
     },
+    makeDetail (coaster) {
+      bus.$emit('msg', {
+        type: bus.MAKE_DETAIL,
+        payload: coaster
+      })
+    },
+    closeDetailView () {
+      bus.$emit('msg', {
+        type: bus.CLOSE_DETAIL
+      })
+    }
   },
   components: {}
 }
@@ -52,9 +62,13 @@ export default {
 .coaster {
   border: 1px dashed white;
   padding: 2%;
+  ul {
+    max-width: 38em;
+  }
 }
-ul {
-  display: inline-block;
+img.close {
+  max-width: 1em;
+  float: right;
 }
 div.type, div.type-label {
   display: inline-block;
@@ -69,6 +83,9 @@ div.type {
 
 .actions {
   text-align: right;
+  button {
+    min-width: 38%;
+  }
   .in-contain {
     display: inline-block;
     button.pick-up {
@@ -76,11 +93,9 @@ div.type {
     }
   }
 }
-  ul {
-    list-style-type: none;
-    li {
-      background-color: rgb(67, 97, 154);
-    }
+
+  li {
+    background-color: rgb(67, 97, 154);
   }
 
 

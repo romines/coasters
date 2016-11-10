@@ -1,25 +1,30 @@
 <template lang="html">
   <div class="new">
-    <h3>Create a new coaster</h3>
-    <input type="date" v-model="date">
-    <select v-model="shiftType">
-      <option value="Serve">Serve</option>
-      <option value="Bus">Bus</option>
-      <option value="Barback">Bar back</option>
-      <option value="Bartend">Bartend</option>
-      <option value="Host">Host</option>
-    </select>
-    <select class="" v-model="time">
-      <option value="AM">AM</option>
-      <option value="PM">PM</option>
-    </select>
-    <textarea v-model="comment"></textarea>
-    <button @click="bubble">Submit</button>
+    <h3>{{test}}</h3>
+    <div class="form">
+      <input type="date" v-model="date">
+      <select v-model="shiftType">
+        <option value="Serve">Serve</option>
+        <option value="Bus">Bus</option>
+        <option value="Barback">Bar back</option>
+        <option value="Bartend">Bartend</option>
+        <option value="Host">Host</option>
+      </select>
+      <select class="" v-model="time">
+        <option value="AM">AM</option>
+        <option value="PM">PM</option>
+      </select>
+      <br>
+      <textarea v-model="comment"></textarea>
+      <span>{{myDate}}</span>
+    </div>
+    <button @click="newCoaster">Submit</button>
   </div>
-
 </template>
 
 <script>
+import bus from '../bus'
+import moment from 'moment'
 export default {
   data () {
     return {
@@ -27,35 +32,40 @@ export default {
       time: 'AM',
       shiftType: 'Serve',
       comment: 'Somebody please help me!',
-
     }
   },
-  created () {
-    console.log('new component in the house');
-  },
+  props: ['test'],
   computed: {
-    reversedMessage () {
-      return this.message.split('').reverse().join('')
+    myDate () {
+      return moment(this.date).format('YYYY-MM-DD')
     }
   },
   methods: {
-    bubble () {
-      console.log('got this far..');
-      this.$emit('new', [
-        event.target,
-        { date: this.date,
+    newCoaster () {
+      console.log({
+          date: this.myDate,
           time: this.time,
           shiftType: this.shiftType,
-          comment: this.comment }
-      ])
+          comment: this.comment
+      });
+
+      bus.$emit('new-coaster', {
+          date: this.myDate,
+          time: this.time,
+          shiftType: this.shiftType,
+          comment: this.comment
+      })
+      // TODO: clear fields
     }
   }
 }
 </script>
 
 <style lang="scss">
-  textarea {
-    display: block;
+  .new {
+    border: 1px solid grey;
+    padding: 1.4em;
+    margin-bottom: 6em;
   }
   html {}
 </style>
