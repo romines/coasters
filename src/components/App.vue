@@ -48,9 +48,14 @@ export default {
   },
   computed: {
     detail () {
-      let criteria = {}
-      criteria['.key'] = this.detailKey
-      return _.where(this.coasters, criteria)[0]
+
+      let getCoasterByKey = (key) => {
+        let obj = {}
+        obj['.key'] = key
+        return _.where(this.coasters, obj)[0]
+      }
+
+      return getCoasterByKey(this.detailKey)
     }
   },
   components: {
