@@ -7,7 +7,7 @@
       </div>
     </div>
     <ul>
-      <li>{{ coaster.date }}</li>
+      <li>{{ weekday }}</li>
       <li>{{ coaster.time }}</li>
       <li>{{ coaster.comment }}</li>
     </ul>
@@ -22,15 +22,17 @@
 
 <script>
 import bus from '../bus'
+import moment from 'moment'
 export default {
   props: ['coaster'],
   data () {
     return {}
   },
   computed: {
-    image () {
-      return '../assets/Serve.svg';
+    weekday () {
+      return moment(this.coaster.date).format('dddd');
     }
+
   },
   methods: {
     getSvg (imgName) {
