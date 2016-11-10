@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="detail">
     <ul>
-      <coaster :coaster="coaster"></coaster>
+      <coaster :coaster="coaster" as="DETAIL"></coaster>
     </ul>
   </div>
 </template>

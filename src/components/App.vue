@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <new></new>
-    <detail v-if="detail" :coaster="detail"></detail>
+    <component :is="currentView" :coaster="detail"></component>
+    <!-- <detail v-if="detail" :coaster="detail"></detail> -->
     <list :coasters="coasters"></list>
   </div>
 </template>
@@ -32,7 +32,11 @@ function attachListeners(vm) {
   bus.$on('msg', (event) => {
     switch (event.type) {
       case bus.MAKE_DETAIL:
-        vm.detailKey = event.payload['.key']
+        vm.detailKey = event.payload['.key'],
+        vm.currentView = Detail
+        break;
+      case 'closeDetail':
+        vm.currentView = New
     }
   })
 }
@@ -43,10 +47,12 @@ export default {
   },
   data: function () {
     return {
-      detailKey: null
+      detailKey: null,
+      currentView: New,
     }
   },
   computed: {
+
     detail () {
 
       let getCoasterByKey = (key) => {

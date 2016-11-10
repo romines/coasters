@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="new">
-    <h3>Create a new coaster</h3>
+    <h3>{{test}}</h3>
     <div class="form">
       <input type="date" v-model="date">
       <select v-model="shiftType">
@@ -34,6 +34,7 @@ export default {
       comment: 'Somebody please help me!',
     }
   },
+  props: ['test'],
   computed: {
     myDate () {
       return moment(this.date).format('YYYY-MM-DD')

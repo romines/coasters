@@ -3,7 +3,7 @@
     <span class="header">Available Shifts</span>
     <button @click="reverseList">Reverse</button>
     <ul>
-      <coaster v-for="coaster in filteredCoasters" :coaster="coaster"></coaster>
+      <coaster v-for="coaster in filteredCoasters" :coaster="coaster" as:="'LIST'"></coaster>
     </ul>
   </div>
 

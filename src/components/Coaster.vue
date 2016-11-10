@@ -6,6 +6,7 @@
         {{ coaster.shiftType }}
       </div>
     </div>
+    <img v-if="as==='DETAIL'" @click="closeDetailView()" class="close" :src="loadSvg('close')" alt="" />
     <ul>
       <li>{{ weekday }}</li>
       <li>{{ coaster.time }}</li>
@@ -24,7 +25,7 @@
 import bus from '../bus'
 import moment from 'moment'
 export default {
-  props: ['coaster'],
+  props: ['coaster','as'],
   data () {
     return {}
   },
@@ -46,6 +47,11 @@ export default {
         type: bus.MAKE_DETAIL,
         payload: coaster
       })
+    },
+    closeDetailView () {
+      bus.$emit('msg', {
+        type: 'closeDetail'
+      })
     }
   },
   components: {}
@@ -56,9 +62,13 @@ export default {
 .coaster {
   border: 1px dashed white;
   padding: 2%;
+  ul {
+    max-width: 38em;
+  }
 }
-ul {
-  max-width: 38em;
+img.close {
+  max-width: 1em;
+  float: right;
 }
 div.type, div.type-label {
   display: inline-block;
