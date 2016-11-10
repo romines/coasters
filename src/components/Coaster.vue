@@ -24,8 +24,10 @@
 <script>
 import bus from '../bus'
 import moment from 'moment'
+import mixins from '../mixins'
 export default {
   props: ['coaster','as'],
+  mixins: [mixins],
   data () {
     return {}
   },
@@ -33,12 +35,8 @@ export default {
     weekday () {
       return moment(this.coaster.date).format('dddd');
     }
-
   },
   methods: {
-    loadSvg (imgName) {
-      return require('../assets/' + imgName + '.svg')
-    },
     removeCoaster (coaster) {
       bus.$emit('remove-coaster', coaster)
     },
@@ -65,10 +63,6 @@ export default {
   ul {
     max-width: 38em;
   }
-}
-img.close {
-  max-width: 1em;
-  float: right;
 }
 div.type, div.type-label {
   display: inline-block;

@@ -3,7 +3,6 @@
       <div class="dynamic-container">
           <component :is="currentView" :coaster="detail"></component>
       </div>
-    <!-- <detail v-if="detail" :coaster="detail"></detail> -->
     <list :coasters="coasters"></list>
   </div>
 </template>
@@ -15,6 +14,8 @@ import List from './List.vue'
 import New from './New.vue'
 import Detail from './Detail.vue'
 import firebase from '../firebase'
+import mixins from '../mixins'
+
 const db = firebase.database() // syntax here depends on config in ../firebase.js, which is not in git
 
 const coastersRef = db.ref('data/coasters')
@@ -89,5 +90,9 @@ ul {
 }
 .dynamic-container {
     height: 17em;
+}
+img.close {
+  max-width: 1em;
+  float: right;
 }
 </style>
