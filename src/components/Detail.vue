@@ -1,6 +1,8 @@
 <template lang="html">
   <div class="detail">
-    <coaster :coaster="coaster"></coaster>
+    <ul>
+      <coaster :coaster="coaster" as="DETAIL"></coaster>
+    </ul>
   </div>
 </template>
 
@@ -11,12 +13,6 @@ export default {
   data () {
     return {}
   },
-  // beforeUpdate () {
-  //   console.log('beforeUpdate')
-  // },
-  computed: {},
-  mounted () {},
-  methods: {},
   components: {
     Coaster
   }
@@ -24,4 +20,7 @@ export default {
 </script>
 
 <style lang="css">
+ul {
+    margin-top: 0;
+}
 </style>

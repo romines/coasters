@@ -1,11 +1,12 @@
 <template lang="html">
   <li class="coaster">
     <div class="type">
-      <img v-if="coaster.shiftType" :src="getSvg(coaster.shiftType)" alt="" />
+      <img v-if="coaster.shiftType" :src="loadSvg(coaster.shiftType)" alt="" />
       <div class="type-label">
         {{ coaster.shiftType }}
       </div>
     </div>
+    <img v-if="as==='DETAIL'" @click="closeDetailView()" class="close" :src="loadSvg('close')" alt="" />
     <ul>
       <li>{{ weekday }}</li>
       <li>{{ coaster.time }}</li>
@@ -24,7 +25,7 @@
 import bus from '../bus'
 import moment from 'moment'
 export default {
-  props: ['coaster'],
+  props: ['coaster','as'],
   data () {
     return {}
   },
@@ -35,7 +36,7 @@ export default {
 
   },
   methods: {
-    getSvg (imgName) {
+    loadSvg (imgName) {
       return require('../assets/' + imgName + '.svg')
     },
     removeCoaster (coaster) {
@@ -45,6 +46,11 @@ export default {
       bus.$emit('msg', {
         type: bus.MAKE_DETAIL,
         payload: coaster
+      })
+    },
+    closeDetailView () {
+      bus.$emit('msg', {
+        type: bus.CLOSE_DETAIL
       })
     }
   },
@@ -56,9 +62,13 @@ export default {
 .coaster {
   border: 1px dashed white;
   padding: 2%;
+  ul {
+    max-width: 38em;
+  }
 }
-ul {
-  max-width: 38em;
+img.close {
+  max-width: 1em;
+  float: right;
 }
 div.type, div.type-label {
   display: inline-block;
@@ -83,12 +93,10 @@ div.type {
     }
   }
 }
-ul {
-  list-style-type: none;
+
   li {
     background-color: rgb(67, 97, 154);
   }
-}
 
 
 </style>

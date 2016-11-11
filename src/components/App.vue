@@ -1,22 +1,22 @@
 <template>
   <div id="app">
-    <new></new>
-    <detail v-if="detail" :coaster="detail"></detail>
+      <div class="dynamic-container">
+          <component :is="currentView" :coaster="detail"></component>
+      </div>
+    <!-- <detail v-if="detail" :coaster="detail"></detail> -->
     <list :coasters="coasters"></list>
   </div>
 </template>
 
 <script>
-// libs
 import _ from 'underscore'
 import bus from '../bus'
-// components
 import List from './List.vue'
 import New from './New.vue'
 import Detail from './Detail.vue'
-// firebase
 import firebase from '../firebase'
-const db = firebase.fb.database()
+const db = firebase.database() // syntax here depends on config in ../firebase.js, which is not in git
+
 const coastersRef = db.ref('data/coasters')
 
 function removeCoaster(key) {
@@ -34,7 +34,11 @@ function attachListeners(vm) {
   bus.$on('msg', (event) => {
     switch (event.type) {
       case bus.MAKE_DETAIL:
-        vm.detailKey = event.payload['.key']
+        vm.detailKey = event.payload['.key'],
+        vm.currentView = Detail
+        break;
+      case bus.CLOSE_DETAIL:
+        vm.currentView = New
     }
   })
 }
@@ -43,12 +47,14 @@ export default {
   firebase: {
     coasters: coastersRef
   },
-  data () {
+  data: function () {
     return {
-      detailKey: null
+      detailKey: null,
+      currentView: New,
     }
   },
   computed: {
+
     detail () {
 
       let getCoasterByKey = (key) => {
@@ -77,5 +83,11 @@ export default {
 <style>
 body {
   font-family: Helvetica, sans-serif;
+}
+ul {
+  list-style-type: none;
+}
+.dynamic-container {
+    height: 17em;
 }
 </style>
