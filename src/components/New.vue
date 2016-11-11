@@ -31,7 +31,7 @@ export default {
       date: '2016-01-01',
       time: 'AM',
       shiftType: 'Serve',
-      comment: 'Somebody please help me!',
+      comment: 'how many',
     }
   },
   props: ['test'],

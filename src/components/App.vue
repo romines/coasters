@@ -3,13 +3,15 @@
       <div class="dynamic-container">
           <component :is="currentView" :coaster="detail"></component>
       </div>
-    <list :coasters="coasters"></list>
+      <navigation></navigation>
+    <list :coasters="currentList"></list>
   </div>
 </template>
 
 <script>
 import _ from 'underscore'
 import bus from '../bus'
+import Navigation from './Navigation.vue'
 import List from './List.vue'
 import New from './New.vue'
 import Detail from './Detail.vue'
@@ -19,9 +21,15 @@ import mixins from '../mixins'
 const db = firebase.database() // syntax here depends on config in ../firebase.js, which is not in git
 
 const coastersRef = db.ref('data/coasters')
+const notPickedUp = coastersRef.orderByChild('pickedUp').equalTo(false)
+const pickedUp = coastersRef.orderByChild('pickedUp').equalTo(true)
 
 function removeCoaster(key) {
   coastersRef.child(key).remove()
+}
+
+function fbRefFromChild(child, equalTo) {
+  return coastersRef.orderByChild(child).equalTo(equalTo)
 }
 
 function attachListeners(vm) {
@@ -30,7 +38,8 @@ function attachListeners(vm) {
   })
   bus.$on('new-coaster', (coasterData) => {
     if (!coasterData) return
-    coastersRef.push(coasterData)
+    let decoratedCoaster = Object.assign({pickedUp: false}, coasterData)
+    coastersRef.push(decoratedCoaster)
   })
   bus.$on('msg', (event) => {
     switch (event.type) {
@@ -40,6 +49,10 @@ function attachListeners(vm) {
         break;
       case bus.CLOSE_DETAIL:
         vm.currentView = New
+      case bus.CHANGE_LIST:
+      console.log('change list, please')
+        vm.$bindAsArray('notPickedUp', fbRefFromChild('pickedUp', false))
+        vm.currentList = vm.notPickedUp
     }
   })
 }
@@ -47,11 +60,19 @@ function attachListeners(vm) {
 export default {
   firebase: {
     coasters: coastersRef
+    // notPickedUp: coastersRef.orderByChild('pickedUp').equalTo(false)
+  },
+  components: {
+    Navigation,
+    List,
+    New,
+    Detail
   },
   data: function () {
     return {
       detailKey: null,
       currentView: New,
+      currentList: this.coasters
     }
   },
   computed: {
@@ -66,11 +87,6 @@ export default {
 
       return getCoasterByKey(this.detailKey)
     }
-  },
-  components: {
-    List,
-    New,
-    Detail
   },
   methods: {
 
