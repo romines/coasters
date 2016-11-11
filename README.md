@@ -29,5 +29,5 @@ let config = {
     storageBucket: "bucket.appspot.com"
   };
 
-eexport default firebase.initializeApp(config)
+export default firebase.initializeApp(config)
 ```
