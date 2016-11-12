@@ -38,7 +38,7 @@ function attachListeners(vm) {
   })
   bus.$on('new-coaster', (coasterData) => {
     if (!coasterData) return
-    let decoratedCoaster = Object.assign({pickedUp: false}, coasterData)
+    let decoratedCoaster = Object.assign({pickedUp: true}, coasterData)
     coastersRef.push(decoratedCoaster)
   })
   bus.$on('msg', (event) => {

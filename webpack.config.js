@@ -37,6 +37,11 @@ module.exports = {
     noInfo: true
   },
   devtool: '#eval-source-map',
+  resolve: {
+  alias: {
+    'vue$': 'vue/dist/vue.js'
+    }
+  },
   vue: {
     loaders: {
       sass: 'style!css!sass?indentedSyntax',
