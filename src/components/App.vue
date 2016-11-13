@@ -1,10 +1,11 @@
 <template>
-  <div id="app">
-      <div class="dynamic-container">
-          <component :is="currentView" :coaster="detail"></component>
-      </div>
-      <navigation></navigation>
-    <list :coasters="currentList"></list>
+  <div id="my-app">
+    <router-view :coasters="currentList"></router-view>
+    <!-- <div class="dynamic-container">
+        <component :is="currentView" :coaster="detail"></component>
+    </div> -->
+    <navigation></navigation>
+    <!-- <list :coasters="currentList"></list> -->
   </div>
 </template>
 
