@@ -38,9 +38,9 @@ module.exports = {
   },
   devtool: '#eval-source-map',
   resolve: {
-  alias: {
-    'vue$': 'vue/dist/vue.js'
-    }
+    alias: {
+      'vue$': 'vue/dist/vue.js'
+      }
   },
   vue: {
     loaders: {

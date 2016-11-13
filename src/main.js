@@ -6,11 +6,11 @@ import App from './components/App.vue'
 
 Vue.use(VueFire)
 Vue.use(VueRouter)
-const Bar = { template: '<div>bar</div>' }
+const Bar = { template: '<div>the bar is: {{ $route.params.id }}</div>' }
 
 const routes = [
-  { path: '/', component: App },
-  { path: '/bar', component: Bar }
+  { path: '/coasters', component: App, alias: '/' },
+  { path: '/bar/:id', component: Bar }
 ]
 
 const router = new VueRouter({
