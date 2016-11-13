@@ -67,7 +67,6 @@ export default {
         return Array.prototype.indexOf.call(parent.children, node)
       }
       this.dayNumber = getElemIndex(event.target)
-      console.log(getElemIndex(event.target))
     }
 
   },

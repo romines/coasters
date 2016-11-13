@@ -1,5 +1,14 @@
 <template lang="html">
   <div class="navigation">
+
+    <ul>
+      <li>
+        <router-link to="/">Home</router-link>
+      </li>
+      <li>
+        <router-link to="/post">New</router-link>
+      </li>
+    </ul>
     <span @click="changeList()" class="coaster-category">Open</span>
     <span class="coaster-category">Picked Up</span>
     <span class="coaster-category">Old</span>
@@ -12,8 +21,6 @@ export default {
   data () {
     return {}
   },
-  computed: {},
-  mounted () {},
   methods: {
     changeList (e) {
       bus.$emit('msg', {
@@ -21,8 +28,7 @@ export default {
         payload: {}
       })
     }
-  },
-  components: {}
+  }
 }
 </script>
 
