@@ -2,24 +2,18 @@
   <div id="my-app">
     <navigation></navigation>
     <router-view :coasters="currentList"></router-view>
-    <!-- <div class="dynamic-container">
-        <component :is="currentView" :coaster="detail"></component>
-    </div> -->
-    <!-- <list :coasters="currentList"></list> -->
   </div>
 </template>
 
 <script>
 import _ from 'underscore'
 import bus from '../bus'
+import router from '../router'
 import Navigation from './Navigation.vue'
-import List from './List.vue'
-import New from './New.vue'
-import Detail from './Detail.vue'
 import firebase from '../firebase'
 import mixins from '../mixins'
 
-const db = firebase.database() // syntax here depends on config in ../firebase.js, which is not in git
+const db = firebase.database()
 
 const coastersRef = db.ref('data/coasters')
 const notPickedUp = coastersRef.orderByChild('pickedUp').equalTo(false)
@@ -45,11 +39,14 @@ function attachListeners(vm) {
   bus.$on('msg', (event) => {
     switch (event.type) {
       case bus.MAKE_DETAIL:
-        vm.detailKey = event.payload['.key'],
-        vm.currentView = Detail
+        vm.detailKey = event.payload['.key']
+        router.push({
+          name: 'detail',
+          params: { key: event.payload['.key']}
+        })
         break;
       case bus.CLOSE_DETAIL:
-        vm.currentView = New
+        router.push({ path: '/' })
       case bus.CHANGE_LIST:
       console.log('change list, please')
         vm.$bindAsArray('notPickedUp', fbRefFromChild('pickedUp', false))
@@ -64,31 +61,27 @@ export default {
     // notPickedUp: coastersRef.orderByChild('pickedUp').equalTo(false)
   },
   components: {
-    Navigation,
-    List,
-    New,
-    Detail
+    Navigation
   },
   data: function () {
     return {
       detailKey: null,
-      currentView: New,
       currentList: this.coasters
     }
   },
-  computed: {
-
-    detail () {
-
-      let getCoasterByKey = (key) => {
-        let obj = {}
-        obj['.key'] = key
-        return _.where(this.coasters, obj)[0]
-      }
-
-      return getCoasterByKey(this.detailKey)
-    }
-  },
+  // computed: {
+  //
+  //   detail () {
+  //
+  //     let getCoasterByKey = (key) => {
+  //       let obj = {}
+  //       obj['.key'] = key
+  //       return _.where(this.coasters, obj)[0]
+  //     }
+  //
+  //     return getCoasterByKey(this.detailKey)
+  //   }
+  // },
   methods: {
 
   },

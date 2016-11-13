@@ -7,11 +7,14 @@
 </template>
 
 <script>
+import firebase from '../firebase'
+const db = firebase.database()
+const coastersRef = db.ref('data/coasters')
+
 import Coaster from './Coaster.vue'
 export default {
-  props: ['coaster'],
-  data () {
-    return {}
+  beforeMount () {
+    this.$bindAsObject('coaster', coastersRef.child(this.$route.params.key))
   },
   components: {
     Coaster
