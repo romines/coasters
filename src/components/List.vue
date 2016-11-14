@@ -1,18 +1,7 @@
 <template lang="html">
   <div class="list">
     <span class="header">Available Shifts</span>
-    <button @click="reverseList">Reverse</button>
-    <span class="days">
-
-      <button @click="setDayFilter" class="dayOfWeek">S</button>
-      <button @click="setDayFilter" class="dayOfWeek">M</button>
-      <button @click="setDayFilter" class="dayOfWeek">T</button>
-      <button @click="setDayFilter" class="dayOfWeek">W</button>
-      <button @click="setDayFilter" class="dayOfWeek">R</button>
-      <button @click="setDayFilter" class="dayOfWeek">F</button>
-      <button @click="setDayFilter" class="dayOfWeek">S</button>
-      <img @click="dayNumber = -1" class="close" :src="loadSvg('close')" />
-    </span>
+    <filters></filters>
     <ul>
       <coaster v-for="coaster in filteredCoasters" :coaster="coaster" as:="'LIST'"></coaster>
     </ul>
@@ -22,13 +11,14 @@
 
 <script>
 import Coaster from './Coaster.vue'
+import Filters from './Filters.vue'
 import bus from '../bus'
 import _ from 'underscore'
 import moment from 'moment'
 import mixins from '../mixins'
 
 export default {
-  props: ['coasters'],
+  props: ['coasters', 'dayIndex'],
   data () {
     return {
       order: 'ASC',
@@ -60,18 +50,12 @@ export default {
     reverseList () {
       console.log(this.coasters);
       this.order = (this.order === 'ASC') ? 'DESC' : 'ASC'
-    },
-    setDayFilter (event) {
-      let getElemIndex = (node) => {
-        let parent = node.parentElement
-        return Array.prototype.indexOf.call(parent.children, node)
-      }
-      this.dayNumber = getElemIndex(event.target)
     }
 
   },
   components: {
-    Coaster
+    Coaster,
+    Filters
   }
 }
 </script>
