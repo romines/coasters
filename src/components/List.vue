@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="list">
     <span class="header">Available Shifts</span>
-    <filters></filters>
+    <filters v-on:setDay="setDay($event)"></filters>
     <ul>
       <coaster v-for="coaster in filteredCoasters" :coaster="coaster" as:="'LIST'"></coaster>
     </ul>
@@ -50,6 +50,9 @@ export default {
     reverseList () {
       console.log(this.coasters);
       this.order = (this.order === 'ASC') ? 'DESC' : 'ASC'
+    },
+    setDay (day) {
+      this.dayNumber = day
     }
 
   },
