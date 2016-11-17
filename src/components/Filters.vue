@@ -38,7 +38,6 @@ export default {
 	},
 	mixins: [mixins],
 	created () {
-		console.log(bus.MAKE_DETAIL);
 	}
 }
 </script>

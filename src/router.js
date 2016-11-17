@@ -1,5 +1,6 @@
 import VueRouter from 'vue-router'
 import App from './components/App.vue'
+import Login from './components/Login.vue'
 import List from './components/List.vue'
 import Detail from './components/Detail.vue'
 import New from './components/New.vue'
@@ -15,8 +16,8 @@ const routes = [
         component: List
       },
       {
-        path: '/test',
-        component: Test
+        path: '/login',
+        component: Login
       },
       {
         path: '/post',

@@ -14,10 +14,51 @@ import firebase from '../firebase'
 import mixins from '../mixins'
 
 const db = firebase.database()
+const auth = firebase.auth()
+// auth.createUserWithEmailAndPassword('01@email.com', 'password')
+auth.onAuthStateChanged(user => console.log(user))
 
 const coastersRef = db.ref('data/coasters')
 const notPickedUp = coastersRef.orderByChild('pickedUp').equalTo(false)
 const pickedUp = coastersRef.orderByChild('pickedUp').equalTo(true)
+
+function handleLoginEvent(e) {
+
+  let email = e.payload.email
+  let password = e.payload.password
+
+  let promise = auth.signInWithEmailAndPassword(email, password)
+  promise.catch(e => console.log(e.message))
+
+}
+
+function handleLoginEvent(e) {
+
+  let promise = auth.signInWithEmailAndPassword(e.payload.email, e.payload.password)
+  promise.catch(e => console.log(e.message))
+
+}
+
+function handleCreateUserEvent(e) {
+
+  let promise = auth.createUserWithEmailAndPassword(e.payload.email, e.payload.password)
+  promise.catch(e => console.log(e.message))
+
+}
+
+function handleLogOutUserEvent() {
+
+  firebase.auth().signOut()
+
+}
+
+firebase.auth().onAuthStateChanged(user => {
+  if (user) {
+    console.log(user);
+  } else {
+    console.log('no one logged in');
+  }
+})
 
 function removeCoaster(key) {
   coastersRef.child(key).remove()
@@ -38,6 +79,15 @@ function attachListeners(vm) {
   })
   bus.$on('msg', (event) => {
     switch (event.type) {
+      case bus.SIGN_IN:
+        handleLoginEvent(event)
+        break;
+      case bus.CREATE_USER:
+        handleCreateUserEvent(event)
+        break;
+      case bus.LOG_OUT_USER:
+        handleLogOutUserEvent()
+        break;
       case bus.MAKE_DETAIL:
         vm.detailKey = event.payload['.key']
         router.push({
@@ -47,10 +97,14 @@ function attachListeners(vm) {
         break;
       case bus.CLOSE_DETAIL:
         router.push({ path: '/' })
+        break;
       case bus.CHANGE_LIST:
-      console.log('change list, please')
+        console.log('change list, please')
         vm.$bindAsArray('notPickedUp', fbRefFromChild('pickedUp', false))
         vm.currentList = vm.notPickedUp
+        break;
+      default:
+        console.log("An indeterminate message was emitted");
     }
   })
 }

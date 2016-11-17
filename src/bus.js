@@ -5,7 +5,10 @@ export default new Vue({
     return {
       REVERSE_LIST: 'REVERSE_LIST',
       MAKE_DETAIL: 'MAKE_DETAIL',
-      CLOSE_DETAIL: 'CLOSE_DETAIL'
+      CLOSE_DETAIL: 'CLOSE_DETAIL',
+      SIGN_IN: 'SIGN_IN',
+      CREATE_USER: 'CREATE_USER',
+      LOG_OUT_USER: 'LOG_OUT_USER'
     }
   }
 })
