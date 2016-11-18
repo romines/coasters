@@ -111,7 +111,7 @@ function attachListeners(vm) {
 
 export default {
   firebase: {
-    coasters: coastersRef
+    coasters: coastersRef.orderByChild('date').startAt('2016-01-02')
     // notPickedUp: coastersRef.orderByChild('pickedUp').equalTo(false)
   },
   components: {
@@ -119,8 +119,14 @@ export default {
   },
   created () {
     attachListeners(this)
-    // this.$bindAsArray('currentCoasters', coastersRef.orderByChild('date').startAt('2016-01-12'))
-    // this.currentList = this.currentCoasters
+    if (this.$route.path === '/history') {
+      console.log("created with route.path === '/history'")
+      this.$bindAsArray('oldCoasters', coastersRef.orderByChild('date').endAt('2016-01-01'))
+      this.currentList = this.oldCoasters
+    } else {
+      console.log("created with route.path === '/'")
+    }
+
   },
   data: function () {
     return {
@@ -131,13 +137,12 @@ export default {
   watch: {
     '$route' (route) {
       if (route.path === '/history') {
-        console.log("route.path === '/history'")
-        this.$bindAsArray('currentCoasters', coastersRef.orderByChild('date').startAt('2016-01-12'))
-        // this.$bindAsArray('someCoasters', coastersRef)
-        this.currentList = this.currentCoasters
-      } else {
-
-        console.log('something else')
+        console.log("route change and route.path === '/history'")
+        this.$bindAsArray('oldCoasters', coastersRef.orderByChild('date').endAt('2016-01-01'))
+        this.currentList = this.oldCoasters
+      } else if (route.path === '/') {
+        console.log("route change and route.path === '/'")
+        this.currentList = this.coasters
       }
     }
   },
