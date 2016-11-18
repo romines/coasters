@@ -8,9 +8,10 @@
     </div>
     <img v-if="as==='DETAIL'" @click="closeDetailView()" class="close" :src="loadSvg('close')" alt="" />
     <ul>
-      <li>{{ weekday }}</li>
+      <li>{{ coaster.date }}</li>
       <li>{{ coaster.time }}</li>
       <li>{{ coaster.comment }}</li>
+      <li>picked up: {{ coaster.pickedUp }}</li>
     </ul>
     <div class="actions">
       <div class="in-contain">

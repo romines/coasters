@@ -23,7 +23,8 @@ export default {
   props: ['coasters', 'dayIndex'],
   data () {
     return {
-      order: 'ASC',
+      order: 'DESC',
+      prop: 'date',//'.key',
       dayNumber: -1
     }
   },
@@ -36,10 +37,10 @@ export default {
       })
 
       if (this.order === 'ASC') {
-        return _.sortBy(filteredByDay, '.key').reverse()
+        return _.sortBy(filteredByDay, this.prop).reverse()
       }
       else {
-        return _.sortBy(filteredByDay, '.key')
+        return _.sortBy(filteredByDay, this.prop)
       }
     },
     isHistory () {

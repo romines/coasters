@@ -100,8 +100,8 @@ function attachListeners(vm) {
         break;
       case bus.CHANGE_LIST:
         console.log('change list, please')
-        vm.$bindAsArray('notPickedUp', fbRefFromChild('pickedUp', false))
-        vm.currentList = vm.notPickedUp
+        vm.$bindAsArray('pickedUp', fbRefFromChild('pickedUp', true))
+        vm.currentList = vm.pickedUp
         break;
       default:
         console.log("An indeterminate message was emitted");
@@ -117,10 +117,28 @@ export default {
   components: {
     Navigation
   },
+  created () {
+    attachListeners(this)
+    // this.$bindAsArray('currentCoasters', coastersRef.orderByChild('date').startAt('2016-01-12'))
+    // this.currentList = this.currentCoasters
+  },
   data: function () {
     return {
       detailKey: null,
       currentList: this.coasters
+    }
+  },
+  watch: {
+    '$route' (route) {
+      if (route.path === '/history') {
+        console.log("route.path === '/history'")
+        this.$bindAsArray('currentCoasters', coastersRef.orderByChild('date').startAt('2016-01-12'))
+        // this.$bindAsArray('someCoasters', coastersRef)
+        this.currentList = this.currentCoasters
+      } else {
+
+        console.log('something else')
+      }
     }
   },
   // computed: {
@@ -138,10 +156,7 @@ export default {
   // },
   methods: {
 
-  },
-  created () {
-    attachListeners(this)
-  },
+  }
 }
 </script>
 

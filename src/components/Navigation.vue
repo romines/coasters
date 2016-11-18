@@ -12,9 +12,9 @@
         <router-link to="/history">History</router-link>
       </li>
     </ul>
-    <span @click="changeList()" class="coaster-category">Open</span>
-    <span class="coaster-category">Picked Up</span>
-    <span class="coaster-category">Old</span>
+    <span @click="changeList()" class="coaster-category">Picked Up</span>
+    <!-- <span class="coaster-category"></span> -->
+    <!-- <span class="coaster-category">Old</span> -->
   </div>
 </template>
 
