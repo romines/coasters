@@ -15,12 +15,10 @@ import mixins from '../mixins'
 
 const db = firebase.database()
 const auth = firebase.auth()
-// auth.createUserWithEmailAndPassword('01@email.com', 'password')
 auth.onAuthStateChanged(user => console.log(user))
 
 const coastersRef = db.ref('data/coasters')
-const notPickedUp = coastersRef.orderByChild('pickedUp').equalTo(false)
-const pickedUp = coastersRef.orderByChild('pickedUp').equalTo(true)
+
 
 function handleLoginEvent(e) {
 
@@ -60,8 +58,8 @@ firebase.auth().onAuthStateChanged(user => {
   }
 })
 
-function removeCoaster(key) {
-  coastersRef.child(key).remove()
+function removeCoaster(arbitraryRef, key) {
+  arbitraryRef.child(key).remove()
 }
 
 function fbRefFromChild(child, equalTo) {
@@ -70,7 +68,7 @@ function fbRefFromChild(child, equalTo) {
 
 function attachListeners(vm) {
   bus.$on('remove-coaster', (coaster) => {
-    removeCoaster(coaster['.key'])
+    removeCoaster(coastersRef, coaster['.key'])
   })
   bus.$on('new-coaster', (coasterData) => {
     if (!coasterData) return
@@ -126,7 +124,8 @@ export default {
     } else {
       console.log("created with route.path === '/'")
     }
-
+    // this.$bindAsArray('currentCoasters', coastersRef.orderByChild('date').startAt('2016-01-12'))
+    // this.currentList = this.currentCoasters
   },
   data: function () {
     return {
