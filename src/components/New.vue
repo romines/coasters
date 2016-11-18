@@ -23,6 +23,9 @@
 </template>
 
 <script>
+//
+// Should encompass <list> and <coaster>, which is hidden with styles on mobile
+//
 import bus from '../bus'
 import moment from 'moment'
 export default {

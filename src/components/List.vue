@@ -1,6 +1,8 @@
 <template lang="html">
   <div class="list">
-    <span class="header">Available Shifts</span>
+
+    <span class="header" v-if="!isHistory">Available Shifts</span>
+    <span class="header" v-if="isHistory">Historical Shifts</span>
     <filters v-on:setDay="setDay($event)"></filters>
     <ul>
       <coaster v-for="coaster in filteredCoasters" :coaster="coaster" as:="'LIST'"></coaster>
@@ -39,12 +41,14 @@ export default {
       else {
         return _.sortBy(filteredByDay, '.key')
       }
+    },
+    isHistory () {
+      if (this.$route.path === '/history') return true
     }
   },
-  created: function () {
-    this.$on('remove', function () {
-      console.log('an event!');
-    })
+  updated: function () {
+
+
   },
   methods: {
     reverseList () {

@@ -33,7 +33,8 @@ export default {
 
 		},
 
-    clearDayFilter () { this.$emit('setDay', -1) }
+    clearDayFilter () { this.$emit('setDay', -1) },
+    reverseList () {console.log('list reversal requested');}
 
 	},
 	mixins: [mixins],

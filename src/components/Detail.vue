@@ -7,6 +7,9 @@
 </template>
 
 <script>
+//
+// Should encompass <list> and <coaster>, which is hidden with styles on mobile
+//
 import firebase from '../firebase'
 const db = firebase.database()
 const coastersRef = db.ref('data/coasters')

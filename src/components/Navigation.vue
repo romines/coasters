@@ -9,7 +9,7 @@
         <router-link to="/post">New</router-link>
       </li>
       <li>
-        <router-link to="/login">Login</router-link>
+        <router-link to="/history">History</router-link>
       </li>
     </ul>
     <span @click="changeList()" class="coaster-category">Open</span>
