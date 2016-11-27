@@ -15,8 +15,9 @@
     </ul>
     <div class="actions">
       <div class="in-contain">
-        <button class="remove" @click="removeCoaster(coaster)">Remove</button>
-        <button @click="makeDetail(coaster)">Pick Up</button>
+        <!-- <button class="remove" @click="removeCoaster(coaster)">Remove</button>
+        <button @click="makeDetail(coaster)">Pick Up</button> -->
+        <my-button :onClick="makeDetail" :ocArgs="coaster"></my-button>
       </div>
     </div>
   </li>
@@ -26,6 +27,7 @@
 import bus from '../bus'
 import moment from 'moment'
 import mixins from '../mixins'
+import * as myButton from './shared/Button.vue'
 export default {
   props: ['coaster','as'],
   mixins: [mixins],
@@ -53,14 +55,18 @@ export default {
       })
     }
   },
-  components: {}
+  components: {
+    myButton
+  }
 }
 </script>
 
 <style lang="scss">
 .coaster {
-  border: 1px dashed white;
+  // border: 1px dashed white;
+  margin: 2%;
   padding: 2%;
+  border-radius: 6px;
   ul {
     max-width: 38em;
   }

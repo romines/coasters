@@ -1,17 +1,17 @@
 <template lang="html">
   <div class="filters">
-	  <button @click="reverseList">Reverse</button>
-	  <span class="days">
+    <button @click="reverseList">Reverse</button>
+    <span class="days">
 
-		<button @click="setDayFilter($event)" class="dayOfWeek">S</button>
-		<button @click="setDayFilter($event)" class="dayOfWeek">M</button>
-		<button @click="setDayFilter($event)" class="dayOfWeek">T</button>
-		<button @click="setDayFilter($event)" class="dayOfWeek">W</button>
-		<button @click="setDayFilter($event)" class="dayOfWeek">R</button>
-		<button @click="setDayFilter($event)" class="dayOfWeek">F</button>
-		<button @click="setDayFilter($event)" class="dayOfWeek">S</button>
-		<img @click="clearDayFilter" class="close" :src="loadSvg('close')" />
-	  </span>
+  	<button @click="setDayFilter($event)" class="dayOfWeek">S</button>
+  	<button @click="setDayFilter($event)" class="dayOfWeek">M</button>
+  	<button @click="setDayFilter($event)" class="dayOfWeek">T</button>
+  	<button @click="setDayFilter($event)" class="dayOfWeek">W</button>
+  	<button @click="setDayFilter($event)" class="dayOfWeek">R</button>
+  	<button @click="setDayFilter($event)" class="dayOfWeek">F</button>
+  	<button @click="setDayFilter($event)" class="dayOfWeek">S</button>
+  	<img @click="clearDayFilter" class="close" :src="loadSvg('close')" />
+    </span>
   </div>
 </template>
 
