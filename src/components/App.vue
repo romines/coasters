@@ -19,14 +19,27 @@ import _ from 'underscore'
 // shifts and changes are primary data Object
 // presented in various list like views
 
+
+// everyone should probably have
+//
 import bus from '../bus'
-import auth from '../auth'
+import actions from '../actions/actions'
+
+// all components
+//
 import router from '../router'
 import Navigation from './Navigation.vue'
 import firebase from '../firebase'
 import mixins from '../mixins'
 
-auth.helloFromAuth()
+// not sure
+//
+import auth from '../auth'
+
+// auth.helloFromAuth()
+actions.helloFromActions()
+actions.secondHandAuthHi()
+actions.secondHandShiftHi()
 
 const db = firebase.database()
 const coastersRef = db.ref('data/coasters')
