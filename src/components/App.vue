@@ -7,81 +7,59 @@
 
 <script>
 import _ from 'underscore'
+//
+// views can listen to firebase independently
+
+// but beyond straight up data bindings, they're listening for app wide events
+// login, logout, notification, notification acknowlegement
+
+// view have a list of actions they can call for
+// ...via emitting messages
+
+// shifts and changes are primary data Object
+// presented in various list like views
+
 import bus from '../bus'
+import auth from '../auth'
 import router from '../router'
 import Navigation from './Navigation.vue'
 import firebase from '../firebase'
 import mixins from '../mixins'
 
-const db = firebase.database()
-const auth = firebase.auth()
-auth.onAuthStateChanged(user => console.log(user))
+auth.helloFromAuth()
 
+const db = firebase.database()
 const coastersRef = db.ref('data/coasters')
 
-
-function handleLoginEvent(e) {
-
-  let email = e.payload.email
-  let password = e.payload.password
-
-  let promise = auth.signInWithEmailAndPassword(email, password)
-  promise.catch(e => console.log(e.message))
-
-}
-
-function handleLoginEvent(e) {
-
-  let promise = auth.signInWithEmailAndPassword(e.payload.email, e.payload.password)
-  promise.catch(e => console.log(e.message))
-
-}
-
-function handleCreateUserEvent(e) {
-
-  let promise = auth.createUserWithEmailAndPassword(e.payload.email, e.payload.password)
-  promise.catch(e => console.log(e.message))
-
-}
-
-function handleLogOutUserEvent() {
-
-  firebase.auth().signOut()
-
-}
-
-firebase.auth().onAuthStateChanged(user => {
-  if (user) {
-    console.log(user);
-  } else {
-    console.log('no one logged in');
-  }
-})
-
-function removeCoaster(arbitraryRef, key) {
-  arbitraryRef.child(key).remove()
-}
-
+// fb helper
 function fbRefFromChild(child, equalTo) {
   return coastersRef.orderByChild(child).equalTo(equalTo)
 }
 
+// these are shift actions
+function removeCoaster(arbitraryRef, key) {
+  arbitraryRef.child(key).remove()
+}
+function newCoaster(coaster) {
+  if (!coaster) return
+  let decoratedCoaster = Object.assign({pickedUp: true}, coaster)
+  coastersRef.push(decoratedCoaster)
+}
+
+
 function attachListeners(vm) {
+
+
   bus.$on('remove-coaster', (coaster) => {
     removeCoaster(coastersRef, coaster['.key'])
   })
   bus.$on('new-coaster', (coasterData) => {
-    if (!coasterData) return
-    let decoratedCoaster = Object.assign({pickedUp: true}, coasterData)
-    coastersRef.push(decoratedCoaster)
+    newCoaster(coasterData)
   })
   bus.$on('msg', (event) => {
     switch (event.type) {
       case bus.SIGN_IN:
         handleLoginEvent(event)
-        break;
-      case bus.CREATE_USER:
-        handleCreateUserEvent(event)
         break;
       case bus.LOG_OUT_USER:
         handleLogOutUserEvent()
