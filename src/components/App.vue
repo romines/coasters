@@ -10,7 +10,7 @@
     /users
     /users/:id
     /signup
-    
+
   -->
     <router-view :coasters="currentList" :myProps="routerViewProps"></router-view>
   </div>
@@ -157,10 +157,6 @@ export default {
     }
   },
   computed: {
-
-    foo () {
-      return this.bar
-    },
 
     routerViewProps () {
       return {

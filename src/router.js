@@ -11,6 +11,17 @@ const Bar = { template: '<div>the bar is: {{ $route.params.id }}</div>' }
 // how to have historical and default ('home'  / 'list') share composition but
 // feel like separate pages/views?
 
+/**
+ *
+ *
+     /coasters
+     /coasters/:id
+     /users
+     /users/:id
+     /signup
+ *
+ */
+
 const routes = [
   { path: '/coasters', component: App, alias: '/',
     children: [
