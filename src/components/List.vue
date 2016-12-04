@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="list">
-
+    <div class="test">Baz: {{baz}}</div>
     <span class="header" v-if="!isHistory">Available Shifts</span>
     <span class="header" v-if="isHistory">Historical Shifts</span>
     <filters v-on:setDay="setDay($event)"></filters>
@@ -19,8 +19,11 @@ import _ from 'underscore'
 import moment from 'moment'
 import mixins from '../mixins'
 
+// list has local state which is basically filters / querires
+// TODO
+
 export default {
-  props: ['coasters', 'dayIndex'],
+  props: ['coasters', 'dayIndex', 'myProps'],
   data () {
     return {
       order: 'DESC',
@@ -47,6 +50,9 @@ export default {
       if (this.$route.path === '/history') return true
     }
   },
+  created () {
+    console.log(this.myProps.authState.status);
+  },
   updated: function () {
 
 
@@ -61,6 +67,12 @@ export default {
     }
 
   },
+  // shifts and changes are primary data Object
+  // presented in various list like views
+  //
+  // views have a list of actions they can call for
+  // ...via emitting messages
+  //
   components: {
     Coaster,
     Filters

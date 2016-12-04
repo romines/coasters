@@ -1,7 +1,18 @@
 <template>
   <div id="my-app">
     <navigation></navigation>
-    <router-view :coasters="currentList"></router-view>
+    <!--
+
+    Router View
+
+    /coasters
+    /coasters/:id
+    /users
+    /users/:id
+    /signup
+    
+  -->
+    <router-view :coasters="currentList" :myProps="routerViewProps"></router-view>
   </div>
 </template>
 
@@ -9,15 +20,10 @@
 import _ from 'underscore'
 //
 // views can listen to firebase independently
-
-// but beyond straight up data bindings, they're listening for app wide events
-// login, logout, notification, notification acknowlegement
-
-// view have a list of actions they can call for
-// ...via emitting messages
-
-// shifts and changes are primary data Object
-// presented in various list like views
+// but beyond straight up data bindings, they're also listening for app wide events
+//
+// auth state lives in the app component
+// as do current notifications
 
 
 // everyone should probably have
@@ -36,10 +42,12 @@ import mixins from '../mixins'
 //
 import auth from '../auth'
 
+// module tests
+//
 // auth.helloFromAuth()
-actions.helloFromActions()
-actions.secondHandAuthHi()
-actions.secondHandShiftHi()
+// actions.helloFromActions()
+// actions.secondHandAuthHi()
+// actions.secondHandShiftHi()
 
 const db = firebase.database()
 const coastersRef = db.ref('data/coasters')
@@ -107,6 +115,9 @@ export default {
     Navigation
   },
   created () {
+
+    // Super temp
+    //
     attachListeners(this)
     if (this.$route.path === '/history') {
       console.log("created with route.path === '/history'")
@@ -121,34 +132,53 @@ export default {
   data: function () {
     return {
       detailKey: null,
-      currentList: this.coasters
+      currentList: this.coasters,
+      // we can organize all props than need to be passed to <router-view> components
+      authState: {
+        status: 'NOT_LOGGED_IN',
+        user: null
+      },
+      // routerViewProps: {
+      // },
+      bar: 'bar'
     }
   },
   watch: {
-    '$route' (route) {
-      if (route.path === '/history') {
+    '$route' (to, from) {
+      // this can be any
+      if (to.path === '/history') {
         console.log("route change and route.path === '/history'")
         this.$bindAsArray('oldCoasters', coastersRef.orderByChild('date').endAt('2016-01-01'))
         this.currentList = this.oldCoasters
-      } else if (route.path === '/') {
+      } else if (to.path === '/') {
         console.log("route change and route.path === '/'")
         this.currentList = this.coasters
       }
     }
   },
-  // computed: {
-  //
-  //   detail () {
-  //
-  //     let getCoasterByKey = (key) => {
-  //       let obj = {}
-  //       obj['.key'] = key
-  //       return _.where(this.coasters, obj)[0]
-  //     }
-  //
-  //     return getCoasterByKey(this.detailKey)
-  //   }
-  // },
+  computed: {
+
+    foo () {
+      return this.bar
+    },
+
+    routerViewProps () {
+      return {
+        authState: this.authState
+      }
+    }
+
+    // detail () {
+    //
+    //   let getCoasterByKey = (key) => {
+    //     let obj = {}
+    //     obj['.key'] = key
+    //     return _.where(this.coasters, obj)[0]
+    //   }
+    //
+    //   return getCoasterByKey(this.detailKey)
+    // }
+  },
   methods: {
 
   }
