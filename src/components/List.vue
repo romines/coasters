@@ -80,7 +80,7 @@ export default {
 }
 </script>
 
-<style lang="sass">
+<style lang="scss" rel="stylesheet/scss">
 span.message {
   color: red;
 }

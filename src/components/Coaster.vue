@@ -61,7 +61,7 @@ export default {
 }
 </script>
 
-<style lang="sass">
+<style lang="scss" rel="stylesheet/scss">
 .coaster {
   // border: 1px dashed white;
   margin: 2%;

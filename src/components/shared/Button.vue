@@ -17,7 +17,7 @@ export default {
 }
 </script>
 
-<style lang="sass">
+<style lang="scss" rel="stylesheet/scss">
 .pill {
   background-color: #ffffff;
   border: none;
