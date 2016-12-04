@@ -1,5 +1,5 @@
 <template>
-  <div id="my-app">
+  <div id="my-app" class="container">
     <navigation :myProps="navProps" ></navigation>
     <!--
 
@@ -154,17 +154,21 @@ export default {
   watch: {
     '$route' (to, from) {
       // this can be any
-      this.navProps.navState = { home: false, history: false, post: false }
+      let resetNav = () => { this.navProps.navState = { home: false, history: false, post: false } }
+
       if (to.path === '/history') {
+        resetNav()
         console.log("route change and route.path === '/history'")
         this.$bindAsArray('oldCoasters', coastersRef.orderByChild('date').endAt('2016-01-01'))
         this.currentList = this.oldCoasters
         this.navProps.history = true;
       } else if (to.path === '/') {
+        resetNav()
         console.log("route change and route.path === '/'")
         this.currentList = this.coasters
         this.navProps.home = true;
       } else {
+        resetNav()
         this.navProps.post = true;
       }
     }

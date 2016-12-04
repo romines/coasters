@@ -1,36 +1,37 @@
 <template lang="html">
-
-  <div class="card is-fullwidth">
-    <header class="card-header">
-      <p class="card-header-title">
-        Component
-      </p>
-      <a class="card-header-icon">
-        <i class="fa fa-angle-down"></i>
-      </a>
-    </header>
-    <div class="card-content">
-      <div class="media">
-      <div class="media-left">
-        <figure class="image is-32x32">
-          <img src="http://placehold.it/64x64" alt="Image">
-        </figure>
+  <div class="box">
+    <div class="card is-fullwidth">
+      <header class="card-header">
+        <p class="card-header-title">
+          {{ title }}
+        </p>
+        <a class="card-header-icon">
+          <i class="fa fa-angle-down"></i>
+        </a>
+      </header>
+      <div class="card-content">
+        <div class="media">
+          <div class="media-left">
+            <figure class="image is-32x32">
+              <img src="http://placehold.it/64x64" alt="Image">
+            </figure>
+          </div>
+          <div class="media-content">
+            <p class="title is-5">John Smith</p>
+            <p class="subtitle is-6">@johnsmith</p>
+          </div>
+        </div>
+        <div class="content">
+          {{ coaster.comment }}</br>
+          <small>{{ coaster.date }} - {{ coaster.time }}</small>
+        </div>
       </div>
-      <div class="media-content">
-        <p class="title is-5">John Smith</p>
-        <p class="subtitle is-6">@johnsmith</p>
-      </div>
+      <footer class="card-footer">
+        <a class="card-footer-item">Save</a>
+        <a class="card-footer-item">Edit</a>
+        <a class="card-footer-item">Delete</a>
+      </footer>
     </div>
-      <div class="content">
-        {{ coaster.comment }}</br>
-        <small>{{ coaster.date }} - {{ coaster.time }}</small>
-      </div>
-    </div>
-    <footer class="card-footer">
-      <a class="card-footer-item">Save</a>
-      <a class="card-footer-item">Edit</a>
-      <a class="card-footer-item">Delete</a>
-    </footer>
   </div>
   <!-- <li class="coaster">
     <div class="type">
@@ -61,8 +62,13 @@ export default {
     return {}
   },
   computed: {
-    weekday () {
-      return moment(this.coaster.date).format('dddd');
+    weekday: function () {
+      // return moment(this.coaster.date).format('dddd')
+      return moment(this.coaster.date).format('dddd, MMM Do')
+    },
+    title:  function () {
+      return moment(this.coaster.date).format('dddd, MMM Do') + ' | ' + this.coaster.time + ' | ' + this.coaster.shiftType
+      return 'this is the title computed'
     }
   },
   methods: {

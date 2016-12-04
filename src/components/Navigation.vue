@@ -23,7 +23,7 @@
         <router-link to="/history" class="button" :class="{ 'is-active': myProps.navState.history }">Picked Up</router-link>
       </span>
       <span class="nav-item" href="#">
-        <router-link to="/post" class="button" :class="{ 'is-active': myProps.navState.post }">Picked Up</router-link>
+        <router-link to="/post" class="button" :class="{ 'is-active': myProps.navState.post }">Post New</router-link>
       </span>
     </div>
   </nav>
