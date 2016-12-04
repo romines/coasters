@@ -8,6 +8,7 @@
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
+    "bulma": "^0.2.3",
     "firebase": "^3.4.0",
     "moment": "^2.15.2",
     "underscore": "^1.8.3",

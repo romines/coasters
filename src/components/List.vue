@@ -79,6 +79,7 @@ export default {
   }
 }
 </script>
+<style src="bulma/css/bulma.css"></style>
 
 <style lang="scss" rel="stylesheet/scss">
 span.message {
