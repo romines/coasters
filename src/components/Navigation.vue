@@ -35,7 +35,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="sass">
 .navigation {
   padding-bottom: .6em;
   margin-bottom: .6em;

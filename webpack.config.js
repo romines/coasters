@@ -1,6 +1,6 @@
 var path = require('path')
 var webpack = require('webpack')
-var HtmlWebpackPlugin = require('html-webpack-plugin')
+// var HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
   entry: './src/main.js',
@@ -9,26 +9,32 @@ module.exports = {
     publicPath: '/dist/',
     filename: 'build.js'
   },
-  resolveLoader: {
-    root: path.join(__dirname, 'node_modules'),
-  },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.vue$/,
-        loader: 'vue'
+        loader: 'vue-loader',
+        options: {
+          loaders: {
+            scss: 'style-loader!css-loader!sass-loader'
+          }
+        }
       },
       {
         test: /\.js$/,
-        loader: 'babel',
+        loader: 'babel-loader',
         exclude: /node_modules/
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
-        loader: 'file',
+        loader: 'file-loader',
         query: {
           name: '[name].[ext]?[hash]'
         }
+      },
+      {
+        test: /\.s[a|c]ss$/,
+        loader: 'style-loader!css-loader!sass-loader'
       }
     ]
   },
@@ -41,13 +47,8 @@ module.exports = {
     alias: {
       'vue$': 'vue/dist/vue.js'
       }
-  },
-  vue: {
-    loaders: {
-      sass: 'style!css!sass?indentedSyntax',
-      scss: 'style!css!sass'
-    }
   }
+
 }
 
 if (process.env.NODE_ENV === 'production') {

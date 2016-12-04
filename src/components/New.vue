@@ -64,7 +64,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="sass">
   .new {
     border: 1px solid grey;
     padding: 1.4em;
