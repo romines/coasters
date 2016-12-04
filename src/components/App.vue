@@ -1,6 +1,6 @@
 <template>
   <div id="my-app">
-    <navigation></navigation>
+    <navigation :myProps="navProps" ></navigation>
     <!--
 
     Router View
@@ -115,6 +115,7 @@ export default {
     Navigation
   },
   created () {
+    // this.navProps.navState = { home: true, history: false, post: false }
 
     // Super temp
     //
@@ -138,6 +139,13 @@ export default {
         status: 'NOT_LOGGED_IN',
         user: null
       },
+      navProps: {
+        navState: {
+          home: true,
+          history: false,
+          post: false,
+        }
+      },
       // routerViewProps: {
       // },
       bar: 'bar'
@@ -146,13 +154,18 @@ export default {
   watch: {
     '$route' (to, from) {
       // this can be any
+      this.navProps.navState = { home: false, history: false, post: false }
       if (to.path === '/history') {
         console.log("route change and route.path === '/history'")
         this.$bindAsArray('oldCoasters', coastersRef.orderByChild('date').endAt('2016-01-01'))
         this.currentList = this.oldCoasters
+        this.navProps.history = true;
       } else if (to.path === '/') {
         console.log("route change and route.path === '/'")
         this.currentList = this.coasters
+        this.navProps.home = true;
+      } else {
+        this.navProps.post = true;
       }
     }
   },
@@ -183,14 +196,12 @@ export default {
 
 <style>
 body {
-  font-family: Helvetica, sans-serif;
+  /*font-family: Helvetica, sans-serif;*/
 }
 ul {
   list-style-type: none;
 }
-.dynamic-container {
-    height: 17em;
-}
+
 img.close {
   max-width: 1em;
   float: right;

@@ -1,9 +1,9 @@
 <template lang="html">
-  <div class="navigation">
+  <!-- <div class="navigation">
 
     <ul>
       <li>
-        <router-link to="/">Home</router-link>
+
       </li>
       <li>
         <router-link to="/post">New</router-link>
@@ -12,18 +12,32 @@
         <router-link to="/history">History</router-link>
       </li>
     </ul>
-    <span @click="changeList()" class="coaster-category">Picked Up</span>
-    <!-- <span class="coaster-category"></span> -->
-    <!-- <span class="coaster-category">Old</span> -->
-  </div>
+  </div> -->
+  <nav class="nav">
+    <div class="nav-center">
+      <span class="nav-item"  href="#">
+        <!--  :class="" -->
+        <router-link to="/" class="button" :class="{ 'is-active': myProps.navState.home }">Home</router-link>
+      </span>
+      <span class="nav-item" href="#">
+        <router-link to="/history" class="button" :class="{ 'is-active': myProps.navState.history }">Picked Up</router-link>
+      </span>
+      <span class="nav-item" href="#">
+        <router-link to="/post" class="button" :class="{ 'is-active': myProps.navState.post }">Picked Up</router-link>
+      </span>
+    </div>
+  </nav>
 </template>
 
 <script>
 import bus from '../bus'
+
 export default {
   data () {
     return {}
   },
+  props: ['myProps'],
+
   methods: {
     changeList (e) {
       bus.$emit('msg', {

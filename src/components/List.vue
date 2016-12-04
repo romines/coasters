@@ -1,6 +1,5 @@
 <template lang="html">
   <div class="list">
-    <div class="test">Baz: {{baz}}</div>
     <span class="header" v-if="!isHistory">Available Shifts</span>
     <span class="header" v-if="isHistory">Historical Shifts</span>
     <filters v-on:setDay="setDay($event)"></filters>
