@@ -7,12 +7,16 @@
 
     /coasters
     /coasters/:id
+    /changes
+    /changes/:id
     /users
     /users/:id
     /signup
 
   -->
-    <router-view :coasters="currentList" :myProps="routerViewProps"></router-view>
+    <section class="section">
+      <router-view :coasters="currentList" :myProps="routerViewProps"></router-view>
+    </section>
   </div>
 </template>
 
@@ -145,10 +149,7 @@ export default {
           history: false,
           post: false,
         }
-      },
-      // routerViewProps: {
-      // },
-      bar: 'bar'
+      }
     }
   },
   watch: {

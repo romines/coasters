@@ -1,5 +1,6 @@
 <template lang="html">
   <div class="detail">
+    hello from the detail component
     <ul>
       <coaster :coaster="coaster" as="DETAIL"></coaster>
     </ul>
@@ -17,7 +18,7 @@ const coastersRef = db.ref('data/coasters')
 import Coaster from './Coaster.vue'
 export default {
   beforeMount () {
-    this.$bindAsObject('coaster', coastersRef.child(this.$route.params.key))
+    this.$bindAsObject('coaster', coastersRef.child(this.$route.params.id))
   },
   components: {
     Coaster

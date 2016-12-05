@@ -27,7 +27,7 @@
         </div>
       </div>
       <footer class="card-footer">
-        <a class="card-footer-item">Save</a>
+        <a @click="makeDetail()" class="card-footer-item">Pick Up</a>
         <a class="card-footer-item">Edit</a>
         <a class="card-footer-item">Delete</a>
       </footer>
@@ -52,6 +52,7 @@
 
 <script>
 import bus from '../bus'
+import router from '../router'
 import moment from 'moment'
 import mixins from '../mixins'
 import * as myButton from './shared/Button.vue'
@@ -76,10 +77,12 @@ export default {
       bus.$emit('remove-coaster', coaster)
     },
     makeDetail (coaster) {
-      bus.$emit('msg', {
-        type: bus.MAKE_DETAIL,
-        payload: coaster
-      })
+      // console.log('coaster is: ', this.coaster['.key'] );
+      router.push({ name: 'detail', params: { id: this.coaster['.key'] }})
+      // bus.$emit('msg', {
+      //   type: bus.MAKE_DETAIL,
+      //   payload: coaster
+      // })
     },
     closeDetailView () {
       bus.$emit('msg', {

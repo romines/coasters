@@ -14,11 +14,16 @@ const Bar = { template: '<div>the bar is: {{ $route.params.id }}</div>' }
 /**
  *
  *
-     /coasters
-     /coasters/:id
-     /users
-     /users/:id
-     /signup
+
+   /coasters
+   /coasters/:id
+   /changes
+   /changes/:id
+   /users
+   /users/:id
+   /signup
+   /post
+
  *
  */
 
@@ -28,6 +33,11 @@ const routes = [
       {
         path: '',
         component: List // List should be child of a 'Home' component
+      },
+      {  // move to /coaster/:key
+        name: 'detail',
+        path: '/:id',
+        component: Detail
       },
       {
         path: '/history',
@@ -44,11 +54,11 @@ const routes = [
         path: '/post',
         component: New
       },
-      {  // move to /coaster/:key
-        name: 'detail',
-        path: '/detail/:key',
-        component: Detail
-      },
+      // {  // move to /coaster/:key
+      //   name: 'detail',
+      //   path: '/detail/:key',
+      //   component: Detail
+      // },
     ]
  },
   { path: '/bar/:id', component: Bar }
