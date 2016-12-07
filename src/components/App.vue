@@ -1,5 +1,6 @@
 <template>
   <div id="my-app" class="container">
+    <modal :myProps="modalProps"></modal>
     <navigation :myProps="navProps" ></navigation>
     <!--
 
@@ -39,6 +40,7 @@ import actions from '../actions/actions'
 //
 import router from '../router'
 import Navigation from './Navigation.vue'
+import Modal from './shared/Modal.vue'
 import firebase from '../firebase'
 import mixins from '../mixins'
 
@@ -61,6 +63,8 @@ function fbRefFromChild(child, equalTo) {
   return coastersRef.orderByChild(child).equalTo(equalTo)
 }
 
+// anything that works out here can be moved to modules/helpers
+
 // these are shift actions
 function removeCoaster(arbitraryRef, key) {
   arbitraryRef.child(key).remove()
@@ -71,9 +75,20 @@ function newCoaster(coaster) {
   coastersRef.push(decoratedCoaster)
 }
 
+function showModal(vm, e) {
+  vm.modal.show = true;
+}
+function closeModal(vm, e) {
+  vm.modal.show = false;
+}
+
 
 function attachListeners(vm) {
 
+  // TODO: We want to get event 'routing' out of App component while still updating
+  // app state appropriately on global events. By passing in the viewmodel, this
+  // can all be moved to a module! But it must have access to all the methods it
+  // references
 
   bus.$on('remove-coaster', (coaster) => {
     removeCoaster(coastersRef, coaster['.key'])
@@ -99,6 +114,12 @@ function attachListeners(vm) {
       case bus.CLOSE_DETAIL:
         router.push({ path: '/' })
         break;
+      case bus.SHOW_MODAL:
+        showModal(vm, event)
+        break;
+      case bus.CLOSE_MODAL:
+        closeModal(vm, event)
+        break;
       case bus.CHANGE_LIST:
         console.log('change list, please')
         vm.$bindAsArray('pickedUp', fbRefFromChild('pickedUp', true))
@@ -116,7 +137,8 @@ export default {
     // notPickedUp: coastersRef.orderByChild('pickedUp').equalTo(false)
   },
   components: {
-    Navigation
+    Navigation,
+    Modal
   },
   created () {
     // this.navProps.navState = { home: true, history: false, post: false }
@@ -136,6 +158,10 @@ export default {
   },
   data: function () {
     return {
+      modal: {
+        show: false,
+        noties: []
+      },
       detailKey: null,
       currentList: this.coasters,
       // we can organize all props than need to be passed to <router-view> components
@@ -180,6 +206,10 @@ export default {
       return {
         authState: this.authState
       }
+    },
+    modalProps () {
+      console.log(this.modal);
+      return this.modal
     }
 
     // detail () {

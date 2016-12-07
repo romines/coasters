@@ -25,6 +25,9 @@
       <span class="nav-item" href="#">
         <router-link to="/post" class="button" :class="{ 'is-active': myProps.navState.post }">Post New</router-link>
       </span>
+      <span class="nav-item" href="#">
+        <span @click="logMeIn" class="button">Login</span>
+      </span>
     </div>
   </nav>
 </template>
@@ -43,6 +46,14 @@ export default {
       bus.$emit('msg', {
         type: bus.CHANGE_LIST,
         payload: {}
+      })
+    },
+    logMeIn () {
+      bus.$emit('msg', {
+        type: bus.SHOW_MODAL,
+        payload: {
+          modalContent: 'login'
+        }
       })
     }
   }

@@ -8,7 +8,9 @@ export default new Vue({
       CLOSE_DETAIL: 'CLOSE_DETAIL',
       SIGN_IN: 'SIGN_IN',
       CREATE_USER: 'CREATE_USER',
-      LOG_OUT_USER: 'LOG_OUT_USER'
+      LOG_OUT_USER: 'LOG_OUT_USER',
+      SHOW_MODAL: 'SHOW_MODAL',
+      CLOSE_MODAL: 'CLOSE_MODAL'
     }
   }
 })
