@@ -15,19 +15,17 @@ npm run dev
 npm run build
 ```
 
-Forked from [webpack-simple](https://github.com/vuejs-templates/webpack-simple).
+Build forked from [webpack-simple](https://github.com/vuejs-templates/webpack-simple).
 
-To create your own webpack simple fire, add some firebase credentials to src/firebase.js
+To create your own webpack simple fire, add some firebase credentials to src/fbConfig.js
 
 ```javascript
-import firebase from 'firebase'
 
-let config = {
+export default {
     apiKey: "apiKey",
     authDomain: "projectId.firebaseapp.com",
     databaseURL: "https://databaseName.firebaseio.com",
     storageBucket: "bucket.appspot.com"
-  };
+  }
 
-export default firebase.initializeApp(config)
 ```
