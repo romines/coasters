@@ -1,4 +1,4 @@
-# to-vuex-fire
+# Coasters - Swap shifts with your coworkers!
 
 > A Vue.js project
 
