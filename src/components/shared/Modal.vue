@@ -1,38 +1,26 @@
 <template lang="html">
   <div class="modal-mask" @click="close" v-show="show" transition="modal">
-      <div class="modal-container" @click.stop>
+    <div class="modal-container" @click.stop>
+      <component :is='content'></component>
 
-          <div class="modal-header">
-              <h3>Login</h3>
-          </div>
 
-          <div class="modal-body">
-              <label class="form-label">
-                  Email
-                  <input class="form-control">
-              </label>
-              <label class="form-label">
-                  Password
-                  <input class="form-control">
-              </label>
-          </div>
-
-          <div class="modal-footer text-right">
-              <button class="modal-default-button" @click="savePost()">
-                  Login
-              </button>
-          </div>
-      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import bus from '../../bus'
+import Login from '../Login.vue'
 
 export default {
   props: ['myProps'],
   data () {
-    return {}
+    return {
+      content: Login
+    }
+  },
+  components: {
+    Login
   },
   computed: {
     show () {

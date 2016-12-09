@@ -104,6 +104,9 @@ function attachListeners(vm) {
       case bus.LOG_OUT_USER:
         handleLogOutUserEvent()
         break;
+      case bus.AUTH_STATE_CHANGE:
+        vm.handleAuthStateChange(e)
+        break;
       case bus.MAKE_DETAIL:
         vm.detailKey = event.payload['.key']
         router.push({
@@ -180,23 +183,23 @@ export default {
   },
   watch: {
     '$route' (to, from) {
-      // this can be any
-      let resetNav = () => { this.navProps.navState = { home: false, history: false, post: false } }
+      let updateNav = (activePage) => {
+        let newNav = { home: false, history: false, post: false }
+        newNav[activePage] = true;
+        this.navProps.navState = newNav
+      }
 
       if (to.path === '/history') {
-        resetNav()
         console.log("route change and route.path === '/history'")
         this.$bindAsArray('oldCoasters', coastersRef.orderByChild('date').endAt('2016-01-01'))
         this.currentList = this.oldCoasters
-        this.navProps.history = true;
+        updateNav('history')
       } else if (to.path === '/') {
-        resetNav()
         console.log("route change and route.path === '/'")
         this.currentList = this.coasters
-        this.navProps.home = true;
+        updateNav('home')
       } else {
-        resetNav()
-        this.navProps.post = true;
+        updateNav('post')
       }
     }
   },
@@ -224,14 +227,20 @@ export default {
     // }
   },
   methods: {
-
+    handleAuthStateChange (e) {
+      console.log(e)
+    }
   }
 }
 </script>
 
 <style>
 body {
-  /*font-family: Helvetica, sans-serif;*/
+  background-color: black;
+}
+app {
+    background-color: black;
+
 }
 ul {
   list-style-type: none;

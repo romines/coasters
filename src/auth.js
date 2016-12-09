@@ -2,7 +2,12 @@ import firebase from './firebase'
 import bus from './bus'
 
 const auth = firebase.auth()
-auth.onAuthStateChanged(user => console.log(user))
+auth.onAuthStateChanged(user => {
+  bus.$emit('msg', {
+    type: bus.AUTH_STATE_CHANGE,
+    payload: {user}
+  })
+})
 
 function handleLoginEvent(e) {
 

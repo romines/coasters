@@ -9,6 +9,7 @@ export default new Vue({
       SIGN_IN: 'SIGN_IN',
       CREATE_USER: 'CREATE_USER',
       LOG_OUT_USER: 'LOG_OUT_USER',
+      AUTH_STATE_CHANGE: 'AUTH_STATE_CHANGE',
       SHOW_MODAL: 'SHOW_MODAL',
       CLOSE_MODAL: 'CLOSE_MODAL'
     }
