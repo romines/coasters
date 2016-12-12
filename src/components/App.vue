@@ -163,13 +163,17 @@ export default {
     return {
       modal: {
         show: false,
-        noties: []
+        noties: [
+          {
+            foo: 'this is a notification'
+          }
+        ]
       },
       detailKey: null,
       currentList: this.coasters,
       // we can organize all props than need to be passed to <router-view> components
       authState: {
-        status: 'NOT_LOGGED_IN',
+        status: 'LOGGED_IN',
         user: null
       },
       navProps: {
@@ -211,8 +215,9 @@ export default {
       }
     },
     modalProps () {
-      console.log(this.modal);
-      return this.modal
+      let mProps = this.modal
+      mProps.authState = this.authState
+      return mProps
     }
 
     // detail () {

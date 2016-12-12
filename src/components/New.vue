@@ -2,23 +2,26 @@
   <div class="new">
     <h3>{{test}}</h3>
     <div class="form">
-      <input type="date" v-model="date">
-      <select v-model="shiftType">
-        <option value="Serve">Serve</option>
-        <option value="Bus">Bus</option>
-        <option value="Barback">Bar back</option>
-        <option value="Bartend">Bartend</option>
-        <option value="Host">Host</option>
-      </select>
-      <select class="" v-model="time">
-        <option value="AM">AM</option>
-        <option value="PM">PM</option>
-      </select>
-      <br>
-      <textarea v-model="comment"></textarea>
-      <span>{{myDate}}</span>
+      <Flatpickr @update="pickDate" :message="datePickerMsg" />
+      <!-- <datepicker v-model="date" :config="{static: true}"></datepicker> -->
+      <p class="control">
+        <span class="select">
+          <select v-model="shiftType">
+            <option value="Serve">Serve</option>
+            <option value="Bus">Bus</option>
+            <option value="Barback">Bar back</option>
+            <option value="Bartend">Bartend</option>
+            <option value="Host">Host</option>
+          </select>
+        </span>
+      </p>
+      <span class="button active" @click="time = 'AM'">AM</span>
+      <span class="button" @click="time = 'PM'">PM</span>
+
+      <textarea v-model="comment" class="textarea"></textarea>
+      <span>{{myDate }}</span>
     </div>
-    <button @click="newCoaster">Submit</button>
+    <button @click="newCoaster" class="button">Submit</button>
   </div>
 </template>
 
@@ -28,9 +31,11 @@
 //
 import bus from '../bus'
 import moment from 'moment'
+import Flatpickr from 'vue-flatpickr/vue-flatpickr-default.vue'
 export default {
   data () {
     return {
+      datePickerMsg: 'Date . . .',
       date: '2016-01-01',
       time: 'AM',
       shiftType: 'Serve',
@@ -41,9 +46,19 @@ export default {
   computed: {
     myDate () {
       return moment(this.date).format('YYYY-MM-DD')
+    },
+    isAM () {
+      return this.time === 'AM'
     }
   },
+  components: {
+    Flatpickr
+  },
   methods: {
+    pickDate (val) {
+      // this.datePickerMsg = val
+      this.date = val
+    },
     newCoaster () {
       console.log({
           date: this.myDate,

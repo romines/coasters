@@ -42,7 +42,7 @@ export default {
   props: ['myProps'],
 
   methods: {
-    changeList (e) {
+    changeList () {
       bus.$emit('msg', {
         type: bus.CHANGE_LIST,
         payload: {}

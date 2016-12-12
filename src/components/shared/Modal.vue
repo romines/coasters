@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="modal-mask" @click="close" v-show="show" transition="modal">
     <div class="modal-container" @click.stop>
-      <component :is='content'></component>
+      <component :is='content' :myProps="myProps"></component>
 
 
     </div>

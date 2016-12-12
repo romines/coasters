@@ -46,6 +46,7 @@ module.exports = {
   },
   devtool: '#eval-source-map',
   resolve: {
+    extensions: ['.js', '.vue'],
     alias: {
       'vue$': 'vue/dist/vue.js'
       }
