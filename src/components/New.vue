@@ -15,8 +15,8 @@
           </select>
         </span>
       </p>
-      <span class="button active" @click="time = 'AM'">AM</span>
-      <span class="button" @click="time = 'PM'">PM</span>
+      <span :class="{ 'is-active': isAM }" class="button" @click="time = 'AM'">AM</span>
+      <span :class="{ 'is-active': isPM }" class="button" @click="time = 'PM'">PM</span>
 
       <textarea v-model="comment" class="textarea"></textarea>
       <span>{{myDate }}</span>
@@ -31,13 +31,13 @@
 //
 import bus from '../bus'
 import moment from 'moment'
-import Flatpickr from 'vue-flatpickr/vue-flatpickr-default.vue'
+import Flatpickr from 'vue-flatpickr/vue-flatpickr-airbnb.vue'
 export default {
   data () {
     return {
       datePickerMsg: 'Date . . .',
       date: '2016-01-01',
-      time: 'AM',
+      time: '',
       shiftType: 'Serve',
       comment: 'how many',
     }
@@ -49,6 +49,9 @@ export default {
     },
     isAM () {
       return this.time === 'AM'
+    },
+    isPM () {
+      return this.time === 'PM'
     }
   },
   components: {
