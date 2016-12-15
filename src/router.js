@@ -15,7 +15,7 @@ const Bar = { template: '<div>the bar is: {{ $route.params.id }}</div>' }
  *
  *
 
-   /coasters
+   /coasters OR /
    /coasters/:id
    /changes
    /changes/:id
@@ -34,11 +34,6 @@ const routes = [
         path: '',
         component: List // List should be child of a 'Home' component
       },
-      // {  // move to /coaster/:key
-      //   name: 'detail',
-      //   path: '/:id',
-      //   component: Detail
-      // },
       {
         path: '/history',
         component: List,
@@ -48,12 +43,17 @@ const routes = [
       },
       {
         path: '/login',
-        component: Login  // should not be routable...modal?
+        component: Login
       },
       {
         path: '/post',
         component: New
       },
+      {  // move to /coaster/:key
+        name: 'detail',
+        path: '/:id',
+        component: Detail
+      }
       // {  // move to /coaster/:key
       //   name: 'detail',
       //   path: '/detail/:key',

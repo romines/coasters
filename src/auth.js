@@ -54,5 +54,6 @@ function helloFromAuth() {
 // const exposes = {  }
 
 export default {
-  helloFromAuth
+  helloFromAuth,
+  handleLoginEvent
 };

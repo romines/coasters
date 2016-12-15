@@ -1,9 +1,6 @@
 <template lang="html">
   <div class="detail">
-    hello from the detail component
-    <ul>
-      <coaster :coaster="coaster" as="DETAIL"></coaster>
-    </ul>
+    <coaster :coaster="coaster" as="DETAIL"></coaster>
   </div>
 </template>
 

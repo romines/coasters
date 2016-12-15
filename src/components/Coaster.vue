@@ -33,21 +33,6 @@
       </footer>
     </div>
   </div>
-  <!-- <li class="coaster">
-    <div class="type">
-      <img v-if="coaster.shiftType" :src="loadSvg(coaster.shiftType)" alt="" />
-      <div class="type-label">
-        {{ coaster.shiftType }}
-      </div>
-    </div>
-    <img v-if="as==='DETAIL'" @click="closeDetailView()" class="close" :src="loadSvg('close')" alt="" />
-
-    <div class="actions">
-      <div class="in-contain">
-        <my-button :onClick="makeDetail" :ocArgs="coaster"></my-button>
-      </div>
-    </div>
-  </li> -->
 </template>
 
 <script>
@@ -77,12 +62,7 @@ export default {
       bus.$emit('remove-coaster', coaster)
     },
     makeDetail (coaster) {
-      // console.log('coaster is: ', this.coaster['.key'] );
       router.push({ name: 'detail', params: { id: this.coaster['.key'] }})
-      // bus.$emit('msg', {
-      //   type: bus.MAKE_DETAIL,
-      //   payload: coaster
-      // })
     },
     closeDetailView () {
       bus.$emit('msg', {

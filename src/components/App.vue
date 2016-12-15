@@ -99,7 +99,7 @@ function attachListeners(vm) {
   bus.$on('msg', (event) => {
     switch (event.type) {
       case bus.SIGN_IN:
-        handleLoginEvent(event)
+        auth.handleLoginEvent(event)
         break;
       case bus.LOG_OUT_USER:
         handleLogOutUserEvent()
@@ -240,13 +240,7 @@ export default {
 </script>
 
 <style>
-body {
-  background-color: black;
-}
-app {
-    background-color: black;
 
-}
 ul {
   list-style-type: none;
 }
