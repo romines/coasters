@@ -40,7 +40,7 @@ import bus from '../bus'
 import router from '../router'
 import moment from 'moment'
 import mixins from '../mixins'
-import * as myButton from './shared/Button.vue'
+import * as myButton from './widgets/Button.vue'
 export default {
   props: ['coaster','as'],
   mixins: [mixins],

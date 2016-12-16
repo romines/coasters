@@ -26,13 +26,20 @@
 </template>
 
 <script>
+
 //
 // Should encompass <list> and <coaster>, which is hidden with styles on mobile
 //
+import { moment } from '../libs'
 import bus from '../bus'
-import moment from 'moment'
+
+
+// Child components
 import Flatpickr from 'vue-flatpickr/vue-flatpickr-airbnb.vue'
+
+
 export default {
+
   data () {
     return {
       datePickerMsg: 'Date . . .',
@@ -43,6 +50,7 @@ export default {
     }
   },
   props: ['test'],
+
   computed: {
     myDate () {
       return moment(this.date).format('YYYY-MM-DD')

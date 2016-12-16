@@ -41,7 +41,7 @@ import actions from '../actions/actions'
 //
 import router from '../router'
 import Navigation from './Navigation.vue'
-import Modal from './shared/Modal.vue'
+import Modal from './widgets/Modal.vue'
 
 import { firebase } from '../libs'
 console.log(firebase);
