@@ -1,4 +1,6 @@
-import firebase from './firebase'
+// import firebase from './firebase'
+import { firebase } from './libs'
+
 import bus from './bus'
 
 const auth = firebase.auth()

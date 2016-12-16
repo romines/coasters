@@ -36,7 +36,7 @@ export default {
   data () {
     return {
       datePickerMsg: 'Date . . .',
-      date: '2016-01-01',
+      date: moment().format('YYYY-MM-DD'),
       time: '',
       shiftType: 'Serve',
       comment: 'how many',

@@ -15,14 +15,32 @@ const Bar = { template: '<div>the bar is: {{ $route.params.id }}</div>' }
  *
  *
 
-   /coasters OR /
-   /coasters/:id
-   /changes
-   /changes/:id
    /users
    /users/:id
    /signup
    /post
+
+   <!--
+
+   Router View
+
+   /coasters   ... OR ... /
+     uses list component
+
+   /coasters/:id
+     coaster component
+   /history
+     - list
+     - links to detail views that use coaster component
+     - filter options: (default) picked up only
+   /users
+     modified list component?
+   /users/:id
+     need user component
+
+   /signup
+
+ -->
 
  *
  */
@@ -46,7 +64,7 @@ const routes = [
         component: Login
       },
       {
-        path: '/post',
+        path: '/new',
         component: New
       },
       {  // move to /coaster/:key

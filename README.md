@@ -28,4 +28,11 @@ export default {
     storageBucket: "bucket.appspot.com"
   }
 
+  // NB: module tests
+
+  auth.helloFromAuth()
+  actions.helloFromActions()
+  actions.secondHandAuthHi()
+  actions.secondHandShiftHi()
+
 ```

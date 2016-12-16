@@ -1,62 +1,71 @@
 <template>
   <div id="my-app" class="container">
+
     <modal :myProps="modalProps"></modal>
     <navigation :myProps="navProps" ></navigation>
-    <!--
 
-    Router View
-
-    /coasters
-    /coasters/:id
-    /changes
-    /changes/:id
-    /users
-    /users/:id
-    /signup
-
-  -->
     <section class="section">
       <router-view :coasters="currentList" :myProps="routerViewProps"></router-view>
     </section>
+
   </div>
 </template>
 
 <script>
-import _ from 'underscore'
-//
-// views can listen to firebase independently
-// but beyond straight up data bindings, they're also listening for app wide events
-//
-// auth state lives in the app component
-// as do current notifications
+/**
+
+   views can listen to firebase independently
+
+   they're also listening for app wide events
+
+
+
+   auth state lives in the app component
+   as do current notifications
+
+
+
+
+
+ *
+ */
 
 
 // everyone should probably have
 //
+import _ from 'underscore'
 import bus from '../bus'
 import actions from '../actions/actions'
 
-// all components
+// all components should probably have
 //
 import router from '../router'
 import Navigation from './Navigation.vue'
 import Modal from './shared/Modal.vue'
-import firebase from '../firebase'
+
+import { firebase } from '../libs'
+console.log(firebase);
 import mixins from '../mixins'
 
 // not sure
 //
 import auth from '../auth'
 
-// module tests
-//
-// auth.helloFromAuth()
-// actions.helloFromActions()
-// actions.secondHandAuthHi()
-// actions.secondHandShiftHi()
+import { fb } from '../helpers'
+
+// console.log(fb);
+fb()
+
+
+
+// components might establish their own ref
+// this is essentially read only
+// any actions relating to data must go through bus/actions
 
 const db = firebase.database()
 const coastersRef = db.ref('data/coasters')
+
+
 
 // fb helper
 function fbRefFromChild(child, equalTo) {
