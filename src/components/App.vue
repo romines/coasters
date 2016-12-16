@@ -18,13 +18,8 @@
 
    they're also listening for app wide events
 
-
-
    auth state lives in the app component
    as do current notifications
-
-
-
 
 
  *
