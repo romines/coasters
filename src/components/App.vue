@@ -35,7 +35,11 @@
 //
 import _ from 'underscore'
 import bus from '../bus'
-import actions from '../actions/actions'
+import actions from '../actions'
+
+actions.helloFromActions()
+actions.secondHandAuthHi()
+actions.secondHandShiftHi()
 
 // all components should probably have
 //
@@ -114,7 +118,7 @@ function attachListeners(vm) {
         handleLogOutUserEvent()
         break;
       case bus.AUTH_STATE_CHANGE:
-        vm.handleAuthStateChange(e)
+        vm.handleAuthStateChange(event)
         break;
       case bus.MAKE_DETAIL:
         vm.detailKey = event.payload['.key']
