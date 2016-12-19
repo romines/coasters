@@ -3,7 +3,12 @@
 
     <modal :myProps="modalProps"></modal>
     <navigation :myProps="navProps" ></navigation>
-
+    <div class="make-local">
+      <section class="section">
+        <button class="button" @click="makeLocal">Local</button>
+        <button class="button" @click="makeFirebase">Firebase</button>
+      </section>
+    </div>
     <section class="section">
       <router-view :coasters="currentList" :myProps="routerViewProps"></router-view>
     </section>
@@ -12,23 +17,11 @@
 </template>
 
 <script>
-/**
-
-   views can listen to firebase independently
-
-   they're also listening for app wide events
-
-   auth state lives in the app component
-   as do current notifications
-
-
- *
- */
-
 
 // everyone should probably have
 //
 import _ from 'underscore'
+import moment from 'moment'
 import bus from '../bus'
 import actions from '../actions'
 
@@ -43,7 +36,6 @@ import Navigation from './Navigation.vue'
 import Modal from './widgets/Modal.vue'
 
 import { firebase } from '../libs'
-console.log(firebase);
 import mixins from '../mixins'
 
 // not sure
@@ -80,7 +72,8 @@ function removeCoaster(arbitraryRef, key) {
 function newCoaster(coaster) {
   if (!coaster) return
   let decoratedCoaster = Object.assign({pickedUp: true}, coaster)
-  coastersRef.push(decoratedCoaster)
+  console.log(decoratedCoaster);
+  // coastersRef.push(decoratedCoaster)
 }
 
 function showModal(vm, e) {
@@ -89,6 +82,8 @@ function showModal(vm, e) {
 function closeModal(vm, e) {
   vm.modal.show = false;
 }
+
+
 
 
 function attachListeners(vm) {
@@ -169,6 +164,16 @@ export default {
   },
   data: function () {
     return {
+      list: 'offLine',
+      offLine: [
+        {
+          date: moment().format('YYYY-MM-DD'),
+          time: 'AM',
+          shiftType: 'Serve',
+          comment: 'Super awesome default comment',
+          pickedUp: false
+        }
+      ],
       modal: {
         show: false,
         noties: [
@@ -178,7 +183,6 @@ export default {
         ]
       },
       detailKey: null,
-      currentList: this.coasters,
       // we can organize all props than need to be passed to <router-view> components
       authState: {
         status: 'LOGGED_IN',
@@ -216,6 +220,13 @@ export default {
     }
   },
   computed: {
+    currentList () {
+      if (this.list === 'offLine') {
+        return this.offLine
+      } else {
+        return this.coasters
+      }
+    },
 
     routerViewProps () {
       return {
@@ -242,6 +253,12 @@ export default {
   methods: {
     handleAuthStateChange (e) {
       console.log(e)
+    },
+    makeLocal () {
+      this.list = 'offLine'
+    },
+    makeFirebase () {
+      this.list = 'firebase'
     }
   }
 }

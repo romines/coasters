@@ -1,5 +1,5 @@
-import authActions from './auth/authActions'
-import shiftActions from './coasters/shiftActions'
+import authActions from './authActions'
+import shiftActions from './coasterActions'
 
 export default {
   helloFromActions () {

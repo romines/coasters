@@ -32,6 +32,8 @@ export default {
   },
   mixins: [mixins],
   computed: {
+    // this will be a computed binding to something like store.currentList
+    //
     filteredCoasters () {
       let filteredByDay = this.coasters.filter((coaster) => {
         if (this.dayNumber < 0) return true
