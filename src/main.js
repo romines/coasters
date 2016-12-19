@@ -9,6 +9,17 @@ Vue.use(VueFire)
 Vue.use(VueRouter)
 Vue.use(Vuex)
 
+const store = new Vuex.Store({
+  state: {
+    count: 0
+  },
+  mutations: {
+  	increment: state => state.count++,
+    decrement: state => state.count--
+  }
+})
+
 new Vue({
-  router
+  router,
+  store
 }).$mount('#app')

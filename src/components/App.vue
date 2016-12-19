@@ -5,6 +5,12 @@
     <navigation :myProps="navProps" ></navigation>
     <div class="make-local">
       <section class="section">
+        <h3>count: {{count}}</h3>
+        <button class="button" @click="increment">+</button>
+        <button class="button" @click="decrement">-</button>
+        <br>
+        <br>
+        <br>
         <button class="button" @click="makeLocal">Local</button>
         <button class="button" @click="makeFirebase">Firebase</button>
       </section>
@@ -24,6 +30,7 @@ import _ from 'underscore'
 import moment from 'moment'
 import bus from '../bus'
 import actions from '../actions'
+import Vuex from 'vuex'
 
 actions.helloFromActions()
 actions.secondHandAuthHi()
@@ -220,6 +227,9 @@ export default {
     }
   },
   computed: {
+    count () {
+      return this.$store.state.count
+    },
     currentList () {
       if (this.list === 'offLine') {
         return this.offLine
@@ -259,6 +269,12 @@ export default {
     },
     makeFirebase () {
       this.list = 'firebase'
+    },
+    increment () {
+      this.$store.commit('increment')
+    },
+    decrement () {
+    	this.$store.commit('decrement')
     }
   }
 }
