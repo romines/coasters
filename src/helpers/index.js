@@ -1,3 +1,3 @@
-import fb from './firebase'
+import fbRefFromChild from './firebase'
 
-export { fb }
+export { fbRefFromChild }

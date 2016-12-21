@@ -4,4 +4,4 @@ function fbRefFromChild(child, equalTo) {
 function testFoo() {
   console.log('hello sweet world from the testFoo !!!!! ');
 }
-export default testFoo
+export { fbRefFromChild }

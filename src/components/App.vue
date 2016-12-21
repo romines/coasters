@@ -8,6 +8,7 @@
         <h3>count: {{count}}</h3>
         <button class="button" @click="increment">+</button>
         <button class="button" @click="decrement">-</button>
+        <button class="button" @click="incrementAsync">increment eventually</button>
         <br>
         <br>
         <br>
@@ -48,10 +49,8 @@ import mixins from '../mixins'
 //
 import auth from '../auth'
 
-import { fb } from '../helpers'
+import { fbRefFromChild } from '../helpers'
 
-// console.log(fb);
-fb()
 
 
 
@@ -63,11 +62,6 @@ const db = firebase.database()
 const coastersRef = db.ref('data/coasters')
 
 
-
-// fb helper
-function fbRefFromChild(child, equalTo) {
-  return coastersRef.orderByChild(child).equalTo(equalTo)
-}
 
 // anything that works out here can be moved to modules/helpers
 
@@ -171,15 +165,6 @@ export default {
   data: function () {
     return {
       list: 'offLine',
-      offLine: [
-        {
-          date: moment().format('YYYY-MM-DD'),
-          time: 'AM',
-          shiftType: 'Serve',
-          comment: 'Super awesome default comment',
-          pickedUp: false
-        }
-      ],
       modal: {
         show: false,
         noties: [
@@ -231,7 +216,7 @@ export default {
     },
     currentList () {
       if (this.list === 'offLine') {
-        return this.offLine
+        return this.$store.state.coasters
       } else {
         return this.coasters
       }
@@ -274,6 +259,9 @@ export default {
     },
     decrement () {
     	this.$store.commit('decrement')
+    },
+    incrementAsync () {
+      this.$store.dispatch('increment')
     }
   }
 }
