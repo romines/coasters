@@ -30,7 +30,6 @@ import _ from 'underscore'
 import moment from 'moment'
 import bus from '../bus'
 import actions from '../actions'
-import Vuex from 'vuex'
 
 actions.helloFromActions()
 actions.secondHandAuthHi()
