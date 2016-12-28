@@ -1,35 +1,25 @@
 <template lang="html">
-  <!-- <div class="navigation">
 
-    <ul>
-      <li>
-
-      </li>
-      <li>
-        <router-link to="/post">New</router-link>
-      </li>
-      <li>
-        <router-link to="/history">History</router-link>
-      </li>
-    </ul>
-  </div> -->
   <nav class="nav">
+
     <div class="nav-center">
       <span class="nav-item"  href="#">
         <!--  :class="" -->
-        <router-link to="/" class="button" :class="{ 'is-active': myProps.navState.home }">Home</router-link>
+        <router-link to="/" class="button" :class="{ 'is-active': navState.home }">Home</router-link>
       </span>
       <span class="nav-item" href="#">
-        <router-link to="/history" class="button" :class="{ 'is-active': myProps.navState.history }">Picked Up</router-link>
+        <router-link to="/history" class="button" :class="{ 'is-active': navState.history }">Picked Up</router-link>
       </span>
       <span class="nav-item" href="#">
-        <router-link to="/new" class="button" :class="{ 'is-active': myProps.navState.post }">Post New</router-link>
+        <router-link to="/new" class="button" :class="{ 'is-active': navState.post }">Post New</router-link>
       </span>
       <span class="nav-item" href="#">
         <span @click="logMeIn" class="button">Login</span>
       </span>
     </div>
+
   </nav>
+
 </template>
 
 <script>
@@ -42,13 +32,17 @@ export default {
   },
   props: ['myProps'],
 
+  computed: {
+    navState () {
+      return {
+        home: this.$store.state.route.path === '/',
+        history: this.$store.state.route.path === '/history',
+        post: this.$store.state.route.path === '/new',
+      }
+    }
+  },
+
   methods: {
-    changeList () {
-      bus.$emit('msg', {
-        type: bus.CHANGE_LIST,
-        payload: {}
-      })
-    },
     logMeIn () {
       bus.$emit('msg', {
         type: bus.SHOW_MODAL,

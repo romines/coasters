@@ -2,7 +2,9 @@
   <div id="my-app" class="container">
 
     <modal :myProps="modalProps"></modal>
-    <navigation :myProps="navProps" ></navigation>
+
+    <navigation></navigation>
+
     <div class="make-local">
       <section class="section">
         <h3>count: {{count}}</h3>
@@ -143,20 +145,7 @@ export default {
     Modal
   },
   created () {
-    // this.navProps.navState = { home: true, history: false, post: false }
 
-    // Super temp
-    //
-    attachListeners(this)
-    if (this.$route.path === '/history') {
-      console.log("created with route.path === '/history'")
-      this.$bindAsArray('oldCoasters', coastersRef.orderByChild('date').endAt('2016-01-01'))
-      this.currentList = this.oldCoasters
-    } else {
-      console.log("created with route.path === '/'")
-    }
-    // this.$bindAsArray('currentCoasters', coastersRef.orderByChild('date').startAt('2016-01-12'))
-    // this.currentList = this.currentCoasters
   },
   data: function () {
     return {
@@ -186,24 +175,9 @@ export default {
   },
   watch: {
     '$route' (to, from) {
-      let updateNav = (activePage) => {
-        let newNav = { home: false, history: false, post: false }
-        newNav[activePage] = true;
-        this.navProps.navState = newNav
-      }
 
-      if (to.path === '/history') {
-        console.log("route change and route.path === '/history'")
-        this.$bindAsArray('oldCoasters', coastersRef.orderByChild('date').endAt('2016-01-01'))
-        this.currentList = this.oldCoasters
-        updateNav('history')
-      } else if (to.path === '/') {
-        console.log("route change and route.path === '/'")
-        this.currentList = this.coasters
-        updateNav('home')
-      } else {
-        updateNav('post')
-      }
+      this.$store.dispatch('getCoasters')
+
     }
   },
   computed: {
