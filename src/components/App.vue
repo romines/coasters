@@ -69,9 +69,9 @@ function removeCoaster(arbitraryRef, key) {
 }
 function newCoaster(coaster) {
   if (!coaster) return
-  let decoratedCoaster = Object.assign({pickedUp: true}, coaster)
-  console.log(decoratedCoaster);
-  // coastersRef.push(decoratedCoaster)
+  let decoratedCoaster = Object.assign({pickedUp: false}, coaster)
+  coastersRef.push(decoratedCoaster)
+  router.push({path: '/'})
 }
 
 function showModal(vm, e) {
@@ -95,6 +95,7 @@ function attachListeners(vm) {
     removeCoaster(coastersRef, coaster['.key'])
   })
   bus.$on('new-coaster', (coasterData) => {
+    console.log('new-coaster event');
     newCoaster(coasterData)
   })
   bus.$on('msg', (event) => {
@@ -145,7 +146,7 @@ export default {
     Modal
   },
   created () {
-
+    attachListeners(this)
   },
   data: function () {
     return {

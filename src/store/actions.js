@@ -1,10 +1,7 @@
 import { firebase, moment } from '../libs'
 
 const db = firebase.database()
-const coastersRef = db.ref('data/coasters').orderByChild('date').startAt('2016-01-02')
-
-
-
+const coastersRef = db.ref('data/coasters')
 
 
 
@@ -15,23 +12,18 @@ const increment = ({ commit }) => {
 }
 
 const getCoasters = ({ commit, state }) => {
-  //
-  // initialize coasters
-  //
 
   let today = moment().format('YYYY-MM-DD')
+  let listRef
   switch (state.route.path) {
-    case '/':
-      console.log('looks like home')
-      break;
     case '/history':
-      console.log('looks like history')
+      listRef = coastersRef.orderByChild('date').startAt('2016-01-02')
       break;
     default:
-      console.log('unmatched route')
+      listRef = coastersRef.orderByChild('date').startAt(today)
   }
 
-  coastersRef.on('value', (snap) => {
+  listRef.on('value', (snap) => {
     console.log(state.route);
     let coasters = []
     snap.forEach((childSnap) => {
@@ -46,6 +38,9 @@ const getCoasters = ({ commit, state }) => {
 
 }
 
-// const changeList = ({ commit }, )
+function newCoaster ({ commit }, coasterData) {
+  let newCoasterRef = coastersRef.push()
+  newCoasterRef.set(coasterData);
+}
 
-export { increment, getCoasters }
+export { increment, getCoasters, newCoaster }

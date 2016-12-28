@@ -32,6 +32,7 @@
 //
 import { moment } from '../libs'
 import bus from '../bus'
+import router from '../router'
 
 
 // Child components
@@ -46,7 +47,7 @@ export default {
       date: moment().format('YYYY-MM-DD'),
       time: '',
       shiftType: 'Serve',
-      comment: 'how many',
+      comment: 'Lorem ipsum shift comments that are super awesome',
     }
   },
   props: ['test'],
@@ -71,19 +72,14 @@ export default {
       this.date = val
     },
     newCoaster () {
-      console.log({
+      this.$store.dispatch('newCoaster', {
           date: this.myDate,
           time: this.time,
           shiftType: this.shiftType,
-          comment: this.comment
-      });
-
-      bus.$emit('new-coaster', {
-          date: this.myDate,
-          time: this.time,
-          shiftType: this.shiftType,
-          comment: this.comment
+          comment: this.comment,
+          pickedUp: false
       })
+      router.push({path: '/'})
       // TODO: clear fields
     }
   }
