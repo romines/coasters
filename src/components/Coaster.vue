@@ -3,7 +3,7 @@
     <div class="card is-fullwidth">
       <header class="card-header">
         <p class="card-header-title">
-          {{ title }}
+          {{ title }} | {{ coaster.key }}
         </p>
         <a class="card-header-icon">
           <i class="fa fa-angle-down"></i>
@@ -62,7 +62,7 @@ export default {
       bus.$emit('remove-coaster', coaster)
     },
     makeDetail (coaster) {
-      router.push({ name: 'detail', params: { id: this.coaster['.key'] }})
+      router.push({ name: 'detail', params: { id: this.coaster.key }})
     },
     closeDetailView () {
       bus.$emit('msg', {

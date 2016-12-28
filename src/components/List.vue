@@ -4,7 +4,7 @@
     <span class="header" v-if="isHistory">Historical Shifts</span>
     <filters v-on:setDay="setDay($event)"></filters>
     <ul>
-      <coaster v-for="coaster in filteredCoasters" :coaster="coaster" as:="'LIST'"></coaster>
+      <coaster v-for="coaster in myCoasters" :coaster="coaster" as:="'LIST'"></coaster>
     </ul>
   </div>
 
@@ -17,6 +17,7 @@ import bus from '../bus'
 import _ from 'underscore'
 import moment from 'moment'
 import mixins from '../mixins'
+import { mapGetters } from 'vuex'
 
 // list has local state which is basically filters / querires
 // TODO
@@ -34,6 +35,9 @@ export default {
   computed: {
     // this will be a computed binding to something like store.currentList
     //
+    myCoasters () {
+      return this.$store.getters.myCoasters
+    },
     filteredCoasters () {
       let filteredByDay = this.coasters.filter((coaster) => {
         if (this.dayNumber < 0) return true
@@ -52,7 +56,7 @@ export default {
     }
   },
   created () {
-    console.log(this.myProps.authState.status);
+    this.$store.dispatch('getCoasters')
   },
   updated: function () {
 

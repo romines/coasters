@@ -6,6 +6,7 @@
     <div class="make-local">
       <section class="section">
         <h3>count: {{count}}</h3>
+        <h3>hundreds: {{hundreds}}</h3>
         <button class="button" @click="increment">+</button>
         <button class="button" @click="decrement">-</button>
         <button class="button" @click="incrementAsync">increment eventually</button>
@@ -30,11 +31,6 @@
 import _ from 'underscore'
 import moment from 'moment'
 import bus from '../bus'
-import actions from '../actions'
-
-actions.helloFromActions()
-actions.secondHandAuthHi()
-actions.secondHandShiftHi()
 
 // all components should probably have
 //
@@ -213,6 +209,9 @@ export default {
   computed: {
     count () {
       return this.$store.state.count
+    },
+    hundreds () {
+      return this.$store.getters.hundreds
     },
     currentList () {
       if (this.list === 'offLine') {
