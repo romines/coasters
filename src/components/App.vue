@@ -240,6 +240,7 @@ export default {
   }
 }
 </script>
+<style src="bulma/css/bulma.css"></style>
 
 <style>
 

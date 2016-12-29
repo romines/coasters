@@ -17,18 +17,22 @@
             </figure>
           </div>
           <div class="media-content">
-            <p class="title is-5">John Smith</p>
+            <p class="title is-5">Is Commenting: {{ commenting.isCommenting }}</p>
             <p class="subtitle is-6">@johnsmith</p>
           </div>
         </div>
         <div class="content">
           {{ coaster.comment }}</br>
+
+
+          <textarea v-if="commenting.isCommenting" class="textarea"></textarea>
+
           <small>{{ coaster.date }} - {{ coaster.time }}</small>
         </div>
       </div>
       <footer class="card-footer">
         <a @click="makeDetail()" class="card-footer-item">Pick Up</a>
-        <a class="card-footer-item">Edit</a>
+        <a @click="startCommenting()" class="card-footer-item">Comment</a>
         <a class="card-footer-item">Delete</a>
       </footer>
     </div>
@@ -36,16 +40,18 @@
 </template>
 
 <script>
-import bus from '../bus'
-import router from '../router'
+import bus from '../../bus'
+import router from '../../router'
 import moment from 'moment'
-import mixins from '../mixins'
-import * as myButton from './widgets/Button.vue'
+import mixins from '../../mixins'
+import * as myButton from '../widgets/Button.vue'
 export default {
   props: ['coaster','as'],
   mixins: [mixins],
   data () {
-    return {}
+    return {
+      localComment: ''
+    }
   },
   computed: {
     weekday: function () {
@@ -55,6 +61,12 @@ export default {
     title:  function () {
       return moment(this.coaster.date).format('dddd, MMM Do') + ' | ' + this.coaster.time + ' | ' + this.coaster.shiftType
       return 'this is the title computed'
+    },
+    commenting: function () {
+      return {
+        isCommenting: this.$store.state.commenting,
+        comment:      ''
+      }
     }
   },
   methods: {
@@ -68,6 +80,9 @@ export default {
       bus.$emit('msg', {
         type: bus.CLOSE_DETAIL
       })
+    },
+    startCommenting () {
+      this.$store.commit('START_COMMENTING')
     }
   },
   components: {

@@ -43,4 +43,12 @@ function newCoaster ({ commit }, coasterData) {
   newCoasterRef.set(coasterData);
 }
 
-export { increment, getCoasters, newCoaster }
+
+export {
+
+    increment
+  , getCoasters
+  , newCoaster
+  // , startCommenting
+
+}

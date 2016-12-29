@@ -12,25 +12,39 @@ import * as getters from './getters'
 
 import { firebase, moment } from '../libs'
 
-Vue.use(Vuex)
+/*=============================================>>>>>
+= Store Section =
+===============================================>>>>>*/
 
+Vue.use(Vuex)
 const db = firebase.database()
 const coastersRef = db.ref('data/coasters').orderByChild('date').startAt('2016-01-02')
 
+/*= End of Store Section =*/
+/*=============================================<<<<<*/
 
-console.log(actions);
 const store = new Vuex.Store({
   state: {
     count: 0,
-    coasters: []
+    coasters: [],
+    modal: {
+      show: false
+    },
+    commenting: false,
+    detailKey: ''
   },
   mutations: {
   	increment: state => state.count++,
     decrement: state => state.count--,
     GET_COASTERS (state, coasters) {
-      console.log(coasters)
       state.count = coasters.length
       state.coasters = coasters
+    },
+    SHOW_MODAL: (state, content) => {
+      state.modal.show = true;
+    },
+    START_COMMENTING: (state) => {
+      state.commenting = true;
     }
   },
   actions,

@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import Coaster from './Coaster.vue'
+import Coaster from './Coaster/Coaster.vue'
 import Filters from './Filters.vue'
 import bus from '../bus'
 import _ from 'underscore'
@@ -84,7 +84,6 @@ export default {
   }
 }
 </script>
-<style src="bulma/css/bulma.css"></style>
 
 <style lang="scss" rel="stylesheet/scss">
 span.message {

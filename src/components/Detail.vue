@@ -12,7 +12,7 @@ import { firebase } from '../libs'
 const db = firebase.database()
 const coastersRef = db.ref('data/coasters')
 
-import Coaster from './Coaster.vue'
+import Coaster from './Coaster/Coaster.vue'
 export default {
   beforeMount () {
     this.$bindAsObject('coaster', coastersRef.child(this.$route.params.id))
