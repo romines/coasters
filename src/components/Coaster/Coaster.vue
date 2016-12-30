@@ -1,5 +1,5 @@
 <template lang="html">
-  <div v-if="coaster" class="box">
+  <div v-if="coaster" class="coaster">
     <div class="card is-fullwidth">
       <header class="card-header">
         <p class="card-header-title">
@@ -104,8 +104,10 @@ export default {
 </script>
 
 <style lang="scss" rel="stylesheet/scss">
+@import '../../../node_modules/bulma/bulma.sass';
+// @import '../../libs/base.scss';
 .coaster {
-  // border: 1px dashed white;
+  @extend .box;
   margin: 2%;
   padding: 2%;
   border-radius: 6px;
