@@ -30,8 +30,7 @@ const store = new Vuex.Store({
     modal: {
       show: false
     },
-    commenting: false,
-    detailKey: ''
+    commenting: false
   },
   mutations: {
   	increment: state => state.count++,
@@ -39,6 +38,10 @@ const store = new Vuex.Store({
     GET_COASTERS (state, coasters) {
       state.count = coasters.length
       state.coasters = coasters
+    },
+    GET_COASTER (state, coasterId) {
+      console.log('inside a mutation......trying to GET_COASTER', coaster);
+      state.detailCoaster.id = coasterId
     },
     SHOW_MODAL: (state, content) => {
       state.modal.show = true;

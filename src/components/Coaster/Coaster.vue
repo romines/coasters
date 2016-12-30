@@ -1,9 +1,9 @@
 <template lang="html">
-  <div class="box">
+  <div v-if="coaster" class="box">
     <div class="card is-fullwidth">
       <header class="card-header">
         <p class="card-header-title">
-          {{ title }} | {{ coaster.key }}
+          {{ getTitle(coaster) }} | {{ coaster.key }}
         </p>
         <a class="card-header-icon">
           <i class="fa fa-angle-down"></i>
@@ -25,7 +25,7 @@
           {{ coaster.comment }}</br>
 
 
-          <textarea v-if="commenting.isCommenting" class="textarea"></textarea>
+          <textarea v-if="commenting.isCommenting && isDetailView" class="textarea"></textarea>
 
           <small>{{ coaster.date }} - {{ coaster.time }}</small>
         </div>
@@ -46,27 +46,27 @@ import moment from 'moment'
 import mixins from '../../mixins'
 import * as myButton from '../widgets/Button.vue'
 export default {
-  props: ['coaster','as'],
   mixins: [mixins],
   data () {
     return {
       localComment: ''
     }
   },
+  props: ['coasterAsProp', 'as'],
   computed: {
-    weekday: function () {
-      // return moment(this.coaster.date).format('dddd')
-      return moment(this.coaster.date).format('dddd, MMM Do')
+    coaster () {
+      return this.coasterAsProp ? this.coasterAsProp : this.$store.getters.detailCoaster
     },
-    title:  function () {
-      return moment(this.coaster.date).format('dddd, MMM Do') + ' | ' + this.coaster.time + ' | ' + this.coaster.shiftType
-      return 'this is the title computed'
-    },
+
     commenting: function () {
       return {
-        isCommenting: this.$store.state.commenting,
+        isCommenting: this.$store.getters.commenting,
         comment:      ''
       }
+    },
+    isDetailView () {
+      // return this.$store.getters.detailShowing
+      return this.as === 'DETAIL'
     }
   },
   methods: {
@@ -74,6 +74,7 @@ export default {
       bus.$emit('remove-coaster', coaster)
     },
     makeDetail (coaster) {
+      if (!this.coaster) return
       router.push({ name: 'detail', params: { id: this.coaster.key }})
     },
     closeDetailView () {
@@ -83,7 +84,18 @@ export default {
     },
     startCommenting () {
       this.$store.commit('START_COMMENTING')
-    }
+    },
+    // getWeekday (coaster) {
+    //   if (this.coaster) {
+    //     return moment(coaster.date).format('dddd, MMM Do')
+    //   }
+    // },
+    getTitle:  function (coaster) {
+      if (coaster) {
+        return moment(coaster.date).format('dddd, MMM Do') + ' | ' + coaster.time + ' | ' + coaster.shiftType
+      }
+    },
+
   },
   components: {
     myButton

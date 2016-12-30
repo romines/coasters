@@ -1,6 +1,7 @@
 <template lang="html">
   <div class="detail">
-    <coaster :coaster="coaster" as="DETAIL"></coaster>
+    <div class="id"></div>
+    <coaster as:="'DETAIL'"></coaster>
   </div>
 </template>
 
@@ -13,9 +14,12 @@ const db = firebase.database()
 const coastersRef = db.ref('data/coasters')
 
 import Coaster from './Coaster/Coaster.vue'
+
 export default {
-  beforeMount () {
-    this.$bindAsObject('coaster', coastersRef.child(this.$route.params.id))
+  computed: {
+    // coaster () {
+    //   return this.$store.getters.detailCoaster
+    // }
   },
   components: {
     Coaster

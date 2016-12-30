@@ -30,7 +30,6 @@
 
 // everyone should probably have
 //
-import _ from 'underscore'
 import moment from 'moment'
 import bus from '../bus'
 
@@ -176,7 +175,7 @@ export default {
   },
   watch: {
     '$route' (to, from) {
-
+      console.log('watch be workin');
       this.$store.dispatch('getCoasters')
 
     }
@@ -206,17 +205,6 @@ export default {
       mProps.authState = this.authState
       return mProps
     }
-
-    // detail () {
-    //
-    //   let getCoasterByKey = (key) => {
-    //     let obj = {}
-    //     obj['.key'] = key
-    //     return _.where(this.coasters, obj)[0]
-    //   }
-    //
-    //   return getCoasterByKey(this.detailKey)
-    // }
   },
   methods: {
     handleAuthStateChange (e) {

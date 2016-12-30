@@ -4,7 +4,7 @@
     <span class="header" v-if="isHistory">Historical Shifts</span>
     <filters v-on:setDay="setDay($event)"></filters>
     <ul>
-      <coaster v-for="coaster in myCoasters" :coaster="coaster" as:="'LIST'"></coaster>
+      <coaster v-for="coaster in myCoasters" :coasterAsProp="coaster" as:="'LIST'"></coaster>
     </ul>
   </div>
 

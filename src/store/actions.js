@@ -24,7 +24,6 @@ const getCoasters = ({ commit, state }) => {
   }
 
   listRef.on('value', (snap) => {
-    console.log(state.route);
     let coasters = []
     snap.forEach((childSnap) => {
       let coaster = childSnap.val()
@@ -38,6 +37,14 @@ const getCoasters = ({ commit, state }) => {
 
 }
 
+// const getCoaster = ({ commit, state }, key) => {
+//   console.log('attempting to single out coaster from list...............', key);
+//
+//   commit('GET_COASTER', key)
+//
+//
+// }
+
 function newCoaster ({ commit }, coasterData) {
   let newCoasterRef = coastersRef.push()
   newCoasterRef.set(coasterData);
@@ -49,6 +56,6 @@ export {
     increment
   , getCoasters
   , newCoaster
-  // , startCommenting
+  // , getCoaster
 
 }
