@@ -1,14 +1,17 @@
 <template lang="html">
-  <div v-if="coaster" class="coaster">
+  <div v-if="coaster" @click="makeDetail()" class="coaster">
+
     <div class="card is-fullwidth">
+
       <header class="card-header">
         <p class="card-header-title">
-          {{ getTitle(coaster) }} | {{ coaster.key }}
+          {{ getTitle(coaster) }}
         </p>
-        <a class="card-header-icon">
-          <i class="fa fa-angle-down"></i>
+        <a v-if="isDetailView" @click="closeDetailView" class="card-header-icon">
+          <i class="fa fa-close"></i>
         </a>
       </header>
+
       <div class="card-content">
         <div class="media">
           <div class="media-left">
@@ -17,21 +20,20 @@
             </figure>
           </div>
           <div class="media-content">
-            <p class="title is-5">Is Commenting: {{ commenting.isCommenting }}</p>
-            <p class="subtitle is-6">@johnsmith</p>
+            <p class="title">Posted by:</p>
           </div>
         </div>
         <div class="content">
           {{ coaster.comment }}</br>
 
 
-          <textarea v-if="commenting.isCommenting && isDetailView" class="textarea"></textarea>
+          <textarea v-if="isCommenting && isDetailView" class="textarea"></textarea>
 
           <small>{{ coaster.date }} - {{ coaster.time }}</small>
         </div>
       </div>
-      <footer class="card-footer">
-        <a @click="makeDetail()" class="card-footer-item">Pick Up</a>
+      <footer v-if="isDetailView" class="card-footer">
+        <a class="card-footer-item">Pick Up</a>
         <a @click="startCommenting()" class="card-footer-item">Comment</a>
         <a class="card-footer-item">Delete</a>
       </footer>
@@ -40,7 +42,6 @@
 </template>
 
 <script>
-import bus from '../../bus'
 import router from '../../router'
 import moment from 'moment'
 import mixins from '../../mixins'
@@ -49,7 +50,8 @@ export default {
   mixins: [mixins],
   data () {
     return {
-      localComment: ''
+      localComment: '',
+      isCommenting: false
     }
   },
   props: ['coasterAsProp', 'as'],
@@ -58,38 +60,25 @@ export default {
       return this.coasterAsProp ? this.coasterAsProp : this.$store.getters.detailCoaster
     },
 
-    commenting: function () {
-      return {
-        isCommenting: this.$store.getters.commenting,
-        comment:      ''
-      }
-    },
     isDetailView () {
-      // return this.$store.getters.detailShowing
-      return this.as === 'DETAIL'
+      return this.$store.state.route.name === 'detail'
     }
   },
   methods: {
-    removeCoaster (coaster) {
-      bus.$emit('remove-coaster', coaster)
-    },
+
     makeDetail (coaster) {
       if (!this.coaster) return
       router.push({ name: 'detail', params: { id: this.coaster.key }})
     },
     closeDetailView () {
-      bus.$emit('msg', {
-        type: bus.CLOSE_DETAIL
-      })
+      router.push({ path: '/'})
     },
     startCommenting () {
-      this.$store.commit('START_COMMENTING')
+      this.isCommenting = true;
     },
-    // getWeekday (coaster) {
-    //   if (this.coaster) {
-    //     return moment(coaster.date).format('dddd, MMM Do')
-    //   }
-    // },
+    cancelComment () {
+      this.isCommenting = false;
+    },
     getTitle:  function (coaster) {
       if (coaster) {
         return moment(coaster.date).format('dddd, MMM Do') + ' | ' + coaster.time + ' | ' + coaster.shiftType
@@ -104,44 +93,13 @@ export default {
 </script>
 
 <style lang="scss" rel="stylesheet/scss">
-// @import '../../../node_modules/bulma/bulma.sass';
-// @import '../../libs/base.scss';
+
 .coaster {
+  &:hover {
+    cursor: pointer;
+  }
 
-  margin: 2%;
-  padding: 2%;
-  border-radius: 6px;
-  ul {
-    max-width: 38em;
-  }
 }
-div.type, div.type-label {
-  display: inline-block;
-  text-align: center;
-}
-div.type {
-  max-width: 16%;
-  img {
-    width: 100%;
-  }
-}
-
-.actions {
-  text-align: right;
-  button {
-    min-width: 38%;
-  }
-  .in-contain {
-    display: inline-block;
-    button.pick-up {
-      border-radius: 0px;
-    }
-  }
-}
-
-  li {
-    background-color: rgb(67, 97, 154);
-  }
 
 
 </style>

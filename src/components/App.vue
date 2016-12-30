@@ -63,15 +63,8 @@ const coastersRef = db.ref('data/coasters')
 // anything that works out here can be moved to modules/helpers
 
 // these are shift actions
-function removeCoaster(arbitraryRef, key) {
-  arbitraryRef.child(key).remove()
-}
-function newCoaster(coaster) {
-  if (!coaster) return
-  let decoratedCoaster = Object.assign({pickedUp: false}, coaster)
-  coastersRef.push(decoratedCoaster)
-  router.push({path: '/'})
-}
+
+
 
 function showModal(vm, e) {
   vm.modal.show = true;
@@ -90,13 +83,7 @@ function attachListeners(vm) {
   // can all be moved to a module! But it must have access to all the methods it
   // references
 
-  bus.$on('remove-coaster', (coaster) => {
-    removeCoaster(coastersRef, coaster['.key'])
-  })
-  bus.$on('new-coaster', (coasterData) => {
-    console.log('new-coaster event');
-    newCoaster(coasterData)
-  })
+
   bus.$on('msg', (event) => {
     switch (event.type) {
       case bus.SIGN_IN:
@@ -108,16 +95,7 @@ function attachListeners(vm) {
       case bus.AUTH_STATE_CHANGE:
         vm.handleAuthStateChange(event)
         break;
-      case bus.MAKE_DETAIL:
-        vm.detailKey = event.payload['.key']
-        router.push({
-          name: 'detail',
-          params: { key: event.payload['.key']}
-        })
-        break;
-      case bus.CLOSE_DETAIL:
-        router.push({ path: '/' })
-        break;
+
       case bus.SHOW_MODAL:
         showModal(vm, event)
         break;
