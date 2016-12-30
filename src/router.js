@@ -49,6 +49,7 @@ const routes = [
   { path: '/coasters', component: App, alias: '/',
     children: [
       {
+        name: 'home',
         path: '',
         component: List // List should be child of a 'Home' component
       },

@@ -146,6 +146,7 @@ export default {
   },
   created () {
     attachListeners(this)
+    this.$store.dispatch('getCoasters')
   },
   data: function () {
     return {
@@ -173,13 +174,15 @@ export default {
       }
     }
   },
-  watch: {
-    '$route' (to, from) {
-      console.log('watch be workin');
-      this.$store.dispatch('getCoasters')
-
-    }
-  },
+  // watch: {
+  //   '$route' (to, from) {
+  //     console.log(to, from);
+  //     if (to.name === 'home') {
+  //       console.log('get coasters again?');
+  //     }
+  //
+  //   }
+  // },
   computed: {
     count () {
       return this.$store.state.count

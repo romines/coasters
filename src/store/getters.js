@@ -42,7 +42,7 @@ const detailCoaster = (state) => {
   })
 
   // return getCoasterByKey(state.route.params.id)
-  // let myCoaster = state.coasters.find((coaster) => {
+  // myCoaster = state.coasters.find((coaster) => {
   //   return coaster.key === state.route.params.id
   // })
   console.log(myCoaster);
