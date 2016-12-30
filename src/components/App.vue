@@ -231,10 +231,11 @@ export default {
   }
 }
 </script>
-<style src="bulma/css/bulma.css"></style>
+<!-- <style src="bulma/css/bulma.css"></style> -->
 
-<style>
-
+<style lang="scss">
+@import '../../node_modules/bulma/bulma.sass';
+.coaster { @extend .box }
 ul {
   list-style-type: none;
 }

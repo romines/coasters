@@ -104,10 +104,10 @@ export default {
 </script>
 
 <style lang="scss" rel="stylesheet/scss">
-@import '../../../node_modules/bulma/bulma.sass';
+// @import '../../../node_modules/bulma/bulma.sass';
 // @import '../../libs/base.scss';
 .coaster {
-  @extend .box;
+
   margin: 2%;
   padding: 2%;
   border-radius: 6px;
