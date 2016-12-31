@@ -1,19 +1,19 @@
 <template>
   <form class="auth-form" >
 
-    <div v-show="!myProps.authState.user" class="no-user">
+    <div v-show="!authState.user" class="no-user">
       <h2>{{wantsToSignUp ? 'Sign up' : 'Sign in'}}</h2>
       <p class="control has-icon">
-        <input class="input" type="email" placeholder="Email">
+        <input v-model="email" class="input" type="email" placeholder="Email">
         <i class="fa fa-envelope"></i>
       </p>
       <p class="control has-icon">
-        <input class="input" type="password" placeholder="Password">
+        <input v-model="password" class="input" type="password" placeholder="Password">
         <i class="fa fa-lock"></i>
       </p>
       <div v-show="wantsToSignUp">
         <p class="control has-icon">
-          <input class="input" type="password" placeholder="Confirm Password">
+          <input v-model="confirmPassword" class="input" type="password" placeholder="Confirm Password">
           <i class="fa fa-lock"></i>
         </p>
       </div>
@@ -24,10 +24,9 @@
       <div v-show="wantsToSignUp">
         <button @click="signUp" class="button">Sign up</button>
       </div>
-
     </div>
 
-    <button v-show="myProps.authState.user" @click="logOut" class="button">Log out</button>
+    <button v-show="authState.user" @click="logOut" class="button">Log out</button>
     <hr>
     <div class="social-providers">
       <a href="#"><i class="fa fa-facebook-square" aria-hidden="true"></i></a>
@@ -44,6 +43,9 @@
     created () {
       console.log(this.myProps);
     },
+    computed : {
+      authState () { return this.$store.state.authState }
+    },
     data () {
       return {
         email: '',
@@ -54,22 +56,14 @@
     },
     methods: {
       signIn () {
-        bus.$emit('msg', {
-          type: bus.SIGN_IN,
-          payload: {email: this.email, password: this.password}
-        })
+        this.$store.dispatch('logInUser', {email: this.email, password: this.password})
       },
       signUp () {
-        bus.$emit('msg', {
-          type: bus.CREATE_USER,
-          payload: {email: this.email, password: this.password}
-        })
+        console.log(this.email, this.password);
+        this.$store.dispatch('signUpUser', {email: this.email, password: this.password})
       },
       logOut () {
-        bus.$emit('msg', {
-          type: bus.LOG_OUT_USER,
-          payload: {}
-        })
+        this.$store.dispatch('logOutUser')
       }
     }
   }

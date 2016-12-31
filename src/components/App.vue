@@ -125,6 +125,7 @@ export default {
   created () {
     attachListeners(this)
     this.$store.dispatch('getCoasters')
+    this.$store.dispatch('listenToFbAuthState')
   },
   data: function () {
     return {
@@ -182,9 +183,7 @@ export default {
       }
     },
     modalProps () {
-      let mProps = this.modal
-      mProps.authState = this.authState
-      return mProps
+      return this.$store.state.modal
     }
   },
   methods: {

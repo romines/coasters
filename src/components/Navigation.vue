@@ -13,8 +13,11 @@
       <span class="nav-item" href="#">
         <router-link to="/new" class="button" :class="{ 'is-active': navState.post }">Post New</router-link>
       </span>
-      <span class="nav-item" href="#">
-        <span @click="logMeIn" class="button">Login</span>
+      <span v-show="!authState.user" class="nav-item" href="#">
+        <span @click="launchLoginModal" class="button">Login</span>
+      </span>
+      <span v-show="authState.user" class="nav-item" href="#">
+        <span @click="logOut" class="button">Logout</span>
       </span>
     </div>
 
@@ -33,6 +36,9 @@ export default {
   props: ['myProps'],
 
   computed: {
+    authState () {
+      return this.$store.state.authState
+    },
     navState () {
       return {
         home: this.$store.state.route.path === '/',
@@ -43,13 +49,11 @@ export default {
   },
 
   methods: {
-    logMeIn () {
-      bus.$emit('msg', {
-        type: bus.SHOW_MODAL,
-        payload: {
-          modalContent: 'login'
-        }
-      })
+    launchLoginModal () {
+      this.$store.commit('SHOW_MODAL')
+    },
+    logOut () {
+      this.$store.dispatch('logOutUser')
     }
   }
 }

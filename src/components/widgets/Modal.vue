@@ -24,17 +24,15 @@ export default {
   },
   computed: {
     show () {
-      return this.myProps.show
+      return this.$store.state.modal.show
     }
   },
   mounted () {},
   methods: {
-    close: function () {
-      bus.$emit('msg', {
-        type: bus.CLOSE_MODAL,
-        payload: {}
-      })
+    close () {
+      this.$store.commit('')
     },
+
     savePost: function () {
       this.close();
     }
