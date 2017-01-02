@@ -4,7 +4,7 @@
     <span class="header" v-if="isHistory">Historical Shifts</span>
     <filters v-on:setDay="setDay($event)"></filters>
     <ul>
-      <coaster v-for="coaster in myCoasters" :coasterAsProp="coaster" as:="'LIST'"></coaster>
+      <coaster v-for="coaster in filteredCoasters" :coasterAsProp="coaster" as:="'LIST'"></coaster>
     </ul>
   </div>
 
@@ -23,7 +23,7 @@ import { mapGetters } from 'vuex'
 // TODO
 
 export default {
-  props: ['coasters', 'dayIndex', 'myProps'],
+  props: ['dayIndex'],
   data () {
     return {
       order: 'DESC',
@@ -35,7 +35,7 @@ export default {
   computed: {
     // this will be a computed binding to something like store.currentList
     //
-    myCoasters () {
+    coasters () {
       return this.$store.getters.myCoasters
     },
     filteredCoasters () {

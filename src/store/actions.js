@@ -12,7 +12,7 @@ const increment = ({ commit }) => {
   }, 684)
 }
 
-const getCoasters = ({ commit, state }) => {
+function getCoasters ({ commit, state }) {
 
   let today = moment().format('YYYY-MM-DD')
   let listRef

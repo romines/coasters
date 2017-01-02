@@ -30,11 +30,7 @@ export default {
   mounted () {},
   methods: {
     close () {
-      this.$store.commit('')
-    },
-
-    savePost: function () {
-      this.close();
+      this.$store.commit('CLOSE_MODAL')
     }
   },
   components: {}
@@ -42,9 +38,6 @@ export default {
 </script>
 
 <style lang="css">
-* {
-    box-sizing: border-box;
-}
 
 .modal-mask {
     position: fixed;

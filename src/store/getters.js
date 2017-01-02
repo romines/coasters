@@ -12,16 +12,6 @@ const commenting = (state) => {
   return state.commenting && (!state.route.path.includes('history')) // state.detailShowing
 }
 
-const detailShowing = (state) => {
-
-  function isDetail() {
-    // return !state.route.path.includes('history')
-    return true
-  }
-
-  return isDetail()
-}
-
 const detailKey = (state) => {
   return state.route.params.id
 }
@@ -37,7 +27,6 @@ const detailCoaster = (state) => {
 
   let myCoaster
   state.coasters.forEach((coaster) => {
-    console.log(coaster.key, state.route.params.id, (coaster.key === state.route.params.id))
     if (coaster.key === state.route.params.id) myCoaster = coaster
   })
 
@@ -53,7 +42,6 @@ const detailCoaster = (state) => {
 export { hundreds
   , myCoasters
   , commenting
-  , detailShowing
   , detailKey
   , detailCoaster
  }

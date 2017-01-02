@@ -15,28 +15,26 @@
       <div class="card-content">
         <div class="media">
           <div class="media-left">
-            <figure class="image is-32x32">
-              <img src="http://placehold.it/64x64" alt="Image">
+            <figure class="posted-by-user-icon image is-32x32">
+
+              <i class="fa fa-user"></i>
             </figure>
           </div>
           <div class="media-content">
-            <p class="title">Posted by:</p>
+            <p class="title">Amy Joe</p>
           </div>
         </div>
         <div class="content">
           {{ coaster.comment }}</br>
 
-
+          <small>Posted:</small>
+          <action-buttons></action-buttons>
           <textarea v-if="isCommenting && isDetailView" class="textarea"></textarea>
 
-          <small>{{ coaster.date }} - {{ coaster.time }}</small>
         </div>
       </div>
-      <footer v-if="isDetailView" class="card-footer">
-        <a class="card-footer-item">Pick Up</a>
-        <a @click="startCommenting()" class="card-footer-item">Comment</a>
-        <a class="card-footer-item">Delete</a>
-      </footer>
+
+
     </div>
   </div>
 </template>
@@ -46,7 +44,13 @@ import router from '../../router'
 import moment from 'moment'
 import mixins from '../../mixins'
 import * as myButton from '../widgets/Button.vue'
+import ActionButtons from './ActionButtons.vue'
+console.log(ActionButtons);
 export default {
+  components: {
+    ActionButtons,
+    myButton
+  },
   mixins: [mixins],
   data () {
     return {
@@ -85,9 +89,6 @@ export default {
       }
     },
 
-  },
-  components: {
-    myButton
   }
 }
 </script>
@@ -97,6 +98,11 @@ export default {
 .coaster {
   &:hover {
     cursor: pointer;
+  }
+
+  .posted-by-user-icon {
+    text-align: center;
+    vertical-align: middle;
   }
 
 }

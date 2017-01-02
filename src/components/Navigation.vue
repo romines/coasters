@@ -8,7 +8,7 @@
         <router-link to="/" class="button" :class="{ 'is-active': navState.home }">Home</router-link>
       </span>
       <span class="nav-item" href="#">
-        <router-link to="/history" class="button" :class="{ 'is-active': navState.history }">Picked Up</router-link>
+        <span @click="toHistory" class="button" :class="{ 'is-active': navState.history }">Picked Up</span>
       </span>
       <span class="nav-item" href="#">
         <router-link to="/new" class="button" :class="{ 'is-active': navState.post }">Post New</router-link>
@@ -27,6 +27,7 @@
 
 <script>
 import bus from '../bus'
+import router from '../router'
 
 
 export default {
@@ -54,6 +55,10 @@ export default {
     },
     logOut () {
       this.$store.dispatch('logOutUser')
+    },
+    toHistory () {
+      router.push({ path: '/history' })
+      this.$store.dispatch('getCoasters')
     }
   }
 }

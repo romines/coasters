@@ -39,9 +39,7 @@
 <script>
   import bus from '../bus'
   export default {
-    props: ['myProps'],
     created () {
-      console.log(this.myProps);
     },
     computed : {
       authState () { return this.$store.state.authState }

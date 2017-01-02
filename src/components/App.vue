@@ -5,22 +5,8 @@
 
     <navigation></navigation>
 
-    <div class="make-local">
-      <section class="section">
-        <h3>count: {{count}}</h3>
-        <h3>hundreds: {{hundreds}}</h3>
-        <button class="button" @click="increment">+</button>
-        <button class="button" @click="decrement">-</button>
-        <button class="button" @click="incrementAsync">increment eventually</button>
-        <br>
-        <br>
-        <br>
-        <button class="button" @click="makeLocal">Local</button>
-        <button class="button" @click="makeFirebase">Firebase</button>
-      </section>
-    </div>
     <section class="section">
-      <router-view :coasters="currentList" :myProps="routerViewProps"></router-view>
+      <router-view :coasters="coasters" :myProps="routerViewProps"></router-view>
     </section>
 
   </div>
@@ -66,16 +52,6 @@ const coastersRef = db.ref('data/coasters')
 
 
 
-function showModal(vm, e) {
-  vm.modal.show = true;
-}
-function closeModal(vm, e) {
-  vm.modal.show = false;
-}
-
-
-
-
 function attachListeners(vm) {
 
   // TODO: We want to get event 'routing' out of App component while still updating
@@ -84,62 +60,22 @@ function attachListeners(vm) {
   // references
 
 
-  bus.$on('msg', (event) => {
-    switch (event.type) {
-      case bus.SIGN_IN:
-        auth.handleLoginEvent(event)
-        break;
-      case bus.LOG_OUT_USER:
-        handleLogOutUserEvent()
-        break;
-      case bus.AUTH_STATE_CHANGE:
-        vm.handleAuthStateChange(event)
-        break;
 
-      case bus.SHOW_MODAL:
-        showModal(vm, event)
-        break;
-      case bus.CLOSE_MODAL:
-        closeModal(vm, event)
-        break;
-      case bus.CHANGE_LIST:
-        console.log('change list, please')
-        vm.$bindAsArray('pickedUp', fbRefFromChild('pickedUp', true))
-        vm.currentList = vm.pickedUp
-        break;
-      default:
-        console.log("An indeterminate message was emitted");
-    }
-  })
 }
 
 export default {
-  firebase: {
-    coasters: coastersRef.orderByChild('date').startAt('2016-01-02')
-    // notPickedUp: coastersRef.orderByChild('pickedUp').equalTo(false)
-  },
+
   components: {
     Navigation,
     Modal
   },
   created () {
-    attachListeners(this)
     this.$store.dispatch('getCoasters')
     this.$store.dispatch('listenToFbAuthState')
   },
   data: function () {
     return {
-      list: 'offLine',
-      modal: {
-        show: false,
-        noties: [
-          {
-            foo: 'this is a notification'
-          }
-        ]
-      },
-      detailKey: null,
-      // we can organize all props than need to be passed to <router-view> components
+
       authState: {
         status: 'LOGGED_IN',
         user: null
@@ -153,28 +89,12 @@ export default {
       }
     }
   },
-  // watch: {
-  //   '$route' (to, from) {
-  //     console.log(to, from);
-  //     if (to.name === 'home') {
-  //       console.log('get coasters again?');
-  //     }
-  //
-  //   }
-  // },
+
   computed: {
-    count () {
-      return this.$store.state.count
-    },
-    hundreds () {
-      return this.$store.getters.hundreds
-    },
-    currentList () {
-      if (this.list === 'offLine') {
-        return this.$store.state.coasters
-      } else {
-        return this.coasters
-      }
+
+    coasters () {
+      return this.$store.state.coasters
+
     },
 
     routerViewProps () {
@@ -187,9 +107,7 @@ export default {
     }
   },
   methods: {
-    handleAuthStateChange (e) {
-      console.log(e)
-    },
+
     makeLocal () {
       this.list = 'offLine'
     },
