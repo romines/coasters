@@ -99,10 +99,12 @@ export default {
   &:hover {
     cursor: pointer;
   }
-
-  .posted-by-user-icon {
+  .media-left {
     text-align: center;
-    vertical-align: middle;
+    .fa-user {
+      vertical-align: middle;
+      line-height: inherit;
+    }
   }
 
 }

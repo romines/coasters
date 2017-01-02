@@ -2,7 +2,7 @@
   <form class="auth-form" >
 
     <div v-show="!authState.user" class="no-user">
-      <h2>{{wantsToSignUp ? 'Sign up' : 'Sign in'}}</h2>
+      <h2 class='title'>{{wantsToSignUp ? 'Sign up' : 'Login'}}</h2>
       <p class="control has-icon">
         <input v-model="email" class="input" type="email" placeholder="Email">
         <i class="fa fa-envelope"></i>
@@ -18,7 +18,7 @@
         </p>
       </div>
       <div v-show="!wantsToSignUp" class="clearfix btn-group">
-        <button @click="signIn" class="button">Sign in</button>
+        <button @click="signIn" class="button">Login</button>
         <button type="button" v-on:click="wantsToSignUp = true" class="button">Sign up</button>
       </div>
       <div v-show="wantsToSignUp">
@@ -31,8 +31,6 @@
     <div class="social-providers">
       <a href="#"><i class="fa fa-facebook-square" aria-hidden="true"></i></a>
       <a href="#"><i class="fa fa-twitter-square" aria-hidden="true"></i></a>
-      <a href="#"><i class="fa fa-google-plus-square" aria-hidden="true"></i></a>
-      <a href="#"><i class="fa fa-github-square" aria-hidden="true"></i></a>
     </div>
   </form>
 </template>
@@ -66,6 +64,12 @@
     }
   }
 </script>
-<style>
+<style lang="scss">
+  .auth-form {
 
+    h2 {
+      margin-bottom: .5em;
+    }
+
+  }
 </style>
