@@ -21,27 +21,29 @@
         <div :class="{ 'is-active' : burgerActive}" class="nav-right nav-menu">
           <span class="nav-item"  href="#">
             <a @click="toHome" class="button" :class="{ 'is-active': navState.home }">
-              <i class="fa fa-home"></i>
+              <i class="icon-only fa fa-home"></i>
               <span class="text-only">Home</span>
             </a>
           </span>
           <span class="nav-item" href="#">
             <a @click="toHistory" class="button" :class="{ 'is-active': navState.history }">
-              <i class="fa fa-history"></i>
+              <i class="icon-only fa fa-history"></i>
               <span class="text-only">History</span>
             </a>
           </span>
           <span class="nav-item" @click='burgerActive = !burgerActive' href="#">
             <router-link to="/new" class="button" :class="{ 'is-active': navState.post }">
-              <i class="fa fa-plus"></i>
+              <i class="icon-only fa fa-plus"></i>
               <span class="text-only">Post New</span>
             </router-link>
           </span>
           <span v-show="!authState.user" class="nav-item" href="#">
             <span @click="launchLoginModal" class="button">Login</span>
           </span>
-          <span v-show="authState.user" class="nav-item welcome-user">
-            {{displayName}} <i class="fa fa-user"></i>
+          <span v-show="authState.user" class="nav-item user">
+            <i class="icon-only fa fa-user"></i>
+            <span class="display-name">{{displayName}}</span>
+            <span @click="logOut"><i class="fa fa-power-off"></i></span>
           </span>
 
         </div>
@@ -63,7 +65,8 @@ import router from '../router'
 export default {
   data () {
     return {
-      burgerActive: false
+      burgerActive: false,
+      userMenuActive: true
     }
   },
   props: ['myProps'],
@@ -123,13 +126,22 @@ export default {
   margin-bottom: .6em;
   z-index: 11;
 
-  .fa-user { margin-left: .7em; }
+  .icon-only {
+    display: none;
+    @include desktop {
+      display: inline;
+    };
+  }
+
+  .fa-user, .display-name { margin: 0 .7em; }
 
   .text-only {
     @include desktop {
       display: none;
     };
   }
+
+  .user { justify-content: center; }
 
 }
 </style>

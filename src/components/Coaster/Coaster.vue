@@ -26,10 +26,11 @@
         </div>
         <div class="content">
           {{ coaster.comment }}</br>
-
-          <small>Posted:</small>
-          <action-buttons></action-buttons>
-          <textarea v-if="isCommenting && isDetailView" class="textarea"></textarea>
+          <div v-if="isDetailView" class="details">
+            <small>Posted:</small>
+            <action-buttons></action-buttons>
+            <textarea v-if="isCommenting" class="textarea"></textarea>
+          </div>
 
         </div>
       </div>

@@ -1,10 +1,6 @@
 {
   "rules": {
     ".read": true,
-    ".write": true,
-    "data":      {
-      "coasters": {
-        ".indexOn": "date"
-    }
+    ".write": true
   }
 }

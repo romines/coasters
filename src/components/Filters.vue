@@ -10,7 +10,8 @@
   	<button @click="setDayFilter($event)" class="dayOfWeek">R</button>
   	<button @click="setDayFilter($event)" class="dayOfWeek">F</button>
   	<button @click="setDayFilter($event)" class="dayOfWeek">S</button>
-  	<img @click="clearDayFilter" class="close" :src="loadSvg('close')" />
+    <i @click="clearDayFilter" class="fa fa-close"></i>
+
     </span>
   </div>
 </template>
