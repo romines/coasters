@@ -1,8 +1,4 @@
-import _ from 'underscore'
 
-const hundreds = (state) => {
-  return state.count * 100
-}
 
 const myCoasters = (state) => {
   return state.coasters
@@ -39,8 +35,7 @@ const detailCoaster = (state) => {
 
 }
 
-export { hundreds
-  , myCoasters
+export { myCoasters
   , commenting
   , detailKey
   , detailCoaster

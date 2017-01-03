@@ -1,6 +1,6 @@
 <template>
   <div id="my-app" class="container">
-
+    
     <modal :myProps="modalProps"></modal>
 
     <navigation></navigation>
