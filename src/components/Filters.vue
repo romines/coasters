@@ -1,15 +1,11 @@
 <template lang="html">
   <div class="filters">
-    <button @click="reverseList">Reverse</button>
+    <!-- <button @click="reverseList">Reverse</button> -->
     <span class="days">
 
-  	<button @click="setDayFilter($event)" class="dayOfWeek">S</button>
-  	<button @click="setDayFilter($event)" class="dayOfWeek">M</button>
-  	<button @click="setDayFilter($event)" class="dayOfWeek">T</button>
-  	<button @click="setDayFilter($event)" class="dayOfWeek">W</button>
-  	<button @click="setDayFilter($event)" class="dayOfWeek">R</button>
-  	<button @click="setDayFilter($event)" class="dayOfWeek">F</button>
-  	<button @click="setDayFilter($event)" class="dayOfWeek">S</button>
+    <span v-for="shiftType in shiftTypes" @click="setShiftFilter(shiftType)" class="shiftType button"><img v-bind:src="loadSvg(shiftType)" alt=""></span>
+    <br>
+    <span v-for="day in daysOfTheWeek" @click="setDayFilter($event)" class="dayOfWeek button">{{day}}</span>
     <i @click="clearDayFilter" class="fa fa-close"></i>
 
     </span>
@@ -21,6 +17,12 @@ import mixins from '../mixins'
 import bus from '../bus'
 import moment from 'moment'
 export default {
+  data () {
+    return {
+      daysOfTheWeek: ['S','M','T','W','R','F','S'],
+      shiftTypes: ['Host', 'Bus', 'Barback', 'Serve', 'Bartend']
+    }
+  },
 	methods: {
 
 		setDayFilter (e) {
@@ -34,6 +36,10 @@ export default {
 
 		},
 
+    setShiftFilter (e) {
+      console.log(e);
+    },
+
     clearDayFilter () { this.$emit('setDay', -1) },
     reverseList () {console.log('list reversal requested');}
 
@@ -45,4 +51,14 @@ export default {
 </script>
 
 <style lang="scss" rel="stylesheet/scss">
+  @import '../../node_modules/bulma/sass/utilities/variables.sass';
+  .dayOfWeek {
+    font-family: $family-monospace
+  }
+  .shiftType {
+    img {
+      width: 1em;
+    }
+  }
+
 </style>
