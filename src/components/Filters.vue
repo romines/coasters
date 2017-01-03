@@ -2,12 +2,17 @@
   <div class="filters">
     <!-- <button @click="reverseList">Reverse</button> -->
 
-    <span v-for="shiftType in shiftTypes" @click="setShiftFilter(shiftType)" class="shiftType button"><img v-bind:src="loadSvg(shiftType)" alt=""></span>
+    <span
+      v-for="(shiftType, index) in shiftTypes"
+      @click="toggleFilter($event, 'shiftTypes')"
+      class="shiftType button">
+      <img v-bind:src="loadSvg(shiftType)" alt="">
+    </span>
     <br>
     <div class="days">
       <span v-for="(day, index) in daysOfTheWeek"
-        @click="setDayFilter($event)"
-        v-bind:class="{'is-active':isActiveDay(index)}"
+        @click="toggleFilter($event, 'days')"
+        v-bind:class="{ 'is-active': isActiveDay(index) }"
         class="dayOfWeek button">{{day}}
       </span>
       <span @click="clearDayFilter" class="button">Clear All</span>
@@ -22,7 +27,7 @@ import moment from 'moment'
 export default {
   data () {
     return {
-      daysOfTheWeek: ['S','M','T','W','R','F','S'],
+      daysOfTheWeek: ['S', 'M', 'T', 'W', 'R', 'F', 'S'],
       shiftTypes: ['Host', 'Bus', 'Barback', 'Serve', 'Bartend']
     }
   },
@@ -34,16 +39,24 @@ export default {
       }
     },
 
-		setDayFilter (e) {
+		toggleFilter (e, type) {
+
       let parent = e.target.parentElement
-      let day = Array.prototype.indexOf.call(parent.children, e.target)
+      let value = Array.prototype.indexOf.call(parent.children, e.target)
+      let indexInFilters = this.$store.state.coasterFilters[type].indexOf(value)
 
-      let dayIndexInFilters = this.$store.state.coasterFilters.days.indexOf(day)
+      let payload = {
+        filterType: type,
+        filter: value
+      }
 
-      if (dayIndexInFilters !== -1) {
-        this.$store.commit('REMOVE_FILTER', dayIndexInFilters)
+      if (indexInFilters !== -1) {  // if already applied, remove
+        payload.index = indexInFilters;
+        this.$store.commit('REMOVE_FILTER', payload)
+
       } else {
-        this.$store.commit('ADD_FILTER', day)
+        payload.filter = value
+        this.$store.commit('ADD_FILTER', payload)
       }
 
 		},

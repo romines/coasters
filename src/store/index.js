@@ -60,13 +60,13 @@ const store = new Vuex.Store({
       console.log('inside a mutation......trying to GET_COASTER', coaster);
       state.detailCoaster.id = coasterId
     },
-    ADD_FILTER (state, filter) {
+    ADD_FILTER (state, {filter}) {
       state.coasterFilters.days = [...state.coasterFilters.days, filter]
     },
-    REMOVE_FILTER (state, index) {
+    REMOVE_FILTER (state, {filterType, index}) {
       state.coasterFilters.days = [
-        ...state.coasterFilters.days.slice(0, index),
-        ...state.coasterFilters.days.slice(index + 1),
+        ...state.coasterFilters[filterType].slice(0, index),
+        ...state.coasterFilters[filterType].slice(index + 1),
       ]
     },
     CLEAR_FILTERS (state) {
