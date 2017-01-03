@@ -38,6 +38,10 @@ function getCoasters ({ commit, state }) {
 
 }
 
+function addFilter({ commit }, filter) {
+  commit('ADD_FILTER', filter)
+}
+
 function signUpUser({}, user) {
   console.log(user.email, user.password)
   auth.createUserWithEmailAndPassword(user.email, user.password).then(() => {
@@ -79,6 +83,7 @@ export {
     increment
   , getCoasters
   , newCoaster
+  , addFilter
   , listenToFbAuthState
   , signUpUser
   , logInUser

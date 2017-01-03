@@ -28,28 +28,31 @@ export default {
     return {
       order: 'DESC',
       prop: 'date',//'.key',
-      dayNumber: -1
+      dayNumber: -1,
+      // days: [0,1,2,3,4,5,6]
+      selectedDays: []
     }
   },
   mixins: [mixins],
   computed: {
-    // this will be a computed binding to something like store.currentList
-    //
+    selectedDays () {
+      return this.$store.state.coasterFilters.days
+    },
     coasters () {
       return this.$store.getters.myCoasters
     },
     filteredCoasters () {
-      let filteredByDay = this.coasters.filter((coaster) => {
-        if (this.dayNumber < 0) return true
-        return moment(coaster.date).day() === this.dayNumber
-      })
 
-      if (this.order === 'ASC') {
-        return _.sortBy(filteredByDay, this.prop).reverse()
+      const withinSelectedDays = (coaster) => {
+        if (this.selectedDays.length === 0) return true
+        let coasterDay = moment(coaster.date).day()
+        return this.selectedDays.some((day) => {
+          return day === coasterDay
+        })
       }
-      else {
-        return _.sortBy(filteredByDay, this.prop)
-      }
+
+      return this.coasters.filter(withinSelectedDays)
+
     },
     isHistory () {
       if (this.$route.path === '/history') return true

@@ -1,14 +1,17 @@
 <template lang="html">
   <div class="filters">
     <!-- <button @click="reverseList">Reverse</button> -->
-    <span class="days">
 
     <span v-for="shiftType in shiftTypes" @click="setShiftFilter(shiftType)" class="shiftType button"><img v-bind:src="loadSvg(shiftType)" alt=""></span>
     <br>
-    <span v-for="day in daysOfTheWeek" @click="setDayFilter($event)" class="dayOfWeek button">{{day}}</span>
-    <i @click="clearDayFilter" class="fa fa-close"></i>
-
-    </span>
+    <div class="days">
+      <span v-for="(day, index) in daysOfTheWeek"
+        @click="setDayFilter($event)"
+        v-bind:class="{'is-active':isActiveDay(index)}"
+        class="dayOfWeek button">{{day}}
+      </span>
+      <span @click="clearDayFilter" class="button">Clear All</span>
+    </div>
   </div>
 </template>
 
@@ -24,15 +27,24 @@ export default {
     }
   },
 	methods: {
+    isActiveDay (day) {
+
+      if (this.$store.state.coasterFilters.days.indexOf(day) !== -1) {
+        return true
+      }
+    },
 
 		setDayFilter (e) {
-      let getElemIndex = (node) => {
-        let parent = node.parentElement
-        return Array.prototype.indexOf.call(parent.children, node)
-      }
-      console.log(e.target, getElemIndex(e.target));
+      let parent = e.target.parentElement
+      let day = Array.prototype.indexOf.call(parent.children, e.target)
 
-			this.$emit('setDay', getElemIndex(e.target))
+      let dayIndexInFilters = this.$store.state.coasterFilters.days.indexOf(day)
+
+      if (dayIndexInFilters !== -1) {
+        this.$store.commit('REMOVE_FILTER', dayIndexInFilters)
+      } else {
+        this.$store.commit('ADD_FILTER', day)
+      }
 
 		},
 
@@ -40,7 +52,7 @@ export default {
       console.log(e);
     },
 
-    clearDayFilter () { this.$emit('setDay', -1) },
+    clearDayFilter () { this.$store.commit('CLEAR_FILTERS') },
     reverseList () {console.log('list reversal requested');}
 
 	},

@@ -28,6 +28,11 @@ const store = new Vuex.Store({
     },
     count: 0,
     coasters: [],
+    coasterFilters: {
+      days: [],
+      times: [],
+      shiftTypes: []
+    },
     modal: {
       show: false,
       notifications: []
@@ -54,6 +59,18 @@ const store = new Vuex.Store({
     GET_COASTER (state, coasterId) {
       console.log('inside a mutation......trying to GET_COASTER', coaster);
       state.detailCoaster.id = coasterId
+    },
+    ADD_FILTER (state, filter) {
+      state.coasterFilters.days = [...state.coasterFilters.days, filter]
+    },
+    REMOVE_FILTER (state, index) {
+      state.coasterFilters.days = [
+        ...state.coasterFilters.days.slice(0, index),
+        ...state.coasterFilters.days.slice(index + 1),
+      ]
+    },
+    CLEAR_FILTERS (state) {
+      state.coasterFilters.days = []
     },
     SHOW_MODAL: (state, content) => {
       state.modal.show = true;
