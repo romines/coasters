@@ -1,6 +1,7 @@
 <template lang="html">
+
   <div class="filters">
-    <!-- <button @click="reverseList">Reverse</button> -->
+
     <span
       v-for="shiftType in shiftTypes"
       @click="toggleFilter('shiftTypes', shiftType)"
@@ -9,6 +10,7 @@
       <img v-bind:src="loadSvg(shiftType)" alt="">
     </span>
     &nbsp;
+
     <span
       v-for="time in times"
       @click="toggleFilter('times', time)"
@@ -17,13 +19,17 @@
       {{time}}
     </span>
     <br>
+
     <span v-for="(day, index) in daysOfTheWeek"
       @click="toggleFilter('days', index)"
       v-bind:class="{ 'is-active': isActiveFilter('days', index) }"
       class="dayOfWeek button">{{day}}
     </span>
+
     <span @click="clearDayFilter" class="button">Clear All</span>
+
   </div>
+  
 </template>
 
 <script>
@@ -70,7 +76,6 @@ export default {
     },
 
     clearDayFilter () { this.$store.commit('CLEAR_FILTERS') },
-    reverseList () {console.log('list reversal requested');}
 
 	},
 	mixins: [mixins],
