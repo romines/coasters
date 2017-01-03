@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="list">
-    <span class="header" v-if="!isHistory">Available Shifts</span>
-    <span class="header" v-if="isHistory">Historical Shifts</span>
+    <span class="title header" v-if="!isHistory">Available Shifts</span>
+    <span class="title header" v-if="isHistory">Historical Shifts</span>
     <filters v-on:setDay="setDay($event)"></filters>
     <ul>
       <coaster v-for="coaster in filteredCoasters" :coasterAsProp="coaster" as:="'LIST'"></coaster>
@@ -38,6 +38,12 @@ export default {
     selectedDays () {
       return this.$store.state.coasterFilters.days
     },
+    selectedShiftTypes () {
+      return this.$store.state.coasterFilters.shiftTypes
+    },
+    selectedTimes () {
+      return this.$store.state.coasterFilters.times
+    },
     coasters () {
       return this.$store.getters.myCoasters
     },
@@ -51,11 +57,29 @@ export default {
         })
       }
 
-      return this.coasters.filter(withinSelectedDays)
+      const withinSelectedShiftTypes = (coaster) => {
+        if (this.selectedShiftTypes.length === 0) return true
+        return this.selectedShiftTypes.some((type) => {
+          return type === coaster.shiftType
+        })
+      }
+
+      const withinSelectedTimes = (coaster) => {
+        if (this.selectedTimes.length === 0) return true
+        return this.selectedTimes.some((time) => {
+          return time === coaster.time
+        })
+      }
+
+      return this.coasters
+        .filter(withinSelectedDays)
+        .filter(withinSelectedShiftTypes)
+        .filter(withinSelectedTimes)
 
     },
+
     isHistory () {
-      if (this.$route.path === '/history') return true
+      if (this.$store.state.route.path === '/history') return true
     }
   },
   created () {
@@ -65,22 +89,8 @@ export default {
 
 
   },
-  methods: {
-    reverseList () {
-      console.log(this.coasters);
-      this.order = (this.order === 'ASC') ? 'DESC' : 'ASC'
-    },
-    setDay (day) {
-      this.dayNumber = day
-    }
+  methods: {},
 
-  },
-  // shifts and changes are primary data Object
-  // presented in various list like views
-  //
-  // views have a list of actions they can call for
-  // ...via emitting messages
-  //
   components: {
     Coaster,
     Filters

@@ -71,7 +71,10 @@ function listenToFbAuthState({ commit }) {
 }
 
 function newCoaster ({ commit, state }, coasterData) {
-  if (!state.authState.user) return
+  if (!state.authState.user) {
+    alert('Please login before posting shifts')
+    return
+  }
   // coasterData.postedBy
   let newCoasterRef = coastersRef.push()
   newCoasterRef.set(coasterData);

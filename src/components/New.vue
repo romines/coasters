@@ -2,7 +2,7 @@
   <div class="new">
     <h3>{{test}}</h3>
     <div class="form">
-      <Flatpickr @update="pickDate" :message="datePickerMsg" />
+      <Flatpickr @update="pickDate" :value="datePickerMsg" />
       <!-- <datepicker v-model="date" :config="{static: true}"></datepicker> -->
       <p class="control">
         <span class="select">
@@ -43,7 +43,7 @@ export default {
 
   data () {
     return {
-      datePickerMsg: 'Date . . .',
+      datePickerMsg: '2017-01-19',
       date: moment().format('YYYY-MM-DD'),
       time: '',
       shiftType: 'Serve',
@@ -80,7 +80,7 @@ export default {
           pickedUp: false
       })
       router.push({path: '/'})
-      // TODO: clear fields
+      // TODO: only redirect on successful persist
     }
   }
 }

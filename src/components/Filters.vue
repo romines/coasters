@@ -1,48 +1,53 @@
 <template lang="html">
   <div class="filters">
     <!-- <button @click="reverseList">Reverse</button> -->
-
     <span
-      v-for="(shiftType, index) in shiftTypes"
-      @click="toggleFilter($event, 'shiftTypes')"
+      v-for="shiftType in shiftTypes"
+      @click="toggleFilter('shiftTypes', shiftType)"
+      v-bind:class="{ 'is-active': isActiveFilter('shiftTypes', shiftType) }"
       class="shiftType button">
       <img v-bind:src="loadSvg(shiftType)" alt="">
     </span>
+    &nbsp;
+    <span
+      v-for="time in times"
+      @click="toggleFilter('times', time)"
+      v-bind:class="{ 'is-active': isActiveFilter('times', time) }"
+      class="time button">
+      {{time}}
+    </span>
     <br>
-    <div class="days">
-      <span v-for="(day, index) in daysOfTheWeek"
-        @click="toggleFilter($event, 'days')"
-        v-bind:class="{ 'is-active': isActiveDay(index) }"
-        class="dayOfWeek button">{{day}}
-      </span>
-      <span @click="clearDayFilter" class="button">Clear All</span>
-    </div>
+    <span v-for="(day, index) in daysOfTheWeek"
+      @click="toggleFilter('days', index)"
+      v-bind:class="{ 'is-active': isActiveFilter('days', index) }"
+      class="dayOfWeek button">{{day}}
+    </span>
+    <span @click="clearDayFilter" class="button">Clear All</span>
   </div>
 </template>
 
 <script>
 import mixins from '../mixins'
-import bus from '../bus'
+import { mapState } from 'vuex'
 import moment from 'moment'
 export default {
   data () {
-    return {
-      daysOfTheWeek: ['S', 'M', 'T', 'W', 'R', 'F', 'S'],
-      shiftTypes: ['Host', 'Bus', 'Barback', 'Serve', 'Bartend']
-    }
+    return {}
   },
+  computed: mapState([
+    'daysOfTheWeek',
+    'shiftTypes',
+    'times'
+  ]),
 	methods: {
-    isActiveDay (day) {
-
-      if (this.$store.state.coasterFilters.days.indexOf(day) !== -1) {
+    isActiveFilter (type, value) {
+      if (this.$store.state.coasterFilters[type].indexOf(value) !== -1) {
         return true
       }
     },
 
-		toggleFilter (e, type) {
+		toggleFilter (type, value) {
 
-      let parent = e.target.parentElement
-      let value = Array.prototype.indexOf.call(parent.children, e.target)
       let indexInFilters = this.$store.state.coasterFilters[type].indexOf(value)
 
       let payload = {
@@ -55,7 +60,6 @@ export default {
         this.$store.commit('REMOVE_FILTER', payload)
 
       } else {
-        payload.filter = value
         this.$store.commit('ADD_FILTER', payload)
       }
 
@@ -77,13 +81,15 @@ export default {
 
 <style lang="scss" rel="stylesheet/scss">
   @import '../../node_modules/bulma/sass/utilities/variables.sass';
-  .dayOfWeek {
-    font-family: $family-monospace
-  }
   .shiftType {
     img {
-      width: 1em;
+      width: 3.8vw;
+      max-width: 20px;
     }
+  }
+  .dayOfWeek {
+    font-family: $family-monospace;
+    font-size: 1.2em;
   }
 
 </style>
