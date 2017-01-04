@@ -15,13 +15,13 @@
       <div class="card-content">
         <div class="media">
           <div class="media-left">
-            <figure class="posted-by-user-icon image is-32x32">
-
-              <i class="fa fa-user"></i>
+            <figure class="posted-by-user-icon image">
+              <img v-if="coaster.postedBy.photoURL" :src="coaster.postedBy.photoURL" alt="">
+              <i v-if="!coaster.postedBy.photoURL" class="fa fa-user"></i>
             </figure>
           </div>
           <div class="media-content">
-            <p class="title">Amy Joe</p>
+            <p class="title">{{coaster.postedBy.displayName}}</p>
           </div>
         </div>
         <div class="content">

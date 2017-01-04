@@ -77,7 +77,12 @@ export default {
           time: this.time,
           shiftType: this.shiftType,
           comment: this.comment,
-          pickedUp: false
+          pickedUp: false,
+          postedBy: {
+            uid: this.$store.state.authState.user.uid,
+            displayName: this.$store.state.authState.user.displayName,
+            photoURL: this.$store.state.authState.user.photoURL,
+          }
       })
       router.push({path: '/'})
       // TODO: only redirect on successful persist
