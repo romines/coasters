@@ -35,19 +35,20 @@ function addFilter({ commit }, filter) {
   commit('ADD_FILTER', filter)
 }
 
-function signUpUser({}, user) {
+function signUpUser({ commit }, user) {
   const addDisplayName = ({displayName}) => {
     var user = auth.currentUser
 
     user.updateProfile({ displayName }).then(
-      data => console.log(data)
+      () => commit('LOG_IN_USER', user)
       , e => console.log(e.message))
 
   }
+
   console.log(user.email, user.password)
   auth.createUserWithEmailAndPassword(user.email, user.password).then(() => {
 
-    logInUser({}, user, addDisplayName)
+    logInUser({ commit }, user, addDisplayName)
   }, e => console.log(e.message))
 }
 
@@ -91,6 +92,7 @@ function newCoaster ({ commit, state }, coasterData) {
     return
   }
   // coasterData.postedBy
+  coasterData.posted = firebase.database.ServerValue.TIMESTAMP
   let newCoasterRef = coastersRef.push()
   newCoasterRef.set(coasterData);
 }

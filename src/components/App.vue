@@ -129,6 +129,7 @@ export default {
 <!-- <style src="bulma/css/bulma.css"></style> -->
 
 <style lang="scss">
+@import url('https://fonts.googleapis.com/css?family=Orbitron:700');
 @import '../../node_modules/bulma/bulma.sass';
 .coaster { @extend .box }
 ul {

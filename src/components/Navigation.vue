@@ -135,7 +135,7 @@ export default {
 
   .fa-user, .display-name { margin: 0 .7em; }
 
-  .fa-power-off { cursor: pointer; }
+  // .fa-power-off {}
 
   .text-only {
     @include desktop {

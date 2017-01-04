@@ -5,8 +5,11 @@
 
       <header class="card-header">
         <p class="card-header-title">
-          {{ getTitle(coaster) }}
+          <img class="shift-icon" v-bind:src="loadSvg(coaster.shiftType)" alt="">
+          <span class="date">{{mediumDateString}}</span>
+          <span class="time">{{coaster.time}}</span>
         </p>
+
         <a v-if="isDetailView" @click="closeDetailView" class="card-header-icon">
           <i class="fa fa-close"></i>
         </a>
@@ -21,13 +24,20 @@
             </figure>
           </div>
           <div class="media-content">
-            <p class="title">{{coaster.postedBy.displayName}}</p>
+            <ul>
+              <li>{{longDateString}}</li>
+              <li><strong>{{coaster.time + ' ' + coaster.shiftType}}</strong></li>
+              <li>for <strong>{{coaster.postedBy.displayName}}</strong></li>
+              <li><small>{{datePosted}}</small></li>
+            </ul>
+            <span class="desktop-comments">{{ coaster.comment }}</span>
           </div>
         </div>
         <div class="content">
-          {{ coaster.comment }}</br>
+
+          <span class="mobile-comments">{{ coaster.comment }}</span>
           <div v-if="isDetailView" class="details">
-            <small>Posted:</small>
+
             <action-buttons></action-buttons>
             <textarea v-if="isCommenting" class="textarea"></textarea>
           </div>
@@ -64,6 +74,17 @@ export default {
     coaster () {
       return this.coasterAsProp ? this.coasterAsProp : this.$store.getters.detailCoaster
     },
+    longDateString () {
+      return moment(this.coaster.date).format('dddd, MMM Do')
+    },
+    mediumDateString () {
+      return moment(this.coaster.date).format('ddd, MMM Do')
+    },
+    datePosted () {
+      // return this.coaster.posted
+      if (!this.coaster.posted) return
+      return moment(this.coaster.posted).fromNow()
+    },
 
     isDetailView () {
       return this.$store.state.route.name === 'detail'
@@ -95,10 +116,26 @@ export default {
 </script>
 
 <style lang="scss" rel="stylesheet/scss">
+@import '../../../node_modules/bulma/sass/utilities/mixins.sass';
 
 .coaster {
   &:hover {
     cursor: pointer;
+  }
+  .card-header {
+    .card-header-title {
+      align-items: center;
+      justify-content: space-between;
+    }
+    img.shift-icon {
+      width: 8vw;
+      max-height: 50px;
+    }
+    .date {
+    }
+    .time {
+      font-family: 'Orbitron', sans-serif;
+    }
   }
   .media-left {
     text-align: center;
@@ -106,6 +143,23 @@ export default {
       vertical-align: middle;
       line-height: inherit;
     }
+    .posted-by-user-icon img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+    }
+  }
+  .desktop-comments {
+    display: none;
+    @include desktop {
+      display: inline;
+    };
+  }
+  .mobile-comments {
+    display: inline;
+    @include desktop {
+      display: none;
+    };
   }
 
 }

@@ -50,6 +50,7 @@ const store = new Vuex.Store({
   	increment: state => state.count++,
     decrement: state => state.count--,
     LOG_IN_USER (state, user) {
+      console.log(user);
       state.authState.user = user
     },
     LOG_OUT_USER (state) {
