@@ -1,16 +1,9 @@
-import { firebase, moment } from '../libs'
+import { firebase, moment, facebookAuthProvider } from '../libs'
 
 const db = firebase.database()
 const auth = firebase.auth()
 const coastersRef = db.ref('data/coasters')
 
-
-
-const increment = ({ commit }) => {
-  setTimeout(() => {
-    commit('increment')
-  }, 684)
-}
 
 function getCoasters ({ commit, state }) {
 
@@ -65,6 +58,18 @@ function logInUser({ commit }, user, cb) {
   }, e => console.log(e.message))
 }
 
+function logInWithFacebook({ commit }) {
+  auth.signInWithPopup(facebookAuthProvider).then((result) => {
+    console.log(result.user)
+    commit('CLOSE_MODAL')
+    // // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+    // var token = result.credential.accessToken;
+    // // The signed-in user info.
+    // var user = result.user;
+    // // ...
+  }).catch(e => console.log(e));
+}
+
 function logOutUser({}) {
   firebase.auth().signOut()
 }
@@ -93,13 +98,13 @@ function newCoaster ({ commit, state }, coasterData) {
 
 export {
 
-    increment
-  , getCoasters
+    getCoasters
   , newCoaster
   , addFilter
   , listenToFbAuthState
   , signUpUser
   , logInUser
+  , logInWithFacebook
   , logOutUser
   // , getCoaster
 

@@ -7,4 +7,7 @@ import config from '../fbConfig'
  *
  */
 
-export default firebase.initializeApp(config)
+firebase.initializeApp(config)
+ const facebookAuthProvider = new firebase.auth.FacebookAuthProvider()
+
+export { firebase, facebookAuthProvider }

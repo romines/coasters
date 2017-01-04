@@ -34,7 +34,7 @@
     <button v-show="authState.user" @click="logOut" class="button">Log out</button>
     <hr>
     <div class="social-providers">
-      <a href="#"><i class="fa fa-facebook-square" aria-hidden="true"></i></a>
+      <a @click="startFacebookLogin" href="#"><i class="fa fa-facebook-square" aria-hidden="true"></i></a>
       <a href="#"><i class="fa fa-twitter-square" aria-hidden="true"></i></a>
     </div>
   </form>
@@ -66,6 +66,9 @@
       },
       logOut () {
         this.$store.dispatch('logOutUser')
+      },
+      startFacebookLogin () {
+        this.$store.dispatch('logInWithFacebook')
       }
     }
   }
