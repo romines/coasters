@@ -3,6 +3,10 @@
 
     <div v-show="!authState.user" class="no-user">
       <h2 class='title'>{{wantsToSignUp ? 'Sign up' : 'Login'}}</h2>
+      <p v-show="wantsToSignUp" class="control has-icon">
+        <input v-model="displayName" class="input" placeholder="Enter your full name">
+        <i class="fa fa-user"></i>
+      </p>
       <p class="control has-icon">
         <input v-model="email" class="input" type="email" placeholder="Email">
         <i class="fa fa-envelope"></i>
@@ -22,6 +26,7 @@
         <button type="button" v-on:click="wantsToSignUp = true" class="button">Sign up</button>
       </div>
       <div v-show="wantsToSignUp">
+        <button type="button" v-on:click="wantsToSignUp = false" class="button">Login</button>
         <button @click="signUp" class="button">Sign up</button>
       </div>
     </div>
@@ -47,6 +52,7 @@
         email: '',
         password: '',
         confirmPassword: '',
+        displayName: '',
         wantsToSignUp: false
       }
     },
@@ -56,7 +62,7 @@
       },
       signUp () {
         console.log(this.email, this.password);
-        this.$store.dispatch('signUpUser', {email: this.email, password: this.password})
+        this.$store.dispatch('signUpUser', {email: this.email, password: this.password, displayName: this.displayName})
       },
       logOut () {
         this.$store.dispatch('logOutUser')
@@ -69,6 +75,10 @@
 
     h2 {
       margin-bottom: .5em;
+    }
+
+    .button {
+      margin-top: .5em;
     }
 
   }

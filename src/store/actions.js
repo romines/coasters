@@ -43,14 +43,24 @@ function addFilter({ commit }, filter) {
 }
 
 function signUpUser({}, user) {
+  const addDisplayName = ({displayName}) => {
+    var user = auth.currentUser
+
+    user.updateProfile({ displayName }).then(
+      data => console.log(data)
+      , e => console.log(e.message))
+
+  }
   console.log(user.email, user.password)
   auth.createUserWithEmailAndPassword(user.email, user.password).then(() => {
-    logInUser({}, user)
+
+    logInUser({}, user, addDisplayName)
   }, e => console.log(e.message))
 }
 
-function logInUser({ commit }, user) {
+function logInUser({ commit }, user, cb) {
   auth.signInWithEmailAndPassword(user.email, user.password).then(() => {
+    cb(user)
     commit('CLOSE_MODAL')
   }, e => console.log(e.message))
 }

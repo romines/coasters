@@ -6,7 +6,7 @@
     <nav class="nav">
       <div class="container">
         <div class="nav-left">
-          <a class="nav-item is-brand" href="#">
+          <a class="nav-item is-brand" @click="toHome">
             SRB Coasters
           </a>
         </div>
@@ -134,6 +134,8 @@ export default {
   }
 
   .fa-user, .display-name { margin: 0 .7em; }
+
+  .fa-power-off { cursor: pointer; }
 
   .text-only {
     @include desktop {
