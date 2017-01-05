@@ -7,7 +7,7 @@
         <p class="card-header-title">
           <img class="shift-icon" v-bind:src="loadSvg(coaster.shiftType)" alt="">
           <span class="date">{{mediumDateString}}</span>
-          <span class="time">{{coaster.time}}</span>
+          <span class="time"><i class="fa" :class="timeIcon"></i></span>
         </p>
 
         <a v-if="isDetailView" @click="closeDetailView" class="card-header-icon">
@@ -18,11 +18,14 @@
       <div class="card-content">
         <div class="media">
           <div class="media-left">
-            <figure class="posted-by-user-icon image">
+            <figure class="posted-by-user">
               <img v-if="coaster.postedBy.photoURL" :src="coaster.postedBy.photoURL" alt="">
-              <i v-if="!coaster.postedBy.photoURL" class="fa fa-user"></i>
+              <span v-if="!coaster.postedBy.photoURL" class="icon is-large">
+                <i class="fa fa-user"></i>
+              </span>
             </figure>
           </div>
+
           <div class="media-content">
             <ul>
               <li>{{longDateString}}</li>
@@ -33,6 +36,7 @@
             <span class="desktop-comments">{{ coaster.comment }}</span>
           </div>
         </div>
+
         <div class="content">
 
           <span class="mobile-comments">{{ coaster.comment }}</span>
@@ -56,7 +60,8 @@ import moment from 'moment'
 import mixins from '../../mixins'
 import * as myButton from '../widgets/Button.vue'
 import ActionButtons from './ActionButtons.vue'
-console.log(ActionButtons);
+
+
 export default {
   components: {
     ActionButtons,
@@ -70,25 +75,34 @@ export default {
     }
   },
   props: ['coasterAsProp', 'as'],
+
   computed: {
+
     coaster () {
       return this.coasterAsProp ? this.coasterAsProp : this.$store.getters.detailCoaster
     },
+
     longDateString () {
       return moment(this.coaster.date).format('dddd, MMM Do')
     },
+
     mediumDateString () {
       return moment(this.coaster.date).format('ddd, MMM Do')
     },
+
     datePosted () {
-      // return this.coaster.posted
       if (!this.coaster.posted) return
       return moment(this.coaster.posted).fromNow()
+    },
+
+    timeIcon () {
+      return (this.coaster.time === 'PM') ? 'fa-moon-o' : 'fa-sun-o'
     },
 
     isDetailView () {
       return this.$store.state.route.name === 'detail'
     }
+
   },
   methods: {
 
@@ -131,10 +145,16 @@ export default {
       width: 8vw;
       max-height: 50px;
     }
-    .date {
-    }
-    .time {
-      font-family: 'Orbitron', sans-serif;
+    @include tablet {
+      .date {
+        font-size: 1.8em;
+      }
+      .time {
+        line-height: 1em;
+        .fa {
+          font-size: 2.8em;
+        }
+      }
     }
   }
   .media-left {
@@ -143,10 +163,30 @@ export default {
       vertical-align: middle;
       line-height: inherit;
     }
-    .posted-by-user-icon img {
-      width: 100px;
-      height: 100px;
-      object-fit: cover;
+    .posted-by-user {
+      img {
+        width: 74px;
+        height: 74px;
+        object-fit: cover;
+      }
+      .icon {
+        width: 74px;
+        height: 74px;
+        line-height: 74px;
+        vertical-align: bottom;
+        border: 1px solid grey;
+        border-radius: 3px;
+      }
+      @include tablet {
+        img {
+          width: 100px;
+          height: 100px;
+        }
+        .icon {
+          width: 100px;
+        }
+
+      }
     }
   }
   .desktop-comments {
@@ -161,6 +201,7 @@ export default {
       display: none;
     };
   }
+
 
 }
 

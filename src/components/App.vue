@@ -28,12 +28,6 @@ import Modal from './widgets/Modal.vue'
 import { firebase } from '../libs'
 import mixins from '../mixins'
 
-// not sure
-//
-import auth from '../auth'
-
-import { fbRefFromChild } from '../helpers'
-
 
 
 
@@ -129,7 +123,6 @@ export default {
 <!-- <style src="bulma/css/bulma.css"></style> -->
 
 <style lang="scss">
-@import url('https://fonts.googleapis.com/css?family=Orbitron:700');
 @import '../../node_modules/bulma/bulma.sass';
 .coaster { @extend .box }
 ul {

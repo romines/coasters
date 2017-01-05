@@ -50,7 +50,6 @@ const store = new Vuex.Store({
   	increment: state => state.count++,
     decrement: state => state.count--,
     LOG_IN_USER (state, user) {
-      console.log(user);
       state.authState.user = user
     },
     LOG_OUT_USER (state) {
@@ -61,7 +60,6 @@ const store = new Vuex.Store({
       state.coasters = coasters
     },
     GET_COASTER (state, coasterId) {
-      console.log('inside a mutation......trying to GET_COASTER', coaster);
       state.detailCoaster.id = coasterId
     },
     ADD_FILTER (state, {filterType, filter}) {
