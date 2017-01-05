@@ -6,7 +6,7 @@ const coastersRef = db.ref('data/coasters')
 
 
 function getCoasters ({ commit, state }) {
-
+  console.log('attempting to get coasters');
   let today = moment().format('YYYY-MM-DD')
   let listRef
   switch (state.route.path) {
@@ -45,7 +45,6 @@ function signUpUser({ commit }, user) {
 
   }
 
-  console.log(user.email, user.password)
   auth.createUserWithEmailAndPassword(user.email, user.password).then(() => {
 
     logInUser({ commit }, user, addDisplayName)
@@ -91,7 +90,6 @@ function newCoaster ({ commit, state }, coasterData) {
     alert('Please login before posting shifts')
     return
   }
-  // coasterData.postedBy
   coasterData.posted = firebase.database.ServerValue.TIMESTAMP
   let newCoasterRef = coastersRef.push()
   newCoasterRef.set(coasterData);

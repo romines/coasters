@@ -27,9 +27,6 @@
 
 <script>
 
-//
-// Should encompass <list> and <coaster>, which is hidden with styles on mobile
-//
 import { moment } from '../libs'
 import bus from '../bus'
 import router from '../router'

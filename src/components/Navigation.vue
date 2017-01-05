@@ -31,11 +31,11 @@
               <span class="text-only">History</span>
             </a>
           </span>
-          <span class="nav-item" @click='burgerActive = !burgerActive' href="#">
-            <router-link to="/new" class="button" :class="{ 'is-active': navState.post }">
+          <span class="nav-item" href="#">
+            <a @click="toNew" class="button" :class="{ 'is-active': navState.post }">
               <i class="icon-only fa fa-plus"></i>
               <span class="text-only">Post New</span>
-            </router-link>
+            </a>
           </span>
           <span v-show="!authState.user" class="nav-item" href="#">
             <span @click="launchLoginModal" class="button">Login</span>
@@ -103,6 +103,10 @@ export default {
     toHistory () {
       router.push({ path: '/history' })
       this.$store.dispatch('getCoasters')
+      this.burgerActive = false
+    },
+    toNew () {
+      router.push({ path: '/new' })
       this.burgerActive = false
     }
   }
