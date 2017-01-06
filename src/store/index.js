@@ -28,6 +28,7 @@ const store = new Vuex.Store({
     },
     count: 0,
     coasters: [],
+    historical: [],
     coasterFilters: {
       days: [],
       times: [],
@@ -58,6 +59,9 @@ const store = new Vuex.Store({
     GET_COASTERS (state, coasters) {
       state.count = coasters.length
       state.coasters = coasters
+    },
+    GET_HISTORICAL (state, coasters) {
+      state.historical = coasters
     },
     GET_COASTER (state, coasterId) {
       state.detailCoaster.id = coasterId

@@ -8,14 +8,8 @@ const coastersRef = db.ref('data/coasters')
 function getCoasters ({ commit, state }) {
   console.log('attempting to get coasters');
   let today = moment().format('YYYY-MM-DD')
-  let listRef
-  switch (state.route.path) {
-    case '/history':
-      listRef = coastersRef.orderByChild('date').startAt('2016-01-02')
-      break;
-    default:
-      listRef = coastersRef.orderByChild('date').startAt(today)
-  }
+  let listRef = coastersRef.orderByChild('date').startAt(today)
+
 
   listRef.on('value', (snap) => {
     let coasters = []
@@ -26,6 +20,25 @@ function getCoasters ({ commit, state }) {
     })
 
     commit('GET_COASTERS', coasters)
+
+  })
+
+}
+
+function getHistorical ({ commit, state }) {
+  console.log('attempting to get historical');
+  let today = moment().format('YYYY-MM-DD')
+  let listRef = coastersRef.orderByChild('date').endAt(today)
+
+  listRef.on('value', (snap) => {
+    let coasters = []
+    snap.forEach((childSnap) => {
+      let coaster = childSnap.val()
+      coaster.key = childSnap.key
+      coasters.push(coaster)
+    })
+
+    commit('GET_HISTORICAL', coasters)
 
   })
 
@@ -99,6 +112,7 @@ function newCoaster ({ commit, state }, coasterData) {
 export {
 
     getCoasters
+  , getHistorical
   , newCoaster
   , addFilter
   , listenToFbAuthState

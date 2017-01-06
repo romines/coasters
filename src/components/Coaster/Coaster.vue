@@ -1,6 +1,5 @@
 <template lang="html">
   <div v-if="coaster" @click="makeDetail()" class="coaster">
-
     <div class="card is-fullwidth">
 
       <header class="card-header">
@@ -10,7 +9,7 @@
           <span class="time"><i class="fa" :class="timeIcon"></i></span>
         </p>
 
-        <a v-if="isDetailView" @click="closeDetailView" class="card-header-icon">
+        <a v-if="isDetailView" @click.stop="closeDetailView" class="card-header-icon">
           <i class="fa fa-close"></i>
         </a>
       </header>
@@ -42,13 +41,11 @@
           <span class="mobile-comments">{{ coaster.comment }}</span>
           <div v-if="isDetailView" class="details">
 
-            <action-buttons></action-buttons>
+            <action-buttons :postedBy="coaster.postedBy.uid"></action-buttons>
             <textarea v-if="isCommenting" class="textarea"></textarea>
           </div>
-
         </div>
       </div>
-
 
     </div>
   </div>
@@ -74,28 +71,27 @@ export default {
       isCommenting: false
     }
   },
-  props: ['coasterAsProp', 'as'],
+  props: ['coaster'],
 
   computed: {
 
-    coaster () {
-      return this.coasterAsProp ? this.coasterAsProp : this.$store.getters.detailCoaster
-    },
-
     longDateString () {
+      // if (!this.coaster) return
       return moment(this.coaster.date).format('dddd, MMM Do')
     },
 
     mediumDateString () {
+      // if (!this.coaster) return
       return moment(this.coaster.date).format('ddd, MMM Do')
     },
 
     datePosted () {
-      if (!this.coaster.posted) return
+      // if (!this.coaster) return
       return moment(this.coaster.posted).fromNow()
     },
 
     timeIcon () {
+      // if (!this.coaster) return
       return (this.coaster.time === 'PM') ? 'fa-moon-o' : 'fa-sun-o'
     },
 
@@ -107,10 +103,12 @@ export default {
   methods: {
 
     makeDetail (coaster) {
-      if (!this.coaster) return
+      console.log(this.isDetailView);
+      if (!this.coaster && this.isDetailView) return
       router.push({ name: 'detail', params: { id: this.coaster.key }})
     },
     closeDetailView () {
+      console.log('wha?');
       router.push({ path: '/'})
     },
     startCommenting () {

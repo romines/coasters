@@ -1,17 +1,10 @@
 <template lang="html">
   <div class="detail">
-    <div class="id"></div>
-    <coaster as:="'DETAIL'"></coaster>
+    <coaster v-if="coaster" :coaster="coaster"></coaster>
   </div>
 </template>
 
 <script>
-//
-// Should encompass <list> and <coaster>, which is hidden with styles on mobile
-//
-import { firebase } from '../libs'
-const db = firebase.database()
-const coastersRef = db.ref('data/coasters')
 
 import Coaster from './Coaster/Coaster.vue'
 
@@ -19,8 +12,17 @@ export default {
 
   components: {
     Coaster
+  },
+
+  computed: {
+
+    coaster () {
+      return this.$store.getters.detailCoaster
+    }
+
   }
-  
+
+
 }
 </script>
 

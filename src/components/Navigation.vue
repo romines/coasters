@@ -97,7 +97,7 @@ export default {
     },
     toHome () {
       router.push({ path: '/' })
-      this.$store.dispatch('getCoasters')
+      // this.$store.dispatch('getCoasters')
       this.burgerActive = false
     },
     toHistory () {
