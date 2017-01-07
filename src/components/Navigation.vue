@@ -28,7 +28,7 @@
           <span class="nav-item" href="#">
             <a @click="toHistory" class="button" :class="{ 'is-active': navState.history }">
               <i class="icon-only fa fa-history"></i>
-              <span class="text-only">History</span>
+              <span class="text-only">Picked Up</span>
             </a>
           </span>
           <span class="nav-item" href="#">
@@ -82,7 +82,7 @@ export default {
     navState () {
       return {
         home: this.$store.state.route.path === '/',
-        history: this.$store.state.route.path === '/history',
+        history: this.$store.state.route.path === '/picked-up',
         post: this.$store.state.route.path === '/new',
       }
     }
@@ -101,7 +101,7 @@ export default {
       this.burgerActive = false
     },
     toHistory () {
-      router.push({ path: '/history' })
+      router.push({ path: '/picked-up' })
       this.$store.dispatch('getCoasters')
       this.burgerActive = false
     },

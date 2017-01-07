@@ -2,6 +2,8 @@ import VueRouter from 'vue-router'
 import App from './components/App.vue'
 import Login from './components/Login.vue'
 import List from './components/List.vue'
+import Home from './components/Home.vue'
+import PickedUp from './components/PickedUp.vue'
 import Detail from './components/Detail.vue'
 import New from './components/New.vue'
 
@@ -26,7 +28,7 @@ import New from './components/New.vue'
 
    /coasters/:id
      coaster component
-   /history
+   /picked-up
      - list
      - links to detail views that use coaster component
      - filter options: (default) picked up only
@@ -48,11 +50,11 @@ const routes = [
       {
         name: 'home',
         path: '',
-        component: List // List should be child of a 'Home' component
+        component: Home // List should be child of a 'Home' component
       },
       {
-        path: '/history',
-        component: List,
+        path: '/picked-up',
+        component: PickedUp,
         meta: {
           sort: 'historical'
         }
@@ -67,7 +69,7 @@ const routes = [
       },
       {  // move to /coaster/:key
         name: 'detail',
-        path: '/:id',
+        path: 'coasters/:id',
         component: Detail
       }
       // {  // move to /coaster/:key

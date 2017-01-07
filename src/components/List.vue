@@ -33,6 +33,12 @@ export default {
     }
   },
   mixins: [mixins],
+
+  components: {
+    Coaster,
+    Filters
+  },
+
   computed: {
     selectedDays () {
       return this.$store.state.coasterFilters.days
@@ -78,7 +84,7 @@ export default {
     },
 
     isHistory () {
-      if (this.$store.state.route.path === '/history') return true
+      if (this.$store.state.route.path === '/picked-up') return true
     }
   },
   created () {
@@ -88,12 +94,7 @@ export default {
 
 
   },
-  methods: {},
-
-  components: {
-    Coaster,
-    Filters
-  }
+  methods: {}
 }
 </script>
 
