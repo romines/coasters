@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="home">
     <h1>Hello from Home component</h1>
-    <list></list>
+    <list v-bind:bindOptions="listOptions"></list>
   </div>
 </template>
 
@@ -12,7 +12,16 @@ export default {
   data () {
     return {}
   },
-  computed: {},
+  created () {
+    console.log('Home was created');
+  },
+  computed: {
+    listOptions () {
+      return {
+        foo: 'baz'
+      }
+    }
+  },
   components: { List },
   mounted () {},
   methods: {},

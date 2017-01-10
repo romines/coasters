@@ -1,5 +1,6 @@
 <template lang="html">
   <div class="list">
+    <div class="test">List option: {{bindOptions.foo}}</div>
     <span class="title header" v-if="!isHistory">Available Shifts</span>
     <span class="title header" v-if="isHistory">Historical Shifts</span>
     <filters v-on:setDay="setDay($event)"></filters>
@@ -26,12 +27,12 @@ export default {
   data () {
     return {
       order: 'DESC',
-      prop: 'date',//'.key',
       dayNumber: -1,
       // days: [0,1,2,3,4,5,6]
       selectedDays: []
     }
   },
+  props: ['bindOptions'],
   mixins: [mixins],
 
   components: {
@@ -40,6 +41,9 @@ export default {
   },
 
   computed: {
+    whatsFoo () {
+
+    },
     selectedDays () {
       return this.$store.state.coasterFilters.days
     },

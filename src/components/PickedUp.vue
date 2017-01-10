@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="home">
     <h1>Hello from Picked Up component</h1>
-    <list></list>
+    <list v-bind:bindOptions="listOptions"></list>
   </div>
 </template>
 
@@ -10,9 +10,17 @@ import List from './List.vue'
 
 export default {
   data () {
-    return {}
+    return {
+
+    }
   },
-  computed: {},
+  computed: {
+    listOptions () {
+      return {
+        foo: 'bar'
+      }
+    }
+  },
   components: { List },
   mounted () {},
   methods: {},
