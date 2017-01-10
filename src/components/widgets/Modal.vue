@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="modal-mask" @click="close" v-show="show" transition="modal">
     <div class="modal-container" @click.stop>
-      <component :is='content' :myProps="myProps"></component>
+      <component :is='modalComponent' :message="message"></component>
 
 
     </div>
@@ -9,22 +9,27 @@
 </template>
 
 <script>
-import bus from '../../bus'
 import Login from '../Login.vue'
+import Confirmation from './Confirmation.vue'
 
 export default {
-  props: ['myProps'],
   data () {
     return {
-      content: Login
     }
   },
   components: {
-    Login
+    Login,
+    Confirmation
   },
   computed: {
     show () {
       return this.$store.state.modal.show
+    },
+    modalComponent () {
+      return this.$store.state.modal.contents.component
+    },
+    message () {
+      return this.$store.state.modal.contents.message
     }
   },
   mounted () {},
@@ -32,8 +37,7 @@ export default {
     close () {
       this.$store.commit('CLOSE_MODAL')
     }
-  },
-  components: {}
+  }
 }
 </script>
 

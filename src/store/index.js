@@ -36,6 +36,10 @@ const store = new Vuex.Store({
     },
     modal: {
       show: false,
+      contents: {
+        component: 'Login',
+        message: ''
+      },
       notifications: []
     },
     commenting: false,
@@ -82,8 +86,9 @@ const store = new Vuex.Store({
         shiftTypes: []
       }
     },
-    SHOW_MODAL: (state, content) => {
-      state.modal.show = true;
+    SHOW_MODAL: (state, contents) => {
+      state.modal.show = true
+      state.modal.contents = contents
     },
     CLOSE_MODAL: (state) => {
       state.modal.show = false;

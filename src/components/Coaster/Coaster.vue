@@ -111,6 +111,7 @@ export default {
       console.log('wha?');
       router.push({ path: '/'})
     },
+
     startCommenting () {
       this.isCommenting = true;
     },

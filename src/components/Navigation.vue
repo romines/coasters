@@ -90,7 +90,7 @@ export default {
 
   methods: {
     launchLoginModal () {
-      this.$store.commit('SHOW_MODAL')
+      this.$store.commit('SHOW_MODAL', {component: 'Login'})
     },
     logOut () {
       this.$store.dispatch('logOutUser')
