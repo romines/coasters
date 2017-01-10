@@ -7,6 +7,8 @@
 </template>
 
 <script>
+import router from '../../router'
+
 export default {
   data () {
     return {}
@@ -15,6 +17,9 @@ export default {
   computed: {
     myOwnCoaster () {
       return this.postedBy === this.$store.state.authState.user.uid
+    },
+    detailKey () {
+      return this.$store.getters.detailKey
     }
   },
   methods: {
@@ -31,12 +36,16 @@ export default {
     cancelCoaster () {
 
       let cancel = () => {
-        this.$store.dispatch('cancelCoaster')
+        this.$store.dispatch('cancelCoaster', this.detailKey)
+        router.push({name: 'home'})
       }
 
       this.$store.commit('SHOW_MODAL', {
         component:'Confirmation',
         heading: 'Cancel Posted Shift',
+        actions: {
+          onConfirm: cancel
+        },
         message: 'Are you sure you want to cancel this shift?'
       })
 

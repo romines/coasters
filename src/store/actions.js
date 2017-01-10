@@ -109,13 +109,10 @@ function newCoaster ({ commit, state }, coasterData) {
 }
 
 function cancelCoaster ({ commit, state }, key) {
-  if (!key) {
-    alert('Something went wrong')
-    return
+  if (key) {
+    console.log('attempting to delete coaster: ', key);
+    coastersRef.child(key).remove()
   }
-  coasterData.posted = firebase.database.ServerValue.TIMESTAMP
-  let newCoasterRef = coastersRef.push()
-  newCoasterRef.set(coasterData);
 }
 
 

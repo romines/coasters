@@ -4,7 +4,7 @@
 		<div class="question">
 			{{contents.message}}
 		</div>
-		<span class="button is-primary">Confirm</span>
+		<span @click="confirm" class="button is-primary">Confirm</span>
 		<span @click="close" class="button">Cancel</span>
   </div>
 </template>
@@ -20,7 +20,11 @@ export default {
 	methods: {
     close () {
       this.$store.commit('CLOSE_MODAL')
-    }
+    },
+		confirm () {
+			this.contents.actions.onConfirm()
+			this.$store.commit('CLOSE_MODAL')
+		}
   }
 }
 </script>

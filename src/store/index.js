@@ -39,7 +39,8 @@ const store = new Vuex.Store({
       contents: {
         component: 'Login',
         heading: '',
-        message: ''
+        message: '',
+        actions: {}
       },
       notifications: []
     },

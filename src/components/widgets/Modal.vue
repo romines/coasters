@@ -25,11 +25,11 @@ export default {
     show () {
       return this.$store.state.modal.show
     },
-    modalComponent () {
-      return this.$store.state.modal.contents.component
-    },
     contents () {
       return this.$store.state.modal.contents
+    },
+    modalComponent () {
+      return this.contents.component
     }
   },
   mounted () {},
