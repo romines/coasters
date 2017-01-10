@@ -97,12 +97,10 @@ export default {
     },
     toHome () {
       router.push({ path: '/' })
-      // this.$store.dispatch('getCoasters')
       this.burgerActive = false
     },
     toHistory () {
       router.push({ path: '/picked-up' })
-      this.$store.dispatch('getCoasters')
       this.burgerActive = false
     },
     toNew () {

@@ -64,7 +64,6 @@ export default {
     Modal
   },
   created () {
-    this.$store.dispatch('getCoasters')
     this.$store.dispatch('listenToFbAuthState')
   },
   data: function () {

@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="home">
-    <h1>Hello from Picked Up component</h1>
-    <list v-bind:bindOptions="listOptions"></list>
+    <h1 class="title header">Historical Shifts</h1>
+    <list :coasters="historical"></list>
   </div>
 </template>
 
@@ -11,18 +11,18 @@ import List from './List.vue'
 export default {
   data () {
     return {
-
     }
   },
+  created () {
+    console.log('PickedUp component was created');
+    this.$store.dispatch('getHistorical')
+  },
   computed: {
-    listOptions () {
-      return {
-        foo: 'bar'
-      }
+    historical () {
+      return this.$store.state.historical
     }
   },
   components: { List },
-  mounted () {},
   methods: {},
 }
 </script>

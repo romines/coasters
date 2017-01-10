@@ -1,8 +1,5 @@
 <template lang="html">
   <div class="list">
-    <div class="test">List option: {{bindOptions.foo}}</div>
-    <span class="title header" v-if="!isHistory">Available Shifts</span>
-    <span class="title header" v-if="isHistory">Historical Shifts</span>
     <filters v-on:setDay="setDay($event)"></filters>
     <ul>
       <coaster v-for="coaster in filteredCoasters" :coaster="coaster"></coaster>
@@ -20,8 +17,6 @@ import moment from 'moment'
 import mixins from '../mixins'
 import { mapGetters } from 'vuex'
 
-// list has local state which is basically filters / querires
-// TODO
 
 export default {
   data () {
@@ -32,7 +27,7 @@ export default {
       selectedDays: []
     }
   },
-  props: ['bindOptions'],
+  props: ['coasters'],
   mixins: [mixins],
 
   components: {
@@ -53,9 +48,9 @@ export default {
     selectedTimes () {
       return this.$store.state.coasterFilters.times
     },
-    coasters () {
-      return this.$store.getters.myCoasters
-    },
+    // coasters () {
+    //   return this.$store.getters.myCoasters
+    // },
     filteredCoasters () {
 
       const withinSelectedDays = (coaster) => {
@@ -91,9 +86,7 @@ export default {
       if (this.$store.state.route.path === '/picked-up') return true
     }
   },
-  created () {
-    this.$store.dispatch('getCoasters')
-  },
+
   updated: function () {
 
 

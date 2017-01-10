@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="home">
-    <h1>Hello from Home component</h1>
-    <list v-bind:bindOptions="listOptions"></list>
+    <h1 class="title header">Available Shifts</h1>
+    <list :coasters="coasters"></list>
   </div>
 </template>
 
@@ -13,13 +13,16 @@ export default {
     return {}
   },
   created () {
-    console.log('Home was created');
+    this.$store.dispatch('getCoasters')
   },
   computed: {
     listOptions () {
       return {
         foo: 'baz'
       }
+    },
+    coasters () {
+      return this.$store.state.coasters
     }
   },
   components: { List },
