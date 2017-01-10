@@ -1,12 +1,12 @@
 <template>
   <div id="app-container">
 
-    <modal :myProps="modalProps"></modal>
+    <modal></modal>
 
     <navigation></navigation>
 
     <section class="section">
-      <router-view :coasters="coasters" :myProps="routerViewProps"></router-view>
+      <router-view></router-view>
     </section>
 
   </div>
@@ -69,17 +69,6 @@ export default {
   data: function () {
     return {
 
-      authState: {
-        status: 'LOGGED_IN',
-        user: null
-      },
-      navProps: {
-        navState: {
-          home: true,
-          history: false,
-          post: false,
-        }
-      }
     }
   },
 
@@ -94,28 +83,10 @@ export default {
       return {
         authState: this.authState
       }
-    },
-    modalProps () {
-      return this.$store.state.modal
     }
   },
   methods: {
 
-    makeLocal () {
-      this.list = 'offLine'
-    },
-    makeFirebase () {
-      this.list = 'firebase'
-    },
-    increment () {
-      this.$store.commit('increment')
-    },
-    decrement () {
-    	this.$store.commit('decrement')
-    },
-    incrementAsync () {
-      this.$store.dispatch('increment')
-    }
   }
 }
 </script>
@@ -128,8 +99,4 @@ ul {
   list-style-type: none;
 }
 
-img.close {
-  max-width: 1em;
-  float: right;
-}
 </style>

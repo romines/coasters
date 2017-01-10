@@ -45,7 +45,7 @@ import New from './components/New.vue'
  */
 
 const routes = [
-  { path: '/coasters', component: App, alias: '/',
+  { path: '/', component: App,
     children: [
       {
         name: 'home',

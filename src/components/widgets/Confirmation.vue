@@ -1,7 +1,8 @@
 <template lang="html">
   <div class="confirmation">
+		<h4 class="title is-4">{{contents.heading}}</h4>
 		<div class="question">
-			{{message}}
+			{{contents.message}}
 		</div>
 		<span class="button is-primary">Confirm</span>
 		<span @click="close" class="button">Cancel</span>
@@ -14,7 +15,7 @@ export default {
 	data () {
 		return {}
 	},
-	props: ['message'],
+	props: ['contents'],
 
 	methods: {
     close () {

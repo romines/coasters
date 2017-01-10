@@ -38,6 +38,7 @@ const store = new Vuex.Store({
       show: false,
       contents: {
         component: 'Login',
+        heading: '',
         message: ''
       },
       notifications: []
@@ -52,8 +53,7 @@ const store = new Vuex.Store({
   /*=============================================<<<<<*/
 
   mutations: {
-  	increment: state => state.count++,
-    decrement: state => state.count--,
+
     LOG_IN_USER (state, user) {
       state.authState.user = user
     },

@@ -108,12 +108,23 @@ function newCoaster ({ commit, state }, coasterData) {
   newCoasterRef.set(coasterData);
 }
 
+function cancelCoaster ({ commit, state }, key) {
+  if (!key) {
+    alert('Something went wrong')
+    return
+  }
+  coasterData.posted = firebase.database.ServerValue.TIMESTAMP
+  let newCoasterRef = coastersRef.push()
+  newCoasterRef.set(coasterData);
+}
+
 
 export {
 
     getCoasters
   , getHistorical
   , newCoaster
+  , cancelCoaster
   , addFilter
   , listenToFbAuthState
   , signUpUser

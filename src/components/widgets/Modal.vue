@@ -1,8 +1,8 @@
 <template lang="html">
   <div class="modal-mask" @click="close" v-show="show" transition="modal">
     <div class="modal-container" @click.stop>
-      <component :is='modalComponent' :message="message"></component>
 
+      <component :is='modalComponent' :contents="contents"></component>
 
     </div>
   </div>
@@ -28,8 +28,8 @@ export default {
     modalComponent () {
       return this.$store.state.modal.contents.component
     },
-    message () {
-      return this.$store.state.modal.contents.message
+    contents () {
+      return this.$store.state.modal.contents
     }
   },
   mounted () {},
