@@ -11,7 +11,6 @@
 <script>
 import Coaster from './Coaster/Coaster.vue'
 import Filters from './Filters.vue'
-import bus from '../bus'
 import _ from 'underscore'
 import moment from 'moment'
 import mixins from '../mixins'

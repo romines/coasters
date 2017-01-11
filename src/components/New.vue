@@ -28,7 +28,6 @@
 <script>
 
 import { moment } from '../libs'
-import bus from '../bus'
 import router from '../router'
 
 

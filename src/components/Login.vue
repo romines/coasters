@@ -31,7 +31,7 @@
     </div>
 
     <button v-show="authState.user" @click="logOut" class="button">Log out</button>
-    
+
     <div v-if="authError" class="auth-error">{{authError}}</div>
 
     <hr>
@@ -42,7 +42,6 @@
   </form>
 </template>
 <script>
-  import bus from '../bus'
   export default {
     created () {
     },

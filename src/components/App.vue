@@ -17,23 +17,16 @@
 // everyone should probably have
 //
 import moment from 'moment'
-import bus from '../bus'
 
 // all components should probably have
 //
 import router from '../router'
-import Navigation from './Navigation.vue'
+import Navigation from './widgets/Navigation.vue'
 import Modal from './widgets/Modal.vue'
 
 import { firebase } from '../libs'
 import mixins from '../mixins'
 
-
-
-
-// components might establish their own ref
-// this is essentially read only
-// any actions relating to data must go through bus/actions
 
 const db = firebase.database()
 const coastersRef = db.ref('data/coasters')

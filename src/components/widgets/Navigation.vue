@@ -58,8 +58,7 @@
 </template>
 
 <script>
-import bus from '../bus'
-import router from '../router'
+import router from '../../router'
 
 
 export default {
@@ -112,7 +111,8 @@ export default {
 </script>
 
 <style lang="scss" rel="stylesheet/scss">
-@import '../../node_modules/bulma/sass/utilities/mixins.sass';
+// TODO: get node package import working inside style loader
+@import '../../../node_modules/bulma/sass/utilities/mixins.sass';
 .nav-mask {
     position: fixed;
     z-index: 10;
