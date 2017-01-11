@@ -49,24 +49,38 @@ function addFilter({ commit }, filter) {
 }
 
 function signUpUser({ commit }, user) {
-  const addDisplayName = ({displayName}) => {
-    var user = auth.currentUser
+  // const addDisplayName = ({displayName}) => {
+  //   const user = auth.currentUser
+  //
+  //   user.updateProfile({ displayName }).then(
+  //     () => commit('LOG_IN_USER', user)
+  //     , e => {
+  //       console.log(e.message)
+  //       Promise.reject(e)
+  //     }
+  //   )
+  //
+  // }
 
-    user.updateProfile({ displayName }).then(
-      () => commit('LOG_IN_USER', user)
-      , e => console.log(e.message))
+  auth.createUserWithEmailAndPassword(user.email, user.password)
+    .then(user => logInUser({ commit }, user)
+      , (e) => {
+        console.log(e.message)
+        Promise.reject(e)
+      })
+    .then(() => {
+      const firebaseUser = auth.currentUser
+      firebaseUser.updateProfile({displayName: user.displayName})
+    }, (e) => {
+      console.log(e.message)
+      Promise.reject(e)
+    })
 
-  }
-
-  auth.createUserWithEmailAndPassword(user.email, user.password).then(() => {
-
-    logInUser({ commit }, user, addDisplayName)
-  }, e => console.log(e.message))
 }
 
-function logInUser({ commit }, user, cb) {
+function logInUser({ commit }, user) {
   auth.signInWithEmailAndPassword(user.email, user.password).then(() => {
-    cb(user)
+    if (cb) cb(user)
     commit('CLOSE_MODAL')
   }, e => console.log(e.message))
 }
