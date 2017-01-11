@@ -36,9 +36,7 @@ export default {
   },
 
   computed: {
-    whatsFoo () {
 
-    },
     selectedDays () {
       return this.$store.state.coasterFilters.days
     },

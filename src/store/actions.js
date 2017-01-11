@@ -48,7 +48,8 @@ function addFilter({ commit }, filter) {
   commit('ADD_FILTER', filter)
 }
 
-function signUpUser({ commit }, user) {
+function signUpUser({ dispatch, commit }, user) {
+  let testVar = 'myAwesomeTestVar'
   // const addDisplayName = ({displayName}) => {
   //   const user = auth.currentUser
   //
@@ -61,28 +62,27 @@ function signUpUser({ commit }, user) {
   //   )
   //
   // }
-
   auth.createUserWithEmailAndPassword(user.email, user.password)
-    .then(user => logInUser({ commit }, user)
-      , (e) => {
-        console.log(e.message)
-        Promise.reject(e)
-      })
     .then(() => {
       const firebaseUser = auth.currentUser
-      firebaseUser.updateProfile({displayName: user.displayName})
-    }, (e) => {
-      console.log(e.message)
-      Promise.reject(e)
+      return Promise.all([
+        firebaseUser.updateProfile({displayName: user.displayName}),
+        dispatch('logInUser', user)
+      ])
     })
-
+    .catch(error => {
+      console.log(testVar);
+      // commit('AUTH_ERROR', error.message)
+      return Promise.reject(error)
+    })
+  console.log('now do something else');
 }
 
 function logInUser({ commit }, user) {
+  console.log(user)
   auth.signInWithEmailAndPassword(user.email, user.password).then(() => {
-    if (cb) cb(user)
     commit('CLOSE_MODAL')
-  }, e => console.log(e.message))
+  }, e => commit('AUTH_ERROR', e.message))
 }
 
 function logInWithFacebook({ commit }) {

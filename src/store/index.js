@@ -24,7 +24,8 @@ const store = new Vuex.Store({
 
   state: {
     authState: {
-      user: null
+      user: null,
+      error: ''
     },
     count: 0,
     coasters: [],
@@ -60,6 +61,10 @@ const store = new Vuex.Store({
     },
     LOG_OUT_USER (state) {
       state.authState.user = null
+    },
+    AUTH_ERROR (state, error) {
+      console.log('an auth error has occurred...');
+      state.authState.error = error
     },
     GET_COASTERS (state, coasters) {
       state.count = coasters.length

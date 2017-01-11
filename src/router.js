@@ -50,7 +50,7 @@ const routes = [
       {
         name: 'home',
         path: '',
-        component: Home // List should be child of a 'Home' component
+        component: Home
       },
       {
         path: '/picked-up',

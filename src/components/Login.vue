@@ -1,6 +1,5 @@
 <template>
   <form class="auth-form" >
-
     <div v-show="!authState.user" class="no-user">
       <h2 class='title'>{{wantsToSignUp ? 'Sign up' : 'Login'}}</h2>
       <p v-show="wantsToSignUp" class="control has-icon">
@@ -32,6 +31,9 @@
     </div>
 
     <button v-show="authState.user" @click="logOut" class="button">Log out</button>
+    
+    <div v-if="authError" class="auth-error">{{authError}}</div>
+
     <hr>
     <div class="social-providers">
       <a @click="startFacebookLogin" href="#"><i class="fa fa-facebook-square" aria-hidden="true"></i></a>
@@ -45,7 +47,8 @@
     created () {
     },
     computed : {
-      authState () { return this.$store.state.authState }
+      authState () { return this.$store.state.authState },
+      authError () { return this.authState.error }
     },
     data () {
       return {
@@ -61,7 +64,6 @@
         this.$store.dispatch('logInUser', {email: this.email, password: this.password})
       },
       signUp () {
-        console.log(this.email, this.password);
         this.$store.dispatch('signUpUser', {email: this.email, password: this.password, displayName: this.displayName})
       },
       logOut () {
@@ -75,7 +77,7 @@
 </script>
 <style lang="scss">
   .auth-form {
-
+    .auth-error { color: red; }
     h2 {
       margin-bottom: .5em;
     }
