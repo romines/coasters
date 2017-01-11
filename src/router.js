@@ -12,34 +12,12 @@ import New from './components/New.vue'
 
 /**
  *
- *
-
-   /users
-   /users/:id
-   /signup
-   /post
-
-   <!--
-
-   Router View
-
-   /coasters   ... OR ... /
-     uses list component
-
-   /coasters/:id
-     coaster component
-   /picked-up
-     - list
-     - links to detail views that use coaster component
-     - filter options: (default) picked up only
-   /users
-     modified list component?
-   /users/:id
-     need user component
-
-   /signup
-
- -->
+ * TODO:
+ 
+ /users
+   modified list component?
+ /users/:id
+   need user component
 
  *
  */

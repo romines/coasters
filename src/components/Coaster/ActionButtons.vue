@@ -20,6 +20,9 @@ export default {
     },
     detailKey () {
       return this.$store.getters.detailKey
+    },
+    detailCoaster () {
+      return this.$store.getters.detailCoaster
     }
   },
   methods: {
@@ -27,10 +30,18 @@ export default {
       console.log('commenting..')
     },
     pickUp () {
+
+      let pickItUp = () => {
+        this.$store.dispatch('pickUpCoaster', this.detailCoaster)
+      }
+      
       this.$store.commit('SHOW_MODAL', {
         component:'Confirmation',
         heading: 'Confirm Pickup',
-        message: 'Are you sure you want to pick up this shift?'
+        message: 'Are you sure you want to pick up this shift?',
+        actions: {
+          onConfirm: pickItUp
+        }
       })
     },
     cancelCoaster () {
@@ -43,10 +54,10 @@ export default {
       this.$store.commit('SHOW_MODAL', {
         component:'Confirmation',
         heading: 'Cancel Posted Shift',
+        message: 'Are you sure you want to cancel this shift?',
         actions: {
           onConfirm: cancel
-        },
-        message: 'Are you sure you want to cancel this shift?'
+        }
       })
 
     }

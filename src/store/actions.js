@@ -2,6 +2,7 @@ import { firebase, moment, facebookAuthProvider } from '../libs'
 
 const db = firebase.database()
 const auth = firebase.auth()
+const baseRef = db.ref('data')
 const coastersRef = db.ref('data/coasters')
 
 
@@ -49,19 +50,7 @@ function addFilter({ commit }, filter) {
 }
 
 function signUpUser({ dispatch, commit }, user) {
-  let testVar = 'myAwesomeTestVar'
-  // const addDisplayName = ({displayName}) => {
-  //   const user = auth.currentUser
-  //
-  //   user.updateProfile({ displayName }).then(
-  //     () => commit('LOG_IN_USER', user)
-  //     , e => {
-  //       console.log(e.message)
-  //       Promise.reject(e)
-  //     }
-  //   )
-  //
-  // }
+
   auth.createUserWithEmailAndPassword(user.email, user.password)
     .then(() => {
       const firebaseUser = auth.currentUser
@@ -72,10 +61,10 @@ function signUpUser({ dispatch, commit }, user) {
     })
     .catch(error => {
       console.log(testVar);
-      // commit('AUTH_ERROR', error.message)
+      commit('AUTH_ERROR', error.message)
       return Promise.reject(error)
     })
-  console.log('now do something else');
+
 }
 
 function logInUser({ commit }, user) {
@@ -94,7 +83,7 @@ function logInWithFacebook({ commit }) {
     // // The signed-in user info.
     // var user = result.user;
     // // ...
-  }).catch(e => console.log(e));
+  }).catch(e => commit('AUTH_ERROR', e.message));
 }
 
 function logOutUser({}) {
@@ -117,16 +106,47 @@ function newCoaster ({ commit, state }, coasterData) {
     alert('Please login before posting shifts')
     return
   }
-  coasterData.posted = firebase.database.ServerValue.TIMESTAMP
-  let newCoasterRef = coastersRef.push()
-  newCoasterRef.set(coasterData);
+
+  let uid = state.authState.user.uid
+  const key = coastersRef.push().key;
+
+  // Write the coaster data simultaneously in the coaster list and the user's coaster list.
+  let updates = {};
+  updates['/coasters/' + key] = coasterData;
+  updates['/user-coasters/' + uid + '/posted/' + key] = coasterData;
+
+  return baseRef.update(updates);
+}
+
+function writeNewPost(uid, username, picture, title, body) {
+
+
 }
 
 function cancelCoaster ({ commit, state }, key) {
-  if (key) {
-    console.log('attempting to delete coaster: ', key);
-    coastersRef.child(key).remove()
-  }
+
+  let uid = state.authState.user.uid
+  let updates = {};
+  updates['/coasters/' + key] = null
+  updates['/user-coasters/' + uid + '/posted/' + key] = null
+  return baseRef.update(updates);
+
+}
+
+function pickUpCoaster ({ commit, state }, coaster) {
+  const now = moment().format()
+  const user = state.authState.user
+  let history = {}
+
+  history[now] = { name: user.displayName, uid: user.uid }
+  let coasterData = Object.assign({}, coaster, {history})
+  console.log(coasterData);
+  let updates = {};
+  updates['/coasters/' + coaster.key] = coasterData
+  updates['/user-coasters/' + user.uid + '/picked-up/' + coaster.key] = coasterData
+  updates['/user-coasters/' + coaster.postedBy.uid + '/posted/' + coaster.key] = coasterData
+  return baseRef.update(updates);
+
 }
 
 
@@ -135,6 +155,7 @@ export {
     getCoasters
   , getHistorical
   , newCoaster
+  , pickUpCoaster
   , cancelCoaster
   , addFilter
   , listenToFbAuthState
@@ -142,6 +163,5 @@ export {
   , logInUser
   , logInWithFacebook
   , logOutUser
-  // , getCoaster
 
 }

@@ -58,6 +58,7 @@ const store = new Vuex.Store({
 
     LOG_IN_USER (state, user) {
       state.authState.user = user
+      state.authState.error = ''
     },
     LOG_OUT_USER (state) {
       state.authState.user = null

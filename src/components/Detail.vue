@@ -20,7 +20,10 @@ export default {
       return this.$store.getters.detailCoaster
     }
 
-  }
+  },
+  created () {
+    if (!this.coaster) this.$store.dispatch('getCoasters')
+  },
 
 
 }
