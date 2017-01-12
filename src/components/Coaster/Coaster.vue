@@ -15,6 +15,30 @@
       </header>
 
       <div class="card-content">
+
+
+        <div v-show="options.showPickedUp" class="posted-by media">
+          <div class="media-left">
+            <figure class="posted-by-user">
+              <img v-if="pickingUpUser.photoURL" :src="pickingUpUser.photoURL" alt="">
+              <span v-if="!pickingUpUser.photoURL" class="icon is-large">
+                <i class="fa fa-user"></i>
+              </span>
+            </figure>
+          </div>
+
+          <div class="media-content">
+            <ul>
+              <li v-if="pickingUpUser"><strong>{{pickingUpUser.name}}</strong></li>
+              <li>{{longDateString}}</li>
+              <li><strong>{{coaster.time + ' ' + coaster.shiftType}}</strong></li>
+            </ul>
+            <span class="desktop-comments">{{ coaster.comment }}</span>
+          </div>
+        </div>
+
+
+
         <div class="media">
           <div class="media-left">
             <figure class="posted-by-user">
@@ -27,8 +51,8 @@
 
           <div class="media-content">
             <ul>
-              <li>{{longDateString}}</li>
-              <li><strong>{{coaster.time + ' ' + coaster.shiftType}}</strong></li>
+              <li v-show="!options.showPickedUp">{{longDateString}}</li>
+              <li v-show="!options.showPickedUp"><strong>{{coaster.time + ' ' + coaster.shiftType}}</strong></li>
               <li>for <strong>{{coaster.postedBy.displayName}}</strong></li>
               <li><small>{{datePosted}}</small></li>
             </ul>
@@ -40,9 +64,9 @@
 
 
           <span class="mobile-comments">{{ coaster.comment }}</span>
+          <slot name="buttons"></slot>
           <div v-if="isDetailView" class="details">
 
-            <slot></slot>
             <textarea v-if="isCommenting" class="textarea"></textarea>
           </div>
         </div>
@@ -70,9 +94,20 @@ export default {
       isCommenting: false
     }
   },
-  props: ['coaster'],
+  props: ['coaster', 'options'],
 
   computed: {
+    pickingUpUser () {
+      if (!this.coaster.coasterHistory) return
+      let history = this.coaster.coasterHistory
+      let firstPickUp;
+      for(var name in history) {
+          console.log(name);
+          firstPickUp = history[name];
+      }
+      console.log(firstPickUp);
+      return firstPickUp.pickedUpBy
+    },
 
     longDateString () {
       // if (!this.coaster) return

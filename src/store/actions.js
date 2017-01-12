@@ -64,49 +64,50 @@ function getPickedUp ({ commit, state }) {
 
 }
 
+function getLoginError(e) {
+  switch (e.code) {
+    case 'auth/user-not-found':
+      return 'That email address is not recognized'
+      break;
+    case 'auth/invalid-email':
+      return 'Please provide a valid email address'
+      break;
+    case 'auth/wrong-password':
+      return 'That password is incorrect'
+      break;
+    default:
+      return 'An error has occured'
+
+  }
+}
+
 function addFilter({ commit }, filter) {
   commit('ADD_FILTER', filter)
 }
 
+
 function signUpUser({ dispatch, commit }, user) {
 
-  auth.createUserWithEmailAndPassword(user.email, user.password)
-    .then(() => {
-      const firebaseUser = auth.currentUser
-      return Promise.all([
-        firebaseUser.updateProfile({displayName: user.displayName}),
-        dispatch('logInUser', user)
-      ])
-    })
-    .catch(error => {
-      console.log(testVar);
-      commit('AUTH_ERROR', error.message)
-      return Promise.reject(error)
-    })
+  firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
+  .then(function () {
+    let currentUser = firebase.auth().currentUser;
+    currentUser.updateProfile({
+      displayName: user.displayName
+    });
+    commit('UPDATE_USERNAME', user.displayName)
+  })
+  .catch(function(error) {
+    console.log(error.message);
+  });
 
 }
+
 
 function logInUser({ commit }, user) {
   console.log(user)
   auth.signInWithEmailAndPassword(user.email, user.password).then(() => {},
     (e) => {
-      console.log(e);
-
-      switch (e.code) {
-        case 'auth/user-not-found':
-          commit('AUTH_ERROR', 'That email address is not recognized')
-          break;
-        case 'auth/invalid-email':
-          commit('AUTH_ERROR', 'Please provide a valid email address')
-          break;
-        case 'auth/wrong-password':
-          commit('AUTH_ERROR', 'That password is incorrect')
-          break;
-        default:
-          commit('AUTH_ERROR', 'An error has occured')
-
-      }
-
+      commit('AUTH_ERROR', getLoginError(e))
     }
   )
 }
@@ -181,12 +182,12 @@ function pickUpCoaster ({ commit, state }, coaster) {
     pickedUpBy: {
       name: user.displayName,
       uid: user.uid,
-      photoURL: user.photoURL
+      photoURL: user.photoURL ? user.photoURL : null
     },
     coveringFor: {
       name: coaster.postedBy.displayName,
       uid: coaster.postedBy.uid,
-      photoURL: coaster.postedBy.photoURL
+      photoURL: coaster.postedBy.photoURL ? coaster.postedBy.photoURL : null
     }
   }
   const newHistoryItemRef = coastersRef.child(coaster.key).child('coasterHistory').push()

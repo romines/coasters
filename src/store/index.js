@@ -67,6 +67,9 @@ const store = new Vuex.Store({
       console.log('an auth error has occurred...');
       state.authState.error = error
     },
+    UPDATE_USERNAME (state, username) {
+      state.authState.user.displayName = username
+    },
     GET_COASTERS (state, coasters) {
       state.count = coasters.length
       state.coasters = coasters

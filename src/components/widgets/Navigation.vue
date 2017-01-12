@@ -45,7 +45,7 @@
               <span class="icon"><i class="fa fa-user"></i></span>
 
               <span v-show="!authState.user" @click.stop="launchLoginModal" class="text-only title">Login</span>
-              <span v-show="authState.user" class="text-only">{{displayName}}</span>
+              <span v-show="authState.user" class="text-only">{{displayName ? displayName : userEmail}}</span>
             </a>
             <i v-show="authState.user" @click="logOut" class="fa fa-power-off"></i>
 
@@ -79,9 +79,14 @@ export default {
     authState () {
       return this.$store.state.authState
     },
+    userEmail () {
+      if (!this.authState.user) return
+      return this.authState.user.email
+    },
     displayName () {
       if (!this.authState.user) return
-      return this.authState.user.displayName ? this.authState.user.displayName : this.authState.user.email
+
+      return this.authState.user.displayName //? this.authState.user.displayName : this.authState.user.email
     },
     userKey () {
       if (!this.authState.user) return
@@ -101,6 +106,7 @@ export default {
       this.$store.commit('SHOW_MODAL', {component: 'Login'})
     },
     logOut () {
+      router.push('/')
       this.$store.dispatch('logOutUser')
     },
     toHome () {

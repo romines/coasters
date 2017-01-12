@@ -54,8 +54,8 @@ export default {
   },
   methods: {
     logOut () {
-      this.$store.dispatch('logOutUser')
       router.push('/')
+      this.$store.dispatch('logOutUser')
     }
   }
 }
