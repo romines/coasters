@@ -19,31 +19,34 @@
         </span>
 
         <div :class="{ 'is-active' : burgerActive}" class="nav-right nav-menu">
-          <span class="nav-item"  href="#">
-            <a @click="toHome" class="button" :class="{ 'is-active': navState.home }">
-              <i class="icon-only fa fa-home"></i>
+          <span class="nav-item">
+            <a @click.stop="toHome" class="title" :class="{ 'is-active': navState.home }">
+              <span class="icon"><i class="fa fa-home"></i></span>
               <span class="text-only">Home</span>
             </a>
           </span>
-          <span class="nav-item" href="#">
-            <a @click="toHistory" class="button" :class="{ 'is-active': navState.history }">
-              <i class="icon-only fa fa-handshake-o"></i>
+
+          <span class="nav-item">
+            <a @click.stop="toHistory" class="title" :class="{ 'is-active': navState.history }">
+              <span class="icon"><i class="fa fa-handshake-o"></i></span>
               <span class="text-only">Picked Up</span>
             </a>
           </span>
-          <span class="nav-item" href="#">
-            <a @click="toNew" class="button" :class="{ 'is-active': navState.post }">
-              <i class="icon-only fa fa-plus"></i>
+
+          <span class="nav-item">
+            <a @click.stop="toNew" class="title" :class="{ 'is-active': navState.post }">
+              <span class="icon"><i class="fa fa-plus"></i></span>
               <span class="text-only">Post New</span>
             </a>
           </span>
-          <span v-show="!authState.user" class="nav-item" href="#">
-            <span @click="launchLoginModal" class="button">Login</span>
-          </span>
-          <span v-show="authState.user" class="nav-item user">
-            <i class="icon-only fa fa-user"></i>
-            <span class="display-name">{{displayName}}</span>
-            <span @click="logOut"><i class="fa fa-power-off"></i></span>
+
+          <span @click="toUserHome" class="nav-item user" >
+            <a class="title">
+              <span class="icon"><i class="fa fa-user"></i></span>
+
+              <span v-show="!authState.user" @click.stop="launchLoginModal" class="text-only title">Login</span>
+              <span v-show="authState.user" class="text-only title">{{displayName}}</span>
+            </a>
           </span>
 
         </div>
@@ -78,6 +81,10 @@ export default {
       if (!this.authState.user) return
       return this.authState.user.displayName ? this.authState.user.displayName : this.authState.user.email
     },
+    userKey () {
+      if (!this.authState.user) return
+      return this.authState.user.uid
+    },
     navState () {
       return {
         home: this.$store.state.route.path === '/',
@@ -95,6 +102,7 @@ export default {
       this.$store.dispatch('logOutUser')
     },
     toHome () {
+      console.log('something is calling "toHome"');
       router.push({ path: '/' })
       this.burgerActive = false
     },
@@ -104,6 +112,15 @@ export default {
     },
     toNew () {
       router.push({ path: '/new' })
+      this.burgerActive = false
+    },
+    toUserHome () {
+      router.push({
+        name: 'user',
+        params: {
+          key: this.userKey
+        }
+      })
       this.burgerActive = false
     }
   }
@@ -124,40 +141,86 @@ export default {
     transition: opacity .3s ease;
 }
 .nav {
-  padding-bottom: .6em;
-  margin-bottom: .6em;
+  .icon {
+    vertical-align: middle;
+    line-height: 1;
+  }
+  .title {
+    line-height: normal;
+  }
   z-index: 11;
 
   @include mobile {
+
     background-color: #23d482;
     height: 11vh;
     .nav-toggle {
       height: 11vh;
       width: 11vh;
     }
+    .nav-item {
+      text-align: left;
+    }
   }
 
   .is-brand {
     color: rgb(33, 33, 33);
   }
-  .icon-only {
-    display: none;
-    @include desktop {
-      display: inline;
-    };
+
+  @include mobile {
+    .nav-item {
+
+      display: flex;
+      align-items: center;
+      & > * {
+        // line-height: 0.8em;
+        vertical-align: middle;
+
+      }
+      .icon {
+        width: 2.5em;
+        border-right: 1px solid grey;
+        padding-right: .5em;
+        margin-right: .5em;
+
+      }
+      .text-only {
+        font-size: .8em;
+        // display: none;
+      }
+
+    }
   }
+  @include tablet {
 
-  .fa-user, .display-name { margin: 0 .7em; }
-
-  // .fa-power-off {}
-
-  .text-only {
-    @include desktop {
+    border-bottom: 1px solid grey;
+    .text-only {
       display: none;
-    };
+    }
+    .user {
+      font-size: 28px;
+      .icon{
+        float: right;
+        padding: .2em;
+      }
+      // margin-right: -1em;
+    }
   }
-
-  .user { justify-content: center; }
-
+  @include desktop {
+    .text-only {
+      display: flex;
+      font-size: .8em;
+    }
+    .icon {
+      display: none;
+    }
+    .user .icon {
+      display: flex;
+    }
+  }
 }
+
+
+
+
 </style>

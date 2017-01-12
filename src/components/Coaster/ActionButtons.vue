@@ -16,6 +16,7 @@ export default {
   props: ['postedBy'],
   computed: {
     myOwnCoaster () {
+      if (!this.$store.state.authState.user) return
       return this.postedBy === this.$store.state.authState.user.uid
     },
     detailKey () {
@@ -34,7 +35,7 @@ export default {
       let pickItUp = () => {
         this.$store.dispatch('pickUpCoaster', this.detailCoaster)
       }
-      
+
       this.$store.commit('SHOW_MODAL', {
         component:'Confirmation',
         heading: 'Confirm Pickup',

@@ -103,7 +103,7 @@ export default {
   methods: {
 
     makeDetail (coaster) {
-      if (!this.coaster && this.isDetailView) return // wtf?
+      if (!this.coaster || this.isDetailView) return
       router.push({ name: 'detail', params: { id: this.coaster.key }})
     },
     closeDetailView () {

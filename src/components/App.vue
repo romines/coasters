@@ -98,6 +98,7 @@ export default {
 
 .coaster { @extend .box }
 .container { max-width: 1080px;}
+
 main {
   @include mobile {
     padding-bottom: 11vh;
