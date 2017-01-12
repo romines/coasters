@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="home">
-    <h1 class="title header">Historical Shifts</h1>
-    <list :coasters="historical"></list>
+    <h1 class="title header">Covered Shifts</h1>
+    <list :coasters="pickedUp"></list>
   </div>
 </template>
 
@@ -14,12 +14,15 @@ export default {
     }
   },
   created () {
-    console.log('PickedUp component was created');
-    this.$store.dispatch('getHistorical')
+    if (this.pickedUp.length <1) this.$store.dispatch('getCoasters')
   },
   computed: {
-    historical () {
-      return this.$store.state.historical
+    pickedUp () {
+      return this.$store.state.coasters.filter((coaster) => {
+        console.log(coaster.coasterHistory);
+        return coaster.coasterHistory
+      })
+
     }
   },
   components: { List },

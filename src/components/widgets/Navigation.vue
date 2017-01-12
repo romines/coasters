@@ -19,22 +19,22 @@
         </span>
 
         <div :class="{ 'is-active' : burgerActive}" class="nav-right nav-menu">
-          <span class="nav-item">
-            <a @click.stop="toHome" class="title" :class="{ 'is-active': navState.home }">
+          <span :class="{ 'is-active': navState.home }" class="nav-item">
+            <a @click.stop="toHome" class="title">
               <span class="icon"><i class="fa fa-home"></i></span>
               <span class="text-only">Home</span>
             </a>
           </span>
 
-          <span class="nav-item">
-            <a @click.stop="toHistory" class="title" :class="{ 'is-active': navState.history }">
+          <span :class="{ 'is-active': navState.history }" class="nav-item">
+            <a @click.stop="toHistory" class="title">
               <span class="icon"><i class="fa fa-handshake-o"></i></span>
               <span class="text-only">Picked Up</span>
             </a>
           </span>
 
-          <span class="nav-item">
-            <a @click.stop="toNew" class="title" :class="{ 'is-active': navState.post }">
+          <span :class="{ 'is-active': navState.post }" class="nav-item">
+            <a @click.stop="toNew" class="title">
               <span class="icon"><i class="fa fa-plus"></i></span>
               <span class="text-only">Post New</span>
             </a>
@@ -45,7 +45,7 @@
               <span class="icon"><i class="fa fa-user"></i></span>
 
               <span v-show="!authState.user" @click.stop="launchLoginModal" class="text-only title">Login</span>
-              <span v-show="authState.user" class="text-only title">{{displayName}}</span>
+              <span v-show="authState.user" class="text-only">{{displayName}}</span>
             </a>
           </span>
 
@@ -141,6 +141,13 @@ export default {
     transition: opacity .3s ease;
 }
 .nav {
+  .nav-item.is-active {
+    background-color: whitesmoke;
+    & * {
+      color: black;
+    }
+
+  }
   .icon {
     vertical-align: middle;
     line-height: 1;

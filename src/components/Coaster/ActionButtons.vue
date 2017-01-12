@@ -33,6 +33,7 @@ export default {
     pickUp () {
 
       let pickItUp = () => {
+        console.log('pickItUp, yo');
         this.$store.dispatch('pickUpCoaster', this.detailCoaster)
       }
 

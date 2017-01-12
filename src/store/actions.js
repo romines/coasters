@@ -26,10 +26,29 @@ function getCoasters ({ commit, state }) {
 
 }
 
-function getHistorical ({ commit, state }) {
+function getPickedUp ({ commit, state }) {
   console.log('attempting to get historical');
   let today = moment().format('YYYY-MM-DD')
-  let listRef = coastersRef.orderByChild('date').endAt(today)
+  let listRef = coastersRef.orderByChild('date').startAt(today)
+
+  listRef.on('value', (snap) => {
+    let coasters = []
+    snap.forEach((childSnap) => {
+      let coaster = childSnap.val()
+      coaster.key = childSnap.key
+      coasters.push(coaster)
+    })
+
+    commit('GET_HISTORICAL', coasters)
+
+  })
+
+}
+
+function getPickedUp ({ commit, state }) {
+  console.log('attempting to get historical');
+  let today = moment().format('YYYY-MM-DD')
+  let listRef = coastersRef.orderByChild('date').startAt(today)
 
   listRef.on('value', (snap) => {
     let coasters = []
@@ -107,21 +126,22 @@ function newCoaster ({ commit, state }, coasterData) {
     return
   }
 
-  let uid = state.authState.user.uid
+  let postedBy = {
+    uid: state.authState.user.uid,
+    displayName: state.authState.user.displayName,
+    photoURL: state.authState.user.photoURL
+  }
   const key = coastersRef.push().key;
+  coasterData.posted = moment().format()
 
   // Write the coaster data simultaneously in the coaster list and the user's coaster list.
   let updates = {};
   updates['/coasters/' + key] = coasterData;
-  updates['/user-coasters/' + uid + '/posted/' + key] = coasterData;
+  updates['/user-coasters/' + postedBy.uid + '/posted/' + key] = coasterData;
 
   return baseRef.update(updates);
 }
 
-function writeNewPost(uid, username, picture, title, body) {
-
-
-}
 
 function cancelCoaster ({ commit, state }, key) {
 
@@ -136,11 +156,26 @@ function cancelCoaster ({ commit, state }, key) {
 function pickUpCoaster ({ commit, state }, coaster) {
   const now = moment().format()
   const user = state.authState.user
-  let history = {}
+  let transaction = {
+    when: now,
+    pickedUpBy: {
+      name: user.displayName,
+      uid: user.uid,
+      photoURL: user.photoURL
+    },
+    coveringFor: {
+      name: coaster.postedBy.displayName,
+      uid: coaster.postedBy.uid,
+      photoURL: coaster.postedBy.photoURL
+    }
+  }
+  const newHistoryItemRef = coastersRef.child(coaster.key).child('coasterHistory').push()
+  const newHistoryItemKey = newHistoryItemRef.key
 
-  history[now] = { name: user.displayName, uid: user.uid }
-  let coasterData = Object.assign({}, coaster, {history})
-  console.log(coasterData);
+  let coasterHistory = {}
+  coasterHistory[newHistoryItemKey] = transaction
+  let coasterData = Object.assign({}, coaster, {coasterHistory})
+  // console.log(coasterData);
   let updates = {};
   updates['/coasters/' + coaster.key] = coasterData
   updates['/user-coasters/' + user.uid + '/picked-up/' + coaster.key] = coasterData
@@ -153,7 +188,7 @@ function pickUpCoaster ({ commit, state }, coaster) {
 export {
 
     getCoasters
-  , getHistorical
+  , getPickedUp
   , newCoaster
   , pickUpCoaster
   , cancelCoaster

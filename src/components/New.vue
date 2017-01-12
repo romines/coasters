@@ -2,7 +2,7 @@
   <div class="new">
     <h3>{{test}}</h3>
     <div class="form">
-      <Flatpickr @update="pickDate" :value="datePickerMsg" />
+      <Flatpickr @update="pickDate" :value="date" />
       <!-- <datepicker v-model="date" :config="{static: true}"></datepicker> -->
       <p class="control">
         <span class="select">
@@ -39,8 +39,8 @@ export default {
 
   data () {
     return {
-      datePickerMsg: '2017-01-19',
-      date: moment().format('YYYY-MM-DD'),
+      datePickerMsg: 'lalalala',
+      date: moment().add(1, 'day').format('YYYY-MM-DD'),
       time: '',
       shiftType: 'Serve',
       comment: 'Lorem ipsum shift comments that are super awesome',
@@ -73,7 +73,6 @@ export default {
           time: this.time,
           shiftType: this.shiftType,
           comment: this.comment,
-          pickedUp: false,
           postedBy: {
             uid: this.$store.state.authState.user.uid,
             displayName: this.$store.state.authState.user.displayName,

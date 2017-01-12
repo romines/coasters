@@ -42,7 +42,12 @@ export default {
 			this.$store.commit('SHOW_MODAL', {component: 'Login'})
 		},
 		toUserHome () {
-			this.$store.dispatch('logOutUser')
+      router.push({
+        name: 'user',
+        params: {
+          key: this.userKey
+        }
+      })
 		},
 		toHome () {
 			router.push({ path: '/' })

@@ -38,10 +38,11 @@
 
         <div class="content">
 
+
           <span class="mobile-comments">{{ coaster.comment }}</span>
           <div v-if="isDetailView" class="details">
 
-            <action-buttons :postedBy="coaster.postedBy.uid"></action-buttons>
+            <slot></slot>
             <textarea v-if="isCommenting" class="textarea"></textarea>
           </div>
         </div>
@@ -107,7 +108,6 @@ export default {
       router.push({ name: 'detail', params: { id: this.coaster.key }})
     },
     closeDetailView () {
-      console.log('wha?');
       router.push({ path: '/'})
     },
 

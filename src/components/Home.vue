@@ -1,9 +1,6 @@
 <template lang="html">
   <div class="home container">
     <h1 class="title header">Available Shifts</h1>
-    <div class="test">
-      <span @click="wtf" class="button">WTF</span>
-    </div>
     <list :coasters="coasters"></list>
   </div>
 </template>
@@ -31,19 +28,13 @@ export default {
       }
     },
     coasters () {
-      return this.$store.state.coasters
+      return this.$store.state.coasters.filter((coaster) => {
+        return !coaster.history
+      })
     }
   },
   methods: {
-    wtf () {
-      console.log('WTF');
-      router.push({
-        name: 'user',
-        params: {
-          key: this.$store.state.authState.user.uid
-        }
-      })
-    }
+
   },
   mounted () {},
 }

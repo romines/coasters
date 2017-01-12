@@ -25,11 +25,11 @@
       v-bind:class="{ 'is-active': isActiveFilter('days', index) }"
       class="dayOfWeek button">{{day}}
     </span>
-
-    <span @click="clearDayFilter" class="button">Clear All</span>
+    &nbsp;
+    <span @click="clearDayFilter" class="button"><i class="fa fa-close"></i></span>
 
   </div>
-  
+
 </template>
 
 <script>
