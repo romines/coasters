@@ -76,7 +76,10 @@
 </script>
 <style lang="scss">
   .auth-form {
-    .auth-error { color: red; }
+    .auth-error {
+      margin-top: .7em;
+      color: red;
+    }
     h2 {
       margin-bottom: .5em;
     }

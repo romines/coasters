@@ -88,9 +88,27 @@ function signUpUser({ dispatch, commit }, user) {
 
 function logInUser({ commit }, user) {
   console.log(user)
-  auth.signInWithEmailAndPassword(user.email, user.password).then(() => {
-    commit('CLOSE_MODAL')
-  }, e => commit('AUTH_ERROR', e.message))
+  auth.signInWithEmailAndPassword(user.email, user.password).then(() => {},
+    (e) => {
+      console.log(e);
+
+      switch (e.code) {
+        case 'auth/user-not-found':
+          commit('AUTH_ERROR', 'That email address is not recognized')
+          break;
+        case 'auth/invalid-email':
+          commit('AUTH_ERROR', 'Please provide a valid email address')
+          break;
+        case 'auth/wrong-password':
+          commit('AUTH_ERROR', 'That password is incorrect')
+          break;
+        default:
+          commit('AUTH_ERROR', 'An error has occured')
+
+      }
+
+    }
+  )
 }
 
 function logInWithFacebook({ commit }) {
@@ -113,6 +131,7 @@ function listenToFbAuthState({ commit }) {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
       commit('LOG_IN_USER', user)
+      commit('CLOSE_MODAL')
     } else {
       console.log('no one logged in');
       commit('LOG_OUT_USER', user)
