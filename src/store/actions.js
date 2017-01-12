@@ -124,6 +124,7 @@ function logInWithFacebook({ commit }) {
 }
 
 function logOutUser({}) {
+  console.log('logging out');
   firebase.auth().signOut()
 }
 

@@ -29,6 +29,10 @@ export default {
     authState () {
       return this.$store.state.authState
     },
+    userKey () {
+      if (!this.authState.user) return
+      return this.authState.user.uid
+    },
     navState () {
       return {
         home: this.$store.state.route.path === '/',

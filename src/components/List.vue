@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="list">
-    <filters v-on:setDay="setDay($event)"></filters>
+    <filters v-show="!options.noFilters" v-on:setDay="setDay($event)"></filters>
     <ul>
       <coaster v-for="coaster in filteredCoasters" :coaster="coaster"></coaster>
     </ul>
@@ -26,7 +26,7 @@ export default {
       selectedDays: []
     }
   },
-  props: ['coasters'],
+  props: ['coasters', 'options'],
   mixins: [mixins],
 
   components: {

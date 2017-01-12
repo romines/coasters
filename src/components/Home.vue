@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="home container">
     <h1 class="title header">Available Shifts</h1>
-    <list :coasters="coasters"></list>
+    <list :coasters="coasters" :options="{}"></list>
   </div>
 </template>
 

@@ -79,7 +79,12 @@ export default {
             photoURL: this.$store.state.authState.user.photoURL,
           }
       })
-      router.push({path: '/'})
+      router.push({
+        name: 'user',
+        params: {
+          key: this.userKey
+        }
+      })
       // TODO: only redirect on successful persist
     }
   }

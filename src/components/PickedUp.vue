@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="home">
     <h1 class="title header">Covered Shifts</h1>
-    <list :coasters="pickedUp"></list>
+    <list :coasters="pickedUp" :options="{}"></list>
   </div>
 </template>
 
