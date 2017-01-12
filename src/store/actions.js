@@ -201,6 +201,7 @@ function pickUpCoaster ({ commit, state }, coaster) {
   updates['/coasters/' + coaster.key] = coasterData
   updates['/user-coasters/' + user.uid + '/picked-up/' + coaster.key] = coasterData
   updates['/user-coasters/' + coaster.postedBy.uid + '/posted/' + coaster.key] = coasterData
+  commit('CLOSE_MODAL')
   return baseRef.update(updates);
 
 }

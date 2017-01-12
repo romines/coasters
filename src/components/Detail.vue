@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="detail">
-    <coaster v-if="coaster" :coaster="coaster">
+    <coaster :options="{}" v-if="coaster" :coaster="coaster">
       <footer slot="buttons" class="card-footer">
         <a v-if="!myOwnCoaster" @click.stop="pickUp" class="card-footer-item">Pick Up</a>
         <a @click.stop="startCommenting()" class="card-footer-item">Comment</a>
@@ -13,6 +13,7 @@
 <script>
 
 import Coaster from './Coaster/Coaster.vue'
+import router from '../router'
 
 export default {
 
@@ -48,6 +49,7 @@ export default {
 
       let pickItUp = () => {
         this.$store.dispatch('pickUpCoaster', this.coaster)
+        setTimeout(() => {router.push('/picked-up')}, 400)
       }
 
       let launchLoginModal = () => {
