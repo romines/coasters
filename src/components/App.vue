@@ -1,5 +1,6 @@
 <template>
   <div id="app-container">
+  <main>
 
     <modal></modal>
 
@@ -8,6 +9,10 @@
     <section class="section">
       <router-view></router-view>
     </section>
+
+    <bottom-nav></bottom-nav>
+
+  </main>
 
   </div>
 </template>
@@ -22,6 +27,7 @@ import moment from 'moment'
 //
 import router from '../router'
 import Navigation from './widgets/Navigation.vue'
+import BottomNav from './widgets/BottomNav.vue'
 import Modal from './widgets/Modal.vue'
 
 import { firebase } from '../libs'
@@ -54,7 +60,8 @@ export default {
 
   components: {
     Navigation,
-    Modal
+    Modal,
+    BottomNav
   },
   created () {
     this.$store.dispatch('listenToFbAuthState')
@@ -86,8 +93,16 @@ export default {
 <!-- <style src="bulma/css/bulma.css"></style> -->
 
 <style lang="scss">
+@import '../../node_modules/bulma/sass/utilities/mixins.sass';
 @import '../../node_modules/bulma/bulma.sass';
+
 .coaster { @extend .box }
+.container { max-width: 1080px;}
+main {
+  @include mobile {
+    padding-bottom: 11vh;
+  };
+}
 ul {
   list-style-type: none;
 }

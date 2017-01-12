@@ -6,7 +6,7 @@
     <nav class="nav">
       <div class="container">
         <div class="nav-left">
-          <a class="nav-item is-brand" @click="toHome">
+          <a class="nav-item is-brand title" @click="toHome">
             SRB Coasters
           </a>
         </div>
@@ -27,7 +27,7 @@
           </span>
           <span class="nav-item" href="#">
             <a @click="toHistory" class="button" :class="{ 'is-active': navState.history }">
-              <i class="icon-only fa fa-history"></i>
+              <i class="icon-only fa fa-handshake-o"></i>
               <span class="text-only">Picked Up</span>
             </a>
           </span>
@@ -128,6 +128,18 @@ export default {
   margin-bottom: .6em;
   z-index: 11;
 
+  @include mobile {
+    background-color: #23d482;
+    height: 11vh;
+    .nav-toggle {
+      height: 11vh;
+      width: 11vh;
+    }
+  }
+
+  .is-brand {
+    color: rgb(33, 33, 33);
+  }
   .icon-only {
     display: none;
     @include desktop {
