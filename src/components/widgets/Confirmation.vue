@@ -4,7 +4,7 @@
 		<div class="question">
 			{{contents.message}}
 		</div>
-		<span @click="confirm" class="button is-primary">Confirm</span>
+    <span v-for="button in contents.buttons" @click="button.action" :class="button.classList" class="button">{{button.label}}</span>
 		<span @click="close" class="button">Cancel</span>
   </div>
 </template>

@@ -50,14 +50,39 @@ export default {
         this.$store.dispatch('pickUpCoaster', this.coaster)
       }
 
-      this.$store.commit('SHOW_MODAL', {
-        component:'Confirmation',
-        heading: 'Confirm Pickup',
-        message: 'Are you sure you want to pick up this shift?',
-        actions: {
-          onConfirm: pickItUp
-        }
-      })
+      let launchLoginModal = () => {
+        this.$store.commit('SHOW_MODAL', {component: 'Login'})
+      }
+
+      if (!this.$store.state.authState.user) {
+        this.$store.commit('SHOW_MODAL', {
+          component:'Confirmation',
+          heading: 'You Must Login',
+          message: '. . . before picking up shifts',
+          buttons: [
+            {
+              label: 'Login',
+              action: launchLoginModal,
+              classList: 'is-primary'
+            }
+          ]
+        })
+      } else {
+        this.$store.commit('SHOW_MODAL', {
+          component:'Confirmation',
+          heading: 'Confirm Pickup',
+          message: 'Are you sure you want to pick up this shift?',
+          buttons: [
+            {
+              label: 'Confirm',
+              action: pickItUp,
+              classList: 'is-primary'
+            }
+          ]
+        })
+      }
+
+
     },
     cancelCoaster () {
 

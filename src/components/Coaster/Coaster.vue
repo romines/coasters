@@ -57,12 +57,10 @@ import router from '../../router'
 import moment from 'moment'
 import mixins from '../../mixins'
 import * as myButton from '../widgets/Button.vue'
-import ActionButtons from './ActionButtons.vue'
 
 
 export default {
   components: {
-    ActionButtons,
     myButton
   },
   mixins: [mixins],

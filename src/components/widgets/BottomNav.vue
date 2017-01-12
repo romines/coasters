@@ -13,7 +13,7 @@
 			<i class="fa fa-plus"></i>
 		</span>
 
-		<span v-show="authState.user" @click="toUserHome" class="bottom-nav-item user">
+		<span @click="toUserHome" class="bottom-nav-item user">
 			<i class="fa fa-user"></i>
 		</span>
 
@@ -42,12 +42,18 @@ export default {
 			this.$store.commit('SHOW_MODAL', {component: 'Login'})
 		},
 		toUserHome () {
-      router.push({
-        name: 'user',
-        params: {
-          key: this.userKey
-        }
-      })
+      if (!this.$store.state.authState.user) {
+        this.$store.commit('SHOW_MODAL', {
+          component:'Login',
+        })
+      } else {
+        router.push({
+          name: 'user',
+          params: {
+            key: this.userKey
+          }
+        })
+      }
 		},
 		toHome () {
 			router.push({ path: '/' })

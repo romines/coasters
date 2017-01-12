@@ -40,13 +40,15 @@
             </a>
           </span>
 
-          <span @click="toUserHome" class="nav-item user" >
-            <a class="title">
+          <span class="nav-item user" >
+            <a @click="toUserHome" class="title">
               <span class="icon"><i class="fa fa-user"></i></span>
 
               <span v-show="!authState.user" @click.stop="launchLoginModal" class="text-only title">Login</span>
               <span v-show="authState.user" class="text-only">{{displayName}}</span>
             </a>
+            <i v-show="authState.user" @click="logOut" class="fa fa-power-off"></i>
+
           </span>
 
         </div>
@@ -167,6 +169,13 @@ export default {
     }
     .nav-item {
       text-align: left;
+      .title:not(:last-child) {
+        margin-bottom: 10px;
+      }
+    }
+    .fa-power-off {
+      position: absolute;
+      right: 1em;
     }
   }
 
