@@ -1,5 +1,6 @@
 <template lang="html">
   <div v-if="coaster" @click="makeDetail()" class="coaster">
+    <slot name="titleBar"></slot>
     <div class="card is-fullwidth">
 
       <header class="card-header">
@@ -64,11 +65,13 @@
 
         <div class="content">
 
-
           <span class="mobile-comments">{{ coaster.comment }}</span>
-          <slot name="buttons"></slot>
-          <div v-if="isDetailView" class="details">
 
+
+          <slot name="buttons"></slot>
+
+
+          <div v-if="isDetailView" class="details">
             <textarea v-if="isCommenting" class="textarea"></textarea>
           </div>
         </div>

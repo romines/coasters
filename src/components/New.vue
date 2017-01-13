@@ -19,7 +19,6 @@
       <span :class="{ 'is-active': isPM }" class="button" @click="time = 'PM'">PM</span>
 
       <textarea v-model="comment" class="textarea"></textarea>
-      <span>{{myDate }}</span>
     </div>
     <button @click="newCoaster" class="button">Submit</button>
   </div>

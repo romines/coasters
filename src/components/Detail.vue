@@ -1,6 +1,9 @@
 <template lang="html">
   <div class="detail">
     <coaster :options="{}" v-if="coaster" :coaster="coaster">
+      <title-bar slot="titleBar">Hi, I'm the title bar from the Detail view</title-bar>
+
+
       <footer slot="buttons" class="card-footer">
         <a v-if="!myOwnCoaster" @click.stop="pickUp" class="card-footer-item">Pick Up</a>
         <a @click.stop="startCommenting()" class="card-footer-item">Comment</a>
