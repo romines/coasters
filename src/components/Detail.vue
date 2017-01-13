@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="detail">
     <coaster :options="{}" v-if="coaster" :coaster="coaster">
-      <title-bar slot="titleBar">Hi, I'm the title bar from the Detail view</title-bar>
+      <!-- <div slot="titleBar">Hi, I'm the title bar from the Detail view</div> -->
 
 
       <footer slot="buttons" class="card-footer">
