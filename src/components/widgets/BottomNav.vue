@@ -78,6 +78,17 @@ export default {
 <style lang="scss">
 	// TODO: get node package import working inside style loader
 	@import '../../../node_modules/bulma/sass/utilities/mixins.sass';
+	.safari .bottom-nav {
+		bottom: 44px;
+		margin-bottom: -44px;
+	}
+	.fullscreen.safari .bottom-nav {
+		margin-bottom: 0;
+		h1.title.header {
+			color: red;
+		}
+	}
+
 	.bottom-nav {
 		height: 11vh;
 		width: 100%;

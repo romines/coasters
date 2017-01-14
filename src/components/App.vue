@@ -10,6 +10,7 @@
       <router-view></router-view>
     </section>
 
+    <div class="safari-hack"></div>
     <bottom-nav></bottom-nav>
 
   </main>
@@ -68,7 +69,6 @@ export default {
   },
   data: function () {
     return {
-
     }
   },
 
@@ -89,6 +89,8 @@ export default {
 
   }
 }
+
+
 </script>
 <!-- <style src="bulma/css/bulma.css"></style> -->
 
@@ -100,6 +102,7 @@ export default {
 .container { max-width: 1080px;}
 
 main {
+
   @include mobile {
     padding-bottom: 11vh;
   };
@@ -107,5 +110,25 @@ main {
 ul {
   list-style-type: none;
 }
+
+.safari-hack {
+  display: none;
+}
+.safari .safari-hack {
+  display: block;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 44px;
+  overflow: hidden;
+  background-color: #4679c7;
+}
+// keep stupid safari action and url bar around all the time, I guess
+// html, body.safari {
+//   height: 100% -44px;
+//   overflow-y: scroll;
+//   -webkit-overflow-scrolling: touch;
+// }
+
 
 </style>
