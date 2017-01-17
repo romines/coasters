@@ -1,7 +1,6 @@
 <template lang="html">
   <div class="detail">
     <coaster :options="{}" v-if="coaster" :coaster="coaster">
-      <!-- <div slot="titleBar">Hi, I'm the title bar from the Detail view</div> -->
 
 
       <footer slot="buttons" class="card-footer">
@@ -9,6 +8,7 @@
         <a @click.stop="startCommenting()" class="card-footer-item">Comment</a>
         <a v-if="myOwnCoaster" @click.stop="cancelCoaster()" class="card-footer-item">Cancel</a>
       </footer>
+      
     </coaster>
   </div>
 </template>

@@ -39,6 +39,10 @@ module.exports = {
       }
     ]
   },
+  plugins: [
+    new webpack.NamedModulesPlugin(),
+    // prints more readable module names in the browser console on HMR updates
+  ],
   devServer: {
     historyApiFallback: true,
     noInfo: true

@@ -7,7 +7,7 @@ const coastersRef = db.ref('data/coasters')
 
 
 function getCoasters ({ commit, state }) {
-  console.log('attempting to get coasters');
+  console.log('Getting coasters . . .');
   let today = moment().format('YYYY-MM-DD')
   let listRef = coastersRef.orderByChild('date').startAt(today)
 
@@ -21,44 +21,6 @@ function getCoasters ({ commit, state }) {
     })
 
     commit('GET_COASTERS', coasters)
-
-  })
-
-}
-
-function getPickedUp ({ commit, state }) {
-  console.log('attempting to get historical');
-  let today = moment().format('YYYY-MM-DD')
-  let listRef = coastersRef.orderByChild('date').startAt(today)
-
-  listRef.on('value', (snap) => {
-    let coasters = []
-    snap.forEach((childSnap) => {
-      let coaster = childSnap.val()
-      coaster.key = childSnap.key
-      coasters.push(coaster)
-    })
-
-    commit('GET_HISTORICAL', coasters)
-
-  })
-
-}
-
-function getPickedUp ({ commit, state }) {
-  console.log('attempting to get historical');
-  let today = moment().format('YYYY-MM-DD')
-  let listRef = coastersRef.orderByChild('date').startAt(today)
-
-  listRef.on('value', (snap) => {
-    let coasters = []
-    snap.forEach((childSnap) => {
-      let coaster = childSnap.val()
-      coaster.key = childSnap.key
-      coasters.push(coaster)
-    })
-
-    commit('GET_HISTORICAL', coasters)
 
   })
 
@@ -211,7 +173,6 @@ function pickUpCoaster ({ commit, state }, coaster) {
 export {
 
     getCoasters
-  , getPickedUp
   , newCoaster
   , pickUpCoaster
   , cancelCoaster

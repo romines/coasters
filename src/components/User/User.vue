@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="user">
+  <div v-if="user" class="user">
     <h1 class="title header">My Coasters</h1>
 
     <div class="media">
@@ -23,7 +23,16 @@
 
     <section class="posted-shifts">
       <span class="title is-5">Posted Shifts</span>
-      <list :coasters="myPostedCoasters" :options="{noFilters: true}"></list>
+      <ul>
+        <coaster :options="{}" v-for="coaster in myPostedCoasters" :coaster="coaster">
+      </ul>
+    </section>
+
+    <section class="posted-shifts">
+      <span class="title is-5">Shifts I'm Covering</span>
+      <ul>
+        <coaster :options="{}" v-for="coaster in myPickedUpCoasters" :coaster="coaster">
+      </ul>
     </section>
 
   </div>
@@ -31,6 +40,7 @@
 
 <script>
 import List from '../List.vue'
+import Coaster from '../Coaster/Coaster.vue'
 import router from '../../router'
 export default {
   data () {
@@ -40,23 +50,44 @@ export default {
     user () {
       return this.$store.state.authState.user
     },
+
     myPostedCoasters () {
       return this.$store.state.coasters.filter((coaster) => {
         return coaster.postedBy.uid === this.user.uid
       })
+    },
+
+    myPickedUpCoasters () {
+
+      return this.$store.state.coasters
+      .filter((coaster) => {
+        return coaster.coasterHistory
+      })
+      .filter((coaster) => {
+        let history = coaster.coasterHistory
+        let lastPickup
+        for(var item in history) {
+            lastPickup = history[item]
+        }
+
+        return lastPickup.pickedUpBy.uid === this.user.uid
+
+      })
+
     }
   },
   components: {
-    List
+    Coaster
   },
-  mounted () {
-    // if (!this.)
-  },
+
   methods: {
     logOut () {
       router.push('/')
       this.$store.dispatch('logOutUser')
     }
+  },
+  created () {
+    if (this.$store.state.coasters.length < 1) this.$store.dispatch('getCoasters')
   }
 }
 </script>

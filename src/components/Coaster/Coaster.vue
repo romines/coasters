@@ -1,19 +1,23 @@
 <template lang="html">
   <div v-if="coaster" @click="makeDetail()" class="coaster">
-    <slot name="titleBar"></slot>
     <div class="card is-fullwidth">
 
-      <header class="card-header">
-        <p class="card-header-title">
-          <img class="shift-icon" v-bind:src="loadSvg(coaster.shiftType)" alt="">
-          <span class="date">{{mediumDateString}}</span>
-          <span class="time"><i class="fa" :class="timeIcon"></i></span>
-        </p>
+      <slot name="cardHeader">
 
-        <a v-if="isDetailView" @click.stop="closeDetailView" class="card-header-icon">
-          <i class="fa fa-close"></i>
-        </a>
-      </header>
+        <header class="card-header">
+          <p class="card-header-title">
+            <img class="shift-icon" v-bind:src="loadSvg(coaster.shiftType)" alt="">
+            <span class="date">{{mediumDateString}}</span>
+            <span class="time"><i class="fa" :class="timeIcon"></i></span>
+          </p>
+
+          <a v-if="isDetailView" @click.stop="closeDetailView" class="card-header-icon">
+            <i class="fa fa-close"></i>
+          </a>
+        </header>
+
+      </slot>
+
 
       <div class="card-content">
 
@@ -105,13 +109,11 @@ export default {
     pickingUpUser () {
       if (!this.coaster.coasterHistory) return
       let history = this.coaster.coasterHistory
-      let firstPickUp;
-      for(var name in history) {
-          console.log(name);
-          firstPickUp = history[name];
+      let trades = [];
+      for(var item in history) {
+          trades.push(history[item])
       }
-      console.log(firstPickUp);
-      return firstPickUp.pickedUpBy
+      return trades[trades.length -1].pickedUpBy
     },
 
     longDateString () {

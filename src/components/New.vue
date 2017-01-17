@@ -81,7 +81,7 @@ export default {
       router.push({
         name: 'user',
         params: {
-          key: this.userKey
+          key: this.$store.state.authState.user.uid
         }
       })
       // TODO: only redirect on successful persist
