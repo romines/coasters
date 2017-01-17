@@ -110,7 +110,6 @@ export default {
       this.$store.dispatch('logOutUser')
     },
     toHome () {
-      console.log('something is calling "toHome"');
       router.push({ path: '/' })
       this.burgerActive = false
     },

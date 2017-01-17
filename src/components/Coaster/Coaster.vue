@@ -17,28 +17,28 @@
 
       <div class="card-content">
 
-<div v-if="options">
-  <div v-if="options.showPickedUp" class="posted-by media">
-    <div class="media-left">
-      <figure class="posted-by-user">
-        <img v-if="pickingUpUser.photoURL" :src="pickingUpUser.photoURL" alt="">
-        <span v-if="!pickingUpUser.photoURL" class="icon is-large">
-          <i class="fa fa-user"></i>
-        </span>
-      </figure>
-    </div>
+        <div v-if="options">
+          <div v-if="options.showPickedUp" class="posted-by media">
+            <div class="media-left">
+              <figure class="posted-by-user">
+                <img v-if="pickingUpUser.photoURL" :src="pickingUpUser.photoURL" alt="">
+                <span v-if="!pickingUpUser.photoURL" class="icon is-large">
+                  <i class="fa fa-user"></i>
+                </span>
+              </figure>
+            </div>
 
-    <div class="media-content">
-      <ul>
-        <li v-if="pickingUpUser"><strong>{{pickingUpUser.name}}</strong></li>
-        <li>{{longDateString}}</li>
-        <li><strong>{{coaster.time + ' ' + coaster.shiftType}}</strong></li>
-      </ul>
-      <span class="desktop-comments">{{ coaster.comment }}</span>
-    </div>
-  </div>
+            <div class="media-content">
+              <ul>
+                <li v-if="pickingUpUser"><strong>{{pickingUpUser.name}}</strong></li>
+                <li>{{longDateString}}</li>
+                <li><strong>{{coaster.time + ' ' + coaster.shiftType}}</strong></li>
+              </ul>
+              <span class="desktop-comments">{{ coaster.comment }}</span>
+            </div>
+          </div>
 
-</div>
+        </div>
 
 
 
