@@ -46,9 +46,21 @@ export default {
 			this.$store.commit('SHOW_MODAL', {component: 'Login'})
 		},
 		toUserHome () {
+			console.log('toUserHome . . .');
       if (!this.$store.state.authState.user) {
         this.$store.commit('SHOW_MODAL', {
           component:'Login',
+					heading: 'Please Login',
+					message: 'You must login before viewing this page',
+					onSuccess (key) {
+						console.log(key);
+						router.push({
+							name: 'user',
+							params: {
+								key: key
+							}
+						})
+					}
         })
       } else {
         router.push({
@@ -68,8 +80,18 @@ export default {
 			this.burgerActive = false
 		},
 		toNew () {
-			router.push({ path: '/new' })
-			this.burgerActive = false
+			if (!this.$store.state.authState.user) {
+				this.$store.commit('SHOW_MODAL', {
+          component:'Login',
+					heading: 'Please Login/Sign Up',
+					message: 'You must login before posting coasters',
+					onSuccess () {
+						router.push({ path: '/new' })
+					}
+        })
+			} else {
+				router.push({ path: '/new' })
+			}
 		}
 	}
 }

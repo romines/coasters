@@ -103,9 +103,11 @@ function signUpUser({ dispatch, commit }, user) {
 }
 
 
-function logInUser({ commit }, user) {
-  console.log(user)
-  auth.signInWithEmailAndPassword(user.email, user.password).then(() => {},
+function logInUser({ commit, state }, user) {
+
+  auth.signInWithEmailAndPassword(user.email, user.password).then((user) => {
+    if (state.modal.contents.onSuccess) state.modal.contents.onSuccess(user.uid)
+  },
     (e) => {
       commit('AUTH_ERROR', getLoginError(e))
     }
@@ -114,8 +116,8 @@ function logInUser({ commit }, user) {
 
 function logInWithFacebook({ commit }) {
   auth.signInWithPopup(facebookAuthProvider).then((result) => {
-    console.log(result.user)
     commit('CLOSE_MODAL')
+    if (state.modal.contents.onSuccess) state.modal.contents.onSuccess(user.uid)
     // // This gives you a Facebook Access Token. You can use it to access the Facebook API.
     // var token = result.credential.accessToken;
     // // The signed-in user info.
@@ -135,7 +137,6 @@ function listenToFbAuthState({ commit }) {
       commit('LOG_IN_USER', user)
       commit('CLOSE_MODAL')
     } else {
-      console.log('no one logged in');
       commit('LOG_OUT_USER', user)
     }
   })

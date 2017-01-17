@@ -19,7 +19,6 @@ export default {
   computed: {
     pickedUp () {
       return this.$store.state.coasters.filter((coaster) => {
-        console.log(coaster.coasterHistory);
         return coaster.coasterHistory
       })
 

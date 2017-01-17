@@ -41,7 +41,10 @@ const store = new Vuex.Store({
         component: 'Login',
         heading: '',
         message: '',
-        buttons: []
+        buttons: [],
+        onSuccess () {
+          console.log('modal successfully modalized . . .')
+        }
       },
       notifications: []
     },

@@ -2,7 +2,10 @@
   <div class="modal-mask" @click="close" v-show="show" transition="modal">
     <div class="modal-container" @click.stop>
 
-      <component :is='modalComponent' :contents="contents"></component>
+      <component :is='modalComponent' :contents="contents">
+        <h2 v-if="contents.heading" slot="title" class="title">{{ contents.heading }}</h2>
+        <p v-if="contents.message" slot="message" >{{ contents.message }}</p>
+      </component>
 
     </div>
   </div>

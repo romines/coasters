@@ -119,7 +119,18 @@ export default {
       this.burgerActive = false
     },
     toNew () {
-      router.push({ path: '/new' })
+      if (!this.$store.state.authState.user) {
+				this.$store.commit('SHOW_MODAL', {
+          component:'Login',
+					heading: 'Please Login/Sign Up',
+					message: 'You must login before posting coasters',
+					onSuccess () {
+						router.push({ path: '/new' })
+					}
+        })
+			} else {
+				router.push({ path: '/new' })
+			}
       this.burgerActive = false
     },
     toUserHome () {
