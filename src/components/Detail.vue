@@ -2,22 +2,43 @@
   <div class="detail">
     <coaster :options="{}" v-if="coaster" :coaster="coaster">
 
-      <textarea slot="newComment" v-model="comment" v-if="commenting" class="textarea"></textarea>
 
-      <footer slot="buttons" class="card-footer">
+      <footer slot="primaryButtons" class="card-footer">
 
-        <span v-show="!commenting" class="coaster-actions default card-footer-item">
+        <span class="coaster-actions default card-footer-item">
           <a v-if="!myOwnCoaster" @click.stop="pickUp" class="button is-primary">Pick Up</a>
           <a @click.stop="startCommenting()" class="button">Comment</a>
           <a v-if="myOwnCoaster" @click.stop="cancelCoaster()" class="button">Remove</a>
         </span>
 
-        <span class="coaster-actions card-footer-item" v-if="commenting">
+      </footer>
+
+      <div slot="comments" class="comments">
+        <div v-for="comment in comments" class="comment-container">
+          <figure class="commenting-user">
+            <img v-if="comment.postedBy.photoURL" :src="comment.postedBy.photoURL" class="image is-48x48">
+            <span v-if="!comment.postedBy.photoURL" class="icon is-large">
+              <i class="fa fa-user"></i>
+            </span>
+          </figure>
+          <div class="contents">
+            <div class="text">{{comment.text}}</div>
+            <div class="date"><small>{{comment.postedBy.name}}</small></div>
+            <div class="date"><small>{{dateCommentPosted(comment.when)}}</small></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div slot="newComment" v-show="commenting" class="newComment">
+        <textarea v-model="comment" ref="newCommentBox" class="textarea"></textarea>
+        <span class="coaster-actions card-footer-item">
           <a @click.stop="postComment" class="button is-primary">Post Comment</a>
           <a @click.stop="cancelComment" class="button">Cancel</a>
         </span>
+      </div>
 
-      </footer>
+
 
     </coaster>
   </div>
@@ -27,6 +48,7 @@
 
 import Coaster from './Coaster/Coaster.vue'
 import router from '../router'
+import moment from 'moment'
 
 export default {
 
@@ -53,6 +75,15 @@ export default {
     },
     detailKey () {
       return this.$store.getters.detailKey
+    },
+    comments () {
+      let comments = []
+      if (this.coaster.coasterComments) {
+        for (var [key, comment] of Object.entries(this.coaster.coasterComments)) {
+          comments.push(comment)
+        }
+      }
+      return comments
     }
 
   },
@@ -83,6 +114,10 @@ export default {
         })
       } else {
         this.commenting = true
+        this.$nextTick(() => {
+          console.log(this.$refs.newCommentBox)
+          this.$refs.newCommentBox.focus()
+        })
       }
     },
     cancelComment () {
@@ -95,6 +130,8 @@ export default {
       payload.coaster = this.coaster
       payload.comment = this.comment
       this.$store.dispatch('postComment', payload)
+      this.comment = ''
+      this.commenting = false
 
     },
     pickUp () {
@@ -154,6 +191,11 @@ export default {
         }
       })
 
+    },
+
+    dateCommentPosted (dateString) {
+      // if (!this.coaster) return
+      return moment(dateString).fromNow()
     }
   }
 
@@ -165,5 +207,19 @@ export default {
 <style lang="scss">
 .coaster-actions {
   justify-content: space-around;
+}
+.comment-container {
+  display: flex;
+  align-items: center;
+  padding: .25em 0;
+  border-top: 1px solid #dbdbdb;
+  .commenting-user {
+    display: inline-flex;
+    margin-right: .8em;
+    img {
+      object-fit: cover;
+      object-position: center;
+    }
+  }
 }
 </style>

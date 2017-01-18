@@ -70,10 +70,15 @@
         <div class="content">
 
           <span class="mobile-comments">{{ coaster.comment }}</span>
+          
+          <slot name="primaryButtons"></slot>
+
+          <slot name="comments"></slot>
 
           <slot name="newComment"></slot>
 
-          <slot name="buttons"></slot>
+
+
         </div>
       </div>
 
