@@ -143,6 +143,7 @@ function postComment ({ commit, state }, payload) {
   console.log(coaster);
   const now = moment().format()
   const user = state.authState.user
+  console.log(user);
   let newComment = {
     when: now,
     postedBy: {
@@ -152,30 +153,32 @@ function postComment ({ commit, state }, payload) {
     },
     text: payload.comment
   }
+
   const newCommentRef = coastersRef.child(coaster.key).child('coasterComments').push()
   const newCommentKey = newCommentRef.key
-
   let coasterComments = {...coaster.coasterComments}
+
   coasterComments[newCommentKey] = newComment
-  // let coasterData = Object.assign({}, coaster, {coasterComments})
+
   let coasterData = {
     ...coaster,
     coasterComments
   }
   console.log(coasterData);
-  // let updates = {};
-  // updates['/coasters/' + coaster.key] = coasterData
+  let updates = {};
+  updates['/coasters/' + coaster.key] = coasterData
 
-  // TODO: fanout when comment is posted...or better yet abstract to a fanout method
+  // TODO: abstract to a fanout method
 
-  for (var [key, value] of Object.entries(coaster.coasterHistory)) {
-      console.log(value);
+  for (var [key, historyEntry] of Object.entries(coaster.coasterHistory)) {
+      let coveringFor = historyEntry.coveringFor
+      let pickedUpBy = historyEntry.pickedUpBy
+      updates['/user-coasters/' + pickedUpBy.uid + '/picked-up/' + coaster.key] = coasterData
+      updates['/user-coasters/' + coveringFor.uid + '/posted/' + coaster.key] = coasterData
   }
+  console.log(updates)
 
-  // updates['/user-coasters/' + user.uid + '/picked-up/' + coaster.key] = coasterData
-  // updates['/user-coasters/' + coaster.postedBy.uid + '/posted/' + coaster.key] = coasterData
-  // commit('CLOSE_MODAL')
-  // return baseRef.update(updates);
+  baseRef.update(updates);
 
 }
 

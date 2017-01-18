@@ -64,7 +64,26 @@ export default {
   },
   methods: {
     startCommenting () {
-      this.commenting = true
+      let launchLoginModal = () => {
+        this.$store.commit('SHOW_MODAL', {component: 'Login'})
+      }
+
+      if (!this.$store.state.authState.user) {
+        this.$store.commit('SHOW_MODAL', {
+          component:'Confirmation',
+          heading: 'You Must Login',
+          message: '. . . before commenting',
+          buttons: [
+            {
+              label: 'Login',
+              action: launchLoginModal,
+              classList: 'is-primary'
+            }
+          ]
+        })
+      } else {
+        this.commenting = true
+      }
     },
     cancelComment () {
       this.commenting = false
@@ -76,6 +95,7 @@ export default {
       payload.coaster = this.coaster
       payload.comment = this.comment
       this.$store.dispatch('postComment', payload)
+
     },
     pickUp () {
 
