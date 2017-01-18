@@ -71,13 +71,9 @@
 
           <span class="mobile-comments">{{ coaster.comment }}</span>
 
+          <slot name="newComment"></slot>
 
           <slot name="buttons"></slot>
-
-
-          <div v-if="isDetailView" class="details">
-            <textarea v-if="isCommenting" class="textarea"></textarea>
-          </div>
         </div>
       </div>
 

@@ -2,13 +2,23 @@
   <div class="detail">
     <coaster :options="{}" v-if="coaster" :coaster="coaster">
 
+      <textarea slot="newComment" v-model="comment" v-if="commenting" class="textarea"></textarea>
 
       <footer slot="buttons" class="card-footer">
-        <a v-if="!myOwnCoaster" @click.stop="pickUp" class="card-footer-item">Pick Up</a>
-        <a @click.stop="startCommenting()" class="card-footer-item">Comment</a>
-        <a v-if="myOwnCoaster" @click.stop="cancelCoaster()" class="card-footer-item">Cancel</a>
+
+        <span v-show="!commenting" class="coaster-actions default card-footer-item">
+          <a v-if="!myOwnCoaster" @click.stop="pickUp" class="button is-primary">Pick Up</a>
+          <a @click.stop="startCommenting()" class="button">Comment</a>
+          <a v-if="myOwnCoaster" @click.stop="cancelCoaster()" class="button">Remove</a>
+        </span>
+
+        <span class="coaster-actions card-footer-item" v-if="commenting">
+          <a @click.stop="postComment" class="button is-primary">Post Comment</a>
+          <a @click.stop="cancelComment" class="button">Cancel</a>
+        </span>
+
       </footer>
-      
+
     </coaster>
   </div>
 </template>
@@ -22,6 +32,14 @@ export default {
 
   components: {
     Coaster
+  },
+
+  data () {
+    return {
+      commenting: false,
+      comment: ''
+
+    }
   },
 
   computed: {
@@ -46,7 +64,18 @@ export default {
   },
   methods: {
     startCommenting () {
-      console.log('commenting..')
+      this.commenting = true
+    },
+    cancelComment () {
+      this.commenting = false
+    },
+    postComment () {
+      // console.log(this.comment);
+      let payload = {}
+
+      payload.coaster = this.coaster
+      payload.comment = this.comment
+      this.$store.dispatch('postComment', payload)
     },
     pickUp () {
 
@@ -113,8 +142,8 @@ export default {
 }
 </script>
 
-<style lang="css">
-ul {
-    margin-top: 0;
+<style lang="scss">
+.coaster-actions {
+  justify-content: space-around;
 }
 </style>
