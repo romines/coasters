@@ -67,7 +67,7 @@ export default {
   computed: {
 
     coaster () {
-      return this.$store.getters.detailCoaster
+      return this.$store.getters.detailCoaster ? this.$store.getters.detailCoaster : {postedBy: {uid: null}}
     },
     myOwnCoaster () {
       if (!(this.$store.state.authState.user && this.coaster)) return
@@ -215,6 +215,7 @@ export default {
   border-top: 1px solid #dbdbdb;
   .commenting-user {
     display: inline-flex;
+    flex-shrink: 0;
     margin-right: .8em;
     img {
       object-fit: cover;

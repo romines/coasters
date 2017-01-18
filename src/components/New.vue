@@ -2,8 +2,9 @@
   <div class="new">
     <h3>{{test}}</h3>
     <div class="form">
-      <Flatpickr @update="pickDate" :value="date" />
-      <!-- <datepicker v-model="date" :config="{static: true}"></datepicker> -->
+      <p class="control">
+        <Flatpickr @update="pickDate" :value="date" />
+      </p>
       <p class="control">
         <span class="select">
           <select v-model="shiftType">
@@ -15,12 +16,17 @@
           </select>
         </span>
       </p>
-      <span :class="{ 'is-active': isAM }" class="button" @click="time = 'AM'">AM</span>
-      <span :class="{ 'is-active': isPM }" class="button" @click="time = 'PM'">PM</span>
-
-      <textarea v-model="comment" class="textarea"></textarea>
+      <p class="control">
+        <span :class="{ 'is-active': isAM }" class="button" @click="time = 'AM'">AM</span>
+        <span :class="{ 'is-active': isPM }" class="button" @click="time = 'PM'">PM</span>
+      </p>
+      <p class="control">
+        <textarea v-model="comment" class="textarea" placeholder="Comments or additional information"></textarea>
+      </p>
     </div>
-    <button @click="newCoaster" class="button">Submit</button>
+
+    <button @click="newCoaster" class="button submit-button">Submit</button>
+
   </div>
 </template>
 
@@ -40,9 +46,9 @@ export default {
     return {
       datePickerMsg: 'lalalala',
       date: moment().add(1, 'day').format('YYYY-MM-DD'),
-      time: '',
+      time: 'AM',
       shiftType: 'Serve',
-      comment: 'Lorem ipsum shift comments that are super awesome',
+      comment: '',
     }
   },
   props: ['test'],
@@ -95,6 +101,8 @@ export default {
     border: 1px solid grey;
     padding: 1.4em;
     margin-bottom: 6em;
+
+    .submit-button { margin-top: 10px; }
   }
   html {}
 </style>
