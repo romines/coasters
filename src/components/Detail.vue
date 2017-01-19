@@ -67,7 +67,7 @@ export default {
   computed: {
 
     coaster () {
-      return this.$store.getters.detailCoaster ? this.$store.getters.detailCoaster : {postedBy: {uid: null}}
+      return this.$store.getters.detailCoaster
     },
     myOwnCoaster () {
       if (!(this.$store.state.authState.user && this.coaster)) return
@@ -77,6 +77,7 @@ export default {
       return this.$store.getters.detailKey
     },
     comments () {
+      if (!this.coaster) return []
       let comments = []
       if (this.coaster.coasterComments) {
         for (var [key, comment] of Object.entries(this.coaster.coasterComments)) {
@@ -194,7 +195,6 @@ export default {
     },
 
     dateCommentPosted (dateString) {
-      // if (!this.coaster) return
       return moment(dateString).fromNow()
     }
   }

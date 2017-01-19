@@ -6,7 +6,7 @@
 
         <header class="card-header">
           <p class="card-header-title">
-            <img class="shift-icon" v-bind:src="loadSvg(coaster.shiftType)" alt="">
+            <img class="shift-icon" :src="coaster ? loadSvg(coaster.shiftType) : ''" alt="">
             <span class="date">{{mediumDateString}}</span>
             <span class="time"><i class="fa" :class="timeIcon"></i></span>
           </p>
@@ -21,12 +21,13 @@
 
       <div class="card-content">
 
-        <div v-if="options">
-          <div v-if="options.showPickedUp" class="posted-by media">
+        <slot name="main">
+
+          <div class="posted-by media">
             <div class="media-left">
-              <figure class="posted-by-user">
-                <img v-if="pickingUpUser.photoURL" :src="pickingUpUser.photoURL" alt="">
-                <span v-if="!pickingUpUser.photoURL" class="icon is-large">
+              <figure class="user">
+                <img v-if="coaster.postedBy.photoURL" :src="coaster.postedBy.photoURL" alt="">
+                <span v-if="!coaster.postedBy.photoURL" class="icon is-large">
                   <i class="fa fa-user"></i>
                 </span>
               </figure>
@@ -34,52 +35,30 @@
 
             <div class="media-content">
               <ul>
-                <li v-if="pickingUpUser"><strong>{{pickingUpUser.name}}</strong></li>
-                <li>{{longDateString}}</li>
-                <li><strong>{{coaster.time + ' ' + coaster.shiftType}}</strong></li>
+                <li v-show="!options.showPickedUp">{{longDateString}}</li>
+                <li v-show="!options.showPickedUp"><strong>{{coaster.time + ' ' + coaster.shiftType}}</strong></li>
+                <li>for <strong>{{coaster.postedBy.displayName}}</strong></li>
+                <li><small>{{datePosted}}</small></li>
               </ul>
               <span class="desktop-comments">{{ coaster.comment }}</span>
             </div>
           </div>
 
-        </div>
+        </slot>
 
-
-
-        <div class="media">
-          <div class="media-left">
-            <figure class="posted-by-user">
-              <img v-if="coaster.postedBy.photoURL" :src="coaster.postedBy.photoURL" alt="">
-              <span v-if="!coaster.postedBy.photoURL" class="icon is-large">
-                <i class="fa fa-user"></i>
-              </span>
-            </figure>
-          </div>
-
-          <div class="media-content">
-            <ul>
-              <li v-show="!options.showPickedUp">{{longDateString}}</li>
-              <li v-show="!options.showPickedUp"><strong>{{coaster.time + ' ' + coaster.shiftType}}</strong></li>
-              <li>for <strong>{{coaster.postedBy.displayName}}</strong></li>
-              <li><small>{{datePosted}}</small></li>
-            </ul>
-            <span class="desktop-comments">{{ coaster.comment }}</span>
-          </div>
-        </div>
-
-        <div class="content">
+        <div class="bottom">
 
           <span class="mobile-comments">{{ coaster.comment }}</span>
-          
+
           <slot name="primaryButtons"></slot>
 
           <slot name="comments"></slot>
 
           <slot name="newComment"></slot>
 
-
-
         </div>
+
+
       </div>
 
     </div>
@@ -116,17 +95,6 @@ export default {
       }
       return trades[trades.length -1].pickedUpBy
     },
-
-    longDateString () {
-      // if (!this.coaster) return
-      return moment(this.coaster.date).format('dddd, MMM Do')
-    },
-
-    mediumDateString () {
-      // if (!this.coaster) return
-      return moment(this.coaster.date).format('ddd, MMM Do')
-    },
-
     datePosted () {
       // if (!this.coaster) return
       return moment(this.coaster.posted).fromNow()
@@ -139,7 +107,18 @@ export default {
 
     isDetailView () {
       return this.$store.state.route.name === 'detail'
+    },
+
+    longDateString () {
+      // if (!this.coaster) return
+      return moment(this.coaster.date).format('dddd, MMM Do')
+    },
+
+    mediumDateString () {
+      // if (!this.coaster) return
+      return moment(this.coaster.date).format('ddd, MMM Do')
     }
+
 
   },
   methods: {
@@ -202,7 +181,7 @@ export default {
       vertical-align: middle;
       line-height: inherit;
     }
-    .posted-by-user {
+    figure.user {
       img {
         width: 74px;
         height: 74px;

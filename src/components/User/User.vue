@@ -4,7 +4,7 @@
 
     <div class="media">
       <div class="media-left">
-        <figure class="posted-by-user">
+        <figure class="user">
           <img v-if="user.photoURL" :src="user.photoURL" alt="">
           <span v-if="!user.photoURL" class="icon is-large">
             <i class="fa fa-user"></i>
