@@ -28,7 +28,7 @@ export default {
   computed: {
     coasters () {
       return this.$store.state.coasters.filter((coaster) => {
-        return !coaster.history
+        return !coaster.coasterHistory
       })
     },
     filters () {
