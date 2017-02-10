@@ -6,24 +6,6 @@ const baseRef = db.ref('data')
 const coastersRef = db.ref('data/coasters')
 
 
-
-function getLoginError(e) {
-  switch (e.code) {
-    case 'auth/user-not-found':
-      return 'That email address is not recognized'
-      break;
-    case 'auth/invalid-email':
-      return 'Please provide a valid email address'
-      break;
-    case 'auth/wrong-password':
-      return 'That password is incorrect'
-      break;
-    default:
-      return 'An error has occured'
-
-  }
-}
-
 function addFilter({ commit }, filter) {
   commit('ADD_FILTER', filter)
 }
@@ -217,6 +199,30 @@ function pickUpCoaster ({ commit, state }, coaster) {
   return baseRef.update(updates);
 
 }
+
+
+/**
+ *
+ * utils
+ *
+ */
+
+ function getLoginError(e) {
+   switch (e.code) {
+     case 'auth/user-not-found':
+       return 'That email address is not recognized'
+       break;
+     case 'auth/invalid-email':
+       return 'Please provide a valid email address'
+       break;
+     case 'auth/wrong-password':
+       return 'That password is incorrect'
+       break;
+     default:
+       return 'An error has occured'
+
+   }
+ }
 
 
 export {

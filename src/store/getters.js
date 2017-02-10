@@ -4,6 +4,7 @@ const myCoasters = (state) => {
   return state.coasters
 }
 
+// this does not belong in app state
 const commenting = (state) => {
   return state.commenting && (!state.route.path.includes('history')) // state.detailShowing
 }
