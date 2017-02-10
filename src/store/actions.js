@@ -227,6 +227,7 @@ function pickUpCoaster ({ commit, state }, coaster) {
  }
 
 
+
 export {
 
    listenToFbAuthState
