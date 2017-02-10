@@ -1,11 +1,66 @@
 <template lang="html">
-  <div class="home">
+  <div class="covered">
     <h1 class="title header">Covered Shifts</h1>
-    <!-- <list :coasters="pickedUp" :options="{showPickedUp: true}"></list> -->
     <div class="list">
       <ul>
-        <coaster :options="{showPickedUp: true}" v-for="coaster in pickedUp" :coaster="coaster">
-          <div slot="cardHeader">Hi, I'm the special header from the PickedUp view</div>
+        <coaster :options="{}" v-for="coaster in pickedUp" :coaster="coaster">
+
+          <div slot="cardHeader">
+
+            <header class="card-header">
+              <p class="card-header-title">
+                <span class="icons">
+                  <span class="time"><i class="fa" :class="timeIcon(coaster)"></i></span>
+                  <img class="shift-icon" v-bind:src="loadSvg(coaster.shiftType)" alt="">
+                </span>
+                <span class="shift-type-code">{{shiftTypeCode(coaster)}}</span>
+                <span class="date">{{shortDate(coaster.date)}}</span>
+              </p>
+            </header>
+
+          </div>
+
+          <div slot="main">
+
+            <div class="posted-by media">
+              <div class="media-left">
+                <figure class="user">
+                  <img v-if="coaster.postedBy.photoURL" :src="coaster.postedBy.photoURL" alt="">
+                  <span v-if="!coaster.postedBy.photoURL" class="icon is-large">
+                    <i class="fa fa-user"></i>
+                  </span>
+                </figure>
+              </div>
+
+              <div class="media-content">
+                <p>scheduled:</p>
+                <h3 class="title">{{coaster.postedBy.displayName}}</h3>
+              </div>
+            </div>
+
+            <div class="picked-up-by">
+              <div class="posted-by media">
+                <div class="media-left">
+                  <figure class="user">
+                    <img v-if="pickingUpUser(coaster)['photoURL']" :src="pickingUpUser(coaster)['photoURL']" alt="">
+                    <span v-if="!pickingUpUser(coaster)['photoURL']" class="icon is-large">
+                      <i class="fa fa-user"></i>
+                    </span>
+                  </figure>
+                </div>
+
+                <div class="media-content">
+                  <p>covering:</p>
+                  <h3 class="title">{{pickingUpUser(coaster)['name']}}</h3>
+                </div>
+              </div>
+            </div>
+
+            <div class="desktop-comments">{{ coaster.comment }}</div>
+
+          </div>
+
+
 
         </coaster>
       </ul>
@@ -14,10 +69,14 @@
 </template>
 
 <script>
-// import List from './List.vue'
+import moment from 'moment'
+import _ from 'lodash'
+import mixins from '../mixins'
+
 import Coaster from './Coaster/Coaster.vue'
 
 export default {
+  mixins: [mixins],
   data () {
     return {
     }
@@ -27,16 +86,56 @@ export default {
   },
   computed: {
     pickedUp () {
-      return this.$store.state.coasters.filter((coaster) => {
+      return _.chain(this.$store.state.coasters).filter((coaster) => {
         return coaster.coasterHistory
       })
-
+      .sortBy('time')
+      .sortBy('date')
+      .value()
     }
   },
   components: { Coaster },
-  methods: {},
+  methods: {
+    pickingUpUser (coaster) {
+      if (!coaster.coasterHistory) return
+      let history = coaster.coasterHistory
+      let trades = [];
+      for(var item in history) {
+          trades.push(history[item])
+      }
+      return trades[trades.length -1].pickedUpBy
+    },
+    shortDate (myDate) {
+      return moment(myDate).format('M/D')
+    },
+
+    shiftTypeCode (coaster) {
+
+      const shiftAbrvs = {
+        Serve: 'Srv',
+        Bus: 'Bus',
+        Barback: 'BB',
+        Host: 'Host',
+        Bartend: 'Bar'
+      }
+
+      return coaster.time + shiftAbrvs[coaster.shiftType]
+
+    },
+
+    timeIcon (coaster) {
+      // if (!coaster) return
+      return (coaster.time === 'PM') ? 'fa-moon-o' : 'fa-sun-o'
+    }
+  }
 }
 </script>
 
-<style lang="css">
+<style lang="scss">
+.covered {
+  .card-header-title {
+    font-size: 1.45em;
+    .fa {vertical-align: super;}
+  }
+}
 </style>

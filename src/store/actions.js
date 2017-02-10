@@ -152,11 +152,13 @@ function postComment ({ commit, state }, payload) {
 
   // TODO: abstract to a fanout method
 
-  for (var [key, historyEntry] of Object.entries(coaster.coasterHistory)) {
+  if (coaster.coasterHistory && coaster.coasterHistory.length > 0) {
+    for (var [key, historyEntry] of Object.entries(coaster.coasterHistory)) {
       let coveringFor = historyEntry.coveringFor
       let pickedUpBy = historyEntry.pickedUpBy
       updates['/user-coasters/' + pickedUpBy.uid + '/picked-up/' + coaster.key] = coasterData
       updates['/user-coasters/' + coveringFor.uid + '/posted/' + coaster.key] = coasterData
+    }
   }
   console.log(updates)
 

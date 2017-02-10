@@ -15,7 +15,7 @@
 <script>
 import Coaster from './Coaster/Coaster.vue'
 import Filters from './Filters.vue'
-import _ from 'underscore'
+import _ from 'lodash'
 import moment from 'moment'
 import mixins from '../mixins'
 import { mapGetters } from 'vuex'
