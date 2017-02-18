@@ -1,83 +1,24 @@
 <template lang="html">
   <div class="home container">
     <h1 class="title header">Available Shifts</h1>
+    <filters></filters>
     <div class="list">
       <div v-for="day in days">
-        <!-- <ul>
-          <li v-for="activity in activities">{{activity.name}}</li>
-        </ul> -->
+
+        <div class="day-title title is-4">{{day.date}}</div>
+
+        <ul>
+          <coaster :options="{}" v-for="coaster in day.shifts" :coaster="coaster">
+
+          </coaster>
+        </ul>
         <hr>
       </div>
-      <filters ></filters>
-      <ul>
-        <coaster :options="{}" v-for="coaster in filteredCoasters" :coaster="coaster">
-
-        </coaster>
-      </ul>
     </div>
   </div>
 </template>
 
 <script>
-
-let activities = [
-  {
-    name: 'Swimming',
-    date: new Date(2017, 2, 9)
-  },
-  {
-    name: 'Hiking',
-    date: new Date(2017, 2, 9)
-  },
-  {
-    name: 'Walking',
-    date: new Date(2017, 2, 9)
-  },
-  {
-    name: 'Coding',
-    date: new Date(2017, 2, 10)
-  },
-  {
-    name: 'Biking',
-    date: new Date(2017, 2, 10)
-  },
-  {
-    name: 'Sewing',
-    date: new Date(2017, 2, 12)
-  },
-  {
-    name: 'Hacking',
-    date: new Date(2017, 2, 12)
-  },
-  {
-    name: 'Wheezing',
-    date: new Date(2017, 2, 13)
-  },
-  {
-    name: 'Eating',
-    date: new Date(2017, 2, 14)
-  },
-  {
-    name: 'Running',
-    date: new Date(2017, 2, 14)
-  },
-  {
-    name: 'Skating',
-    date: new Date(2017, 2, 14)
-  },
-  {
-    name: 'Sleeping',
-    date: new Date(2017, 2, 15)
-  },
-  {
-    name: 'Baking',
-    date: new Date(2017, 2, 16)
-  },
-  {
-    name: 'Groaning',
-    date: new Date(2017, 2, 16)
-  },
-];
 
 import _ from 'lodash'
 import moment from 'moment'
@@ -88,7 +29,6 @@ import router from '../router'
 export default {
   data () {
     return {
-      activities
     }
   },
   components: { Filters, Coaster },
@@ -106,15 +46,16 @@ export default {
         .value()
     },
     days () {
-      let obj = this.activities.reduce((days, activity) => {
-        let when = moment(activity.date).format('dddd, MMM Do');
-        days[when] = days[when] ? days[when] : [];
-        days[when].push(activity.name);
-        return days;
+      let obj = this.coasters.reduce((days, coaster) => {
+        let when = moment(coaster.date).format('dddd, MMM Do')
+        days[when] = days[when] ? days[when] : []
+        days[when].push(coaster)
+        // days[when] = _.sortBy(days[when], 'time')
+        return days
       }, {})
 
       return Object.keys(obj).reduce((arr, key) => {
-        arr.push({date: key, activities: obj[key]})
+        arr.push({date: key, shifts: obj[key]})
         return arr
       }, [])
 
@@ -166,5 +107,8 @@ export default {
 }
 </script>
 
-<style lang="css">
+<style lang="scss">
+  .day-title {
+    margin: .4em 0;
+  }
 </style>
