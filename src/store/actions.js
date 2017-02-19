@@ -38,6 +38,21 @@ function signUpUser({ dispatch, commit }, user) {
 
 }
 
+function updateUserPhotoURL({ commit }, photoURL) {
+
+  let currentUser = firebase.auth().currentUser;
+  currentUser.updateProfile({
+    photoURL
+  })
+  .then(function () {
+    commit('UPDATE_PHOTO_URL', photoURL)
+  })
+  .catch(function(error) {
+    console.log(error.message);
+  });
+
+}
+
 
 function logInUser({ commit, state }, user) {
 
@@ -232,6 +247,7 @@ export {
 
    listenToFbAuthState
   , signUpUser
+  , updateUserPhotoURL
   , logInUser
   , logInWithFacebook
   , logOutUser

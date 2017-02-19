@@ -73,6 +73,9 @@ const store = new Vuex.Store({
     UPDATE_USERNAME (state, username) {
       state.authState.user.displayName = username
     },
+    UPDATE_PHOTO_URL (state, photoURL) {
+      state.authState.user.photoURL = photoURL
+    },
     GET_COASTERS (state, coasters) {
       state.count = coasters.length
       state.coasters = coasters
