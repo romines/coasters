@@ -39,14 +39,14 @@ export default {
     coasters () {
       return _.chain(this.$store.state.coasters)
       .filter((coaster) => {
-        return !coaster.history
+        return !coaster.coasterHistory
       })
         .sortBy('time')
         .sortBy('date')
         .value()
     },
     days () {
-      let obj = this.coasters.reduce((days, coaster) => {
+      let obj = this.filteredCoasters.reduce((days, coaster) => {
         let when = moment(coaster.date).format('dddd, MMM Do')
         days[when] = days[when] ? days[when] : []
         days[when].push(coaster)

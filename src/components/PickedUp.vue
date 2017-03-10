@@ -106,7 +106,7 @@ export default {
       return trades[trades.length -1].pickedUpBy
     },
     shortDate (myDate) {
-      return moment(myDate).format('M/D')
+      return moment(myDate).format('ddd M/D')
     },
 
     shiftTypeCode (coaster) {
