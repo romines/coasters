@@ -11,10 +11,18 @@ function addFilter({ commit }, filter) {
 }
 
 
-function listenToFbAuthState({ commit }) {
+function listenToFbAuthState({ commit, state }) {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
-      commit('LOG_IN_USER', user)
+      if (!user.displayName) {
+        user.updateProfile({
+          displayName: state.authState.tempUserData.displayName
+        }).then(() => {
+          commit('LOG_IN_USER', user)
+        }, (error) => console.log(error))
+      } else {
+        commit('LOG_IN_USER', user)
+      }
       // commit('CLOSE_MODAL')
     } else {
       commit('LOG_OUT_USER', user)
@@ -23,18 +31,14 @@ function listenToFbAuthState({ commit }) {
 }
 
 function signUpUser({ dispatch, commit, state }, user) {
-
+  commit('SAVE_TEMP_USER', user)
   firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
   .then(function () {
-    let currentUser = firebase.auth().currentUser;
-    currentUser.updateProfile({
-      displayName: user.displayName
-    });
-    // commit('UPDATE_USERNAME', user.displayName)
+
     commit('SHOW_MODAL', {
       component:'ImageUpload',
-      heading: 'Just One More Thing!',
-      message: 'Take a second to add a photo to your profile. (Studies show people are 13 times more likely to pick up your shift if they see your smiling face next to it...)',
+      heading: 'Profile Picture',
+      message: 'Add a photo so Lisa knows who you are . . .',
       onSuccess: state.modal.contents.onSuccess
     })
   })

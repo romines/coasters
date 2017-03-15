@@ -25,7 +25,8 @@ const store = new Vuex.Store({
   state: {
     authState: {
       user: null,
-      error: ''
+      error: '',
+      tempUserData: {}
     },
     count: 0,
     coasters: [],
@@ -75,6 +76,9 @@ const store = new Vuex.Store({
     },
     UPDATE_PHOTO_URL (state, photoURL) {
       state.authState.user.photoURL = photoURL
+    },
+    SAVE_TEMP_USER (state, user) {
+      state.authState.tempUserData = user
     },
     GET_COASTERS (state, coasters) {
       state.count = coasters.length

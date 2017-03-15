@@ -1,5 +1,13 @@
 <template lang="html">
   <div class="image-upload">
+    <slot name="title">
+      <h2 class='title'>Login</h2>
+    </slot>
+    <div class="smaller">
+      <slot name="message">
+
+      </slot>
+    </div>
     <img v-if="user.photoURL" :src="user.photoURL" alt="">
     <span v-if="!user.photoURL" class="icon is-large">
       <i class="fa fa-user"></i>
@@ -71,4 +79,8 @@ export default {
 </script>
 
 <style lang="scss">
+  .smaller {
+    font-size: .96em;
+    margin-bottom: .5em;
+  }
 </style>
