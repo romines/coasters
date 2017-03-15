@@ -15,14 +15,14 @@ function listenToFbAuthState({ commit }) {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
       commit('LOG_IN_USER', user)
-      commit('CLOSE_MODAL')
+      // commit('CLOSE_MODAL')
     } else {
       commit('LOG_OUT_USER', user)
     }
   })
 }
 
-function signUpUser({ dispatch, commit }, user) {
+function signUpUser({ dispatch, commit, state }, user) {
 
   firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
   .then(function () {
@@ -30,10 +30,16 @@ function signUpUser({ dispatch, commit }, user) {
     currentUser.updateProfile({
       displayName: user.displayName
     });
-    commit('UPDATE_USERNAME', user.displayName)
+    // commit('UPDATE_USERNAME', user.displayName)
+    commit('SHOW_MODAL', {
+      component:'ImageUpload',
+      heading: 'Just One More Thing!',
+      message: 'Take a second to add a photo to your profile. (Studies show people are 13 times more likely to pick up your shift if they see your smiling face next to it...)',
+      onSuccess: state.modal.contents.onSuccess
+    })
   })
   .catch(function(error) {
-    console.log(error.message);
+    commit('AUTH_ERROR', error.message)
   });
 
 }
@@ -48,7 +54,7 @@ function updateUserPhotoURL({ commit }, photoURL) {
     commit('UPDATE_PHOTO_URL', photoURL)
   })
   .catch(function(error) {
-    console.log(error.message);
+    commit('AUTH_ERROR', error.message)
   });
 
 }

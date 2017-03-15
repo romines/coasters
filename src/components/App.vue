@@ -30,6 +30,8 @@ import router from '../router'
 import Navigation from './widgets/Navigation.vue'
 import BottomNav from './widgets/BottomNav.vue'
 import Modal from './widgets/Modal.vue'
+// why doesn't this work???
+// import { Navigation, BottomNav, Modal } from './widgets'
 
 import { firebase } from '../libs'
 import mixins from '../mixins'
@@ -40,22 +42,6 @@ const coastersRef = db.ref('data/coasters')
 
 
 
-// anything that works out here can be moved to modules/helpers
-
-// these are shift actions
-
-
-
-function attachListeners(vm) {
-
-  // TODO: We want to get event 'routing' out of App component while still updating
-  // app state appropriately on global events. By passing in the viewmodel, this
-  // can all be moved to a module! But it must have access to all the methods it
-  // references
-
-
-
-}
 
 export default {
 

@@ -67,7 +67,7 @@ const store = new Vuex.Store({
       state.authState.user = null
     },
     AUTH_ERROR (state, error) {
-      console.log('an auth error has occurred...');
+      console.log(error);
       state.authState.error = error
     },
     UPDATE_USERNAME (state, username) {

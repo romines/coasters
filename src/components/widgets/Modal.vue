@@ -14,6 +14,7 @@
 <script>
 import Login from '../Login.vue'
 import Confirmation from './Confirmation.vue'
+import ImageUpload from './ImageUpload.vue'
 
 export default {
   data () {
@@ -22,7 +23,8 @@ export default {
   },
   components: {
     Login,
-    Confirmation
+    Confirmation,
+    ImageUpload
   },
   computed: {
     show () {
@@ -35,7 +37,9 @@ export default {
       return this.contents.component
     }
   },
-  mounted () {},
+  mounted () {
+    console.log(this.contents);
+  },
   methods: {
     close () {
       this.$store.commit('CLOSE_MODAL')
