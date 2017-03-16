@@ -1,19 +1,37 @@
 <template lang="html">
   <div class="image-upload">
-    <slot name="title">
-      <h2 class='title'>Login</h2>
-    </slot>
-    <div class="smaller">
-      <slot name="message">
 
-      </slot>
+    <slot name="title">
+      <span class='title'>User Image</span>
+    </slot>
+    <div class="message-text">
+      <slot name="message"></slot>
     </div>
-    <img v-if="user.photoURL" :src="user.photoURL" alt="">
-    <span v-if="!user.photoURL" class="icon is-large">
-      <i class="fa fa-user"></i>
-    </span>
-    <span v-show="!updating" @click="updating = !updating"><slot name="text">Click to add a photo</slot></span>
-    <input v-show="updating" @change="onFileAdded" type="file" name="image-upload">
+
+
+    <div class="prompt" @click="updating = !updating">
+      <div class="user-image">
+        <img v-if="user.photoURL" :src="user.photoURL" class="user-photo">
+        <div v-if="!user.photoURL" class="icon is-large placeholder">
+          <i class="fa fa-user"></i>
+        </div>
+      </div>
+
+      <span v-show="!updating">
+        <slot name="text" >{{user.photoURL ? 'Update your' : 'Add a'}} photo</slot>
+      </span>
+    </div>
+
+    <input v-show="updating" @change="onFileAdded" type="file" name="image-upload" class="add-image">
+    <progress v-show="uploading" :value="uploadProgress" max="100" class="progress is-primary">0%</progress>
+
+    <!-- <div v-show="updating" class="buttons">
+      <button class="button is-primary">Save</button>
+      <button class="button">
+        <slot class="cancel-button-text">Cancel</slot>
+      </button>
+    </div> -->
+
   </div>
 </template>
 
@@ -23,7 +41,11 @@ const storageRef = firebase.storage().ref()
 
 export default {
   data () {
-    return {updating: false}
+    return {
+      updating: false,
+      uploading: false,
+      uploadProgress: 0
+    }
   },
   computed: {
     user () {
@@ -32,22 +54,23 @@ export default {
   },
   methods: {
     onFileAdded (e) {
-
-      let file = e.target.files[0];
+      this.uploading = true
+      let vm = this
+      let file = e.target.files[0]
       // Create the file metadata
       let metadata = {
         contentType: 'image/jpeg'
       };
 
-      // Upload file and metadata to the object 'images/mountains.jpg'
-      let uploadTask = storageRef.child('images/' + file.name).put(file, metadata);
+      let extension = file.name.split('.').pop()
 
-      // Listen for state changes, errors, and completion of the upload.
+      let uploadTask = storageRef.child('images/' + this.user.uid + '.' + extension).put(file, metadata);
+
       uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
         function(snapshot) {
-          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-          var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log('Upload is ' + progress + '% done');
+
+          vm.uploadProgress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+
           switch (snapshot.state) {
             case firebase.storage.TaskState.PAUSED: // or 'paused'
               console.log('Upload is paused');
@@ -71,6 +94,7 @@ export default {
             break;
         }
       }, () => {
+        this.uploading = false;
         this.$store.dispatch('updateUserPhotoURL', uploadTask.snapshot.downloadURL)
       });
     }
@@ -79,8 +103,21 @@ export default {
 </script>
 
 <style lang="scss">
-  .smaller {
-    font-size: .96em;
+  .message-text {
     margin-bottom: .5em;
+    background-color: transparent;
+  }
+  .user-image {
+    margin-bottom: .3em;
+    .user-photo {
+      max-width: 230px;
+    }
+  }
+  .prompt { margin: .5em 0; }
+  .placeholder {
+    border: 1px solid grey;
+  }
+  input.add-image {
+    margin: .65em 0;
   }
 </style>

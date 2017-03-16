@@ -5,7 +5,9 @@
     <div class="media">
       <div class="media-left">
         <figure class="user">
-
+          <image-upload>
+            <span slot="title"></span>
+          </image-upload>
 
         </figure>
       </div>
@@ -39,7 +41,7 @@
 <script>
 import List from '../List.vue'
 import Coaster from '../Coaster/Coaster.vue'
-import ImageUpload from '../widgets'
+import ImageUpload from '../widgets/ImageUpload.vue'
 import router from '../../router'
 
 export default {
@@ -100,6 +102,9 @@ export default {
     width: 74px;
     height: 74px;
     object-fit: cover;
+  }
+  .media-left {
+    max-width: 50%;
   }
   .posted-shifts {
     padding-top: 1em;

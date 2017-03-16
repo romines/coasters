@@ -37,8 +37,8 @@ function signUpUser({ dispatch, commit, state }, user) {
 
     commit('SHOW_MODAL', {
       component:'ImageUpload',
-      heading: 'Profile Picture',
-      message: 'Add a photo so Lisa knows who you are . . .',
+      heading: 'One More Thing...',
+      message: 'Please add a profile picture',
       onSuccess: state.modal.contents.onSuccess
     })
   })

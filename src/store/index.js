@@ -75,7 +75,7 @@ const store = new Vuex.Store({
       state.authState.user.displayName = username
     },
     UPDATE_PHOTO_URL (state, photoURL) {
-      state.authState.user.photoURL = photoURL
+      state.authState.user = {...state.authState.user, photoURL: photoURL}
     },
     SAVE_TEMP_USER (state, user) {
       state.authState.tempUserData = user

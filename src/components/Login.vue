@@ -55,8 +55,8 @@
 
     <hr>
     <div class="social-providers">
-      <a @click="startFacebookLogin" href="#"><i class="fa fa-facebook-square" aria-hidden="true"></i></a>
-      <a href="#"><i class="fa fa-twitter-square" aria-hidden="true"></i></a>
+      <span @click="startFacebookLogin"><i class="fa fa-facebook-square" aria-hidden="true"></i></span>
+      <div class="is-small">Login/sign-up with Facebook . . .</div>
     </div>
   </div>
 </template>
