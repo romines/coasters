@@ -207,7 +207,7 @@ function pickUpCoaster ({ commit, state }, coaster) {
       photoURL: coaster.postedBy.photoURL ? coaster.postedBy.photoURL : null
     }
   }
-  const newHistoryItemRef = coastersRef.child(coaster.key).child('coasterComments').push()
+  const newHistoryItemRef = coastersRef.child(coaster.key).child('coasterHistory').push()
   const newHistoryItemKey = newHistoryItemRef.key
 
   let coasterHistory = {...coaster.coasterHistory}

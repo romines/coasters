@@ -17,9 +17,9 @@
         </div>
       </div>
 
-      <span v-show="!updating">
+      <a v-show="!updating">
         <slot name="text" >{{user.photoURL ? 'Update your' : 'Add a'}} photo</slot>
-      </span>
+      </a>
     </div>
 
     <input v-show="updating" @change="onFileAdded" type="file" name="image-upload" class="add-image">

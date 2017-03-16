@@ -4,3 +4,4 @@ dist/
 npm-debug.log
 src/fbConfig.js
 project.cson
+functions/node_modules/
