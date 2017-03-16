@@ -1,13 +1,15 @@
 import firebase from 'firebase'
-import config from '../fbConfig'
-
+import { production, development } from '../fbConfig'
 /**
  *
  * Exposes full firebase library
  *
  */
+console.log(process.env.NODE_ENV);
 
-firebase.initializeApp(config)
+let environment = process.env.NODE_ENV === 'production' ? production : development
+
+firebase.initializeApp(environment)
  const facebookAuthProvider = new firebase.auth.FacebookAuthProvider()
 
 export { firebase, facebookAuthProvider }

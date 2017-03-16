@@ -1,5 +1,6 @@
 {
   "projects": {
-    "production": "srb-coasters"
+    "production": "srb-coasters",
+    "dev": "srb-coasters-dev"
   }
 }
