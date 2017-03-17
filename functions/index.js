@@ -32,8 +32,9 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
   const fileName = filePathSplit.pop();
   const fileDir = filePathSplit.join('/') + (filePathSplit.length > 0 ? '/' : '');
   const uid = fileName.split('.')[0];
-  console.log('***** UID is: ' + fileDir);
   const thumbFilePath = `${fileDir}${THUMB_PREFIX}${fileName}`;
+  console.log('***** thumbFilePath is: ' + thumbFilePath);
+
   const tempLocalDir = `${LOCAL_TMP_FOLDER}${fileDir}`;
   const tempLocalFile = `${tempLocalDir}${fileName}`;
   const tempLocalThumbFile = `${LOCAL_TMP_FOLDER}${thumbFilePath}`;
@@ -60,46 +61,46 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
 
   function getImageUpdates (userCoasters, url) {
 
-    let coastersPostedUpdates = Object.keys(userCoasters.posted).reduce((updates, key) => {
+  	let coastersPostedUpdates = Object.keys(userCoasters.posted).reduce((updates, key) => {
+  		updates[`/user-coasters/${uid}/posted/${key}/postedBy/photoURL`] = url;
+  		if (userCoasters.posted[key]['coasterHistory']) {
+  			let coasterHistory = userCoasters[uid]['posted'][key]['coasterHistory'];
+  			for (let historyItem in coasterHistory) {
+  				if (coasterHistory[historyItem].coveringFor.uid === uid) {
+  					updates[`/user-coasters/${uid}/posted/${key}/coasterHistory/${historyItem}/coveringFor/photoURL`] = url;
+  					updates[`/coasters/${key}/coasterHistory/${historyItem}/coveringFor/photoURL`] = url;
+  				}
+  				if (coasterHistory[historyItem].pickedUpBy.uid === uid) {
+  					updates[`/user-coasters/${uid}/posted/${key}/coasterHistory/${historyItem}/pickedUpBy/photoURL`] = url;
+  					updates[`/coasters/${key}/coasterHistory/${historyItem}/pickedUpBy/photoURL`] = url;
+  				}
+  			}
+  		}
 
-      updates[`/user-coasters/${uid}/posted/${key}/postedBy/photoURL`] = url;
-      if (userCoasters[uid]['posted'][key]['coasterHistory']) {
-        let coasterHistory = userCoasters[uid]['posted'][key]['coasterHistory'];
-        for (historyItem in coasterHistory) {
-          if coasterHistory[historyItem].coveringFor.uid === uid {
-            updates[`/user-coasters/${uid}/posted/${key}/coasterHistory/${historyItem}/coveringFor/photoURL`] = url;
-            updates[`/coasters/${key}/coasterHistory/${historyItem}/coveringFor/photoURL`] = url;
-          }
-          if coasterHistory[historyItem].pickedUpBy.uid === uid {
-            updates[`/user-coasters/${uid}/posted/${key}/coasterHistory/${historyItem}/pickedUpBy/photoURL`] = url;
-            updates[`/coasters/${key}/coasterHistory/${historyItem}/pickedUpBy/photoURL`] = url;
-          }
-        }
-      }
+  		return updates;
 
-      return updates;
+  	}, {});
 
-    }, {});
 
-    return Object.keys(userCoasters['picked-up']).reduce((updates, key) => {
+  	return Object.keys(userCoasters['picked-up']).reduce((updates, key) => {
 
-      if (userCoasters[uid]['picked-up'][key]['coasterHistory']) {
-        let coasterHistory = userCoasters[uid]['picked-up'][key]['coasterHistory'];
-        for (historyItem in coasterHistory) {
-          if coasterHistory[historyItem].coveringFor.uid === uid {
-            updates[`/user-coasters/${uid}/posted/${key}/coasterHistory/${historyItem}/coveringFor/photoURL`] = url;
-            updates[`/coasters/${key}/coasterHistory/${historyItem}/coveringFor/photoURL`] = url;
-          }
-          if coasterHistory[historyItem].pickedUpBy.uid === uid {
-            updates[`/user-coasters/${uid}/posted/${key}/coasterHistory/${historyItem}/pickedUpBy/photoURL`] = url;
-            updates[`/coasters/${key}/coasterHistory/${historyItem}/pickedUpBy/photoURL`] = url;
-          }
-        }
-      }
+  		if (userCoasters['picked-up'][key]['coasterHistory']) {
+  			let coasterHistory = userCoasters['picked-up'][key]['coasterHistory'];
+  			for (let historyItem in coasterHistory) {
+  				if (coasterHistory[historyItem].coveringFor.uid === uid) {
+  					updates[`/user-coasters/${uid}/posted/${key}/coasterHistory/${historyItem}/coveringFor/photoURL`] = url;
+  					updates[`/coasters/${key}/coasterHistory/${historyItem}/coveringFor/photoURL`] = url;
+  				}
+  				if (coasterHistory[historyItem].pickedUpBy.uid === uid) {
+  					updates[`/user-coasters/${uid}/posted/${key}/coasterHistory/${historyItem}/pickedUpBy/photoURL`] = url;
+  					updates[`/coasters/${key}/coasterHistory/${historyItem}/pickedUpBy/photoURL`] = url;
+  				}
+  			}
+  		}
 
-      return updates;
+  		return updates;
 
-    }, coastersPostedUpdates);
+  	}, coastersPostedUpdates);
 
   }
 
@@ -114,9 +115,9 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
         return bucket.upload(tempLocalThumbFile, {
           destination: thumbFilePath
         }).then(() => {
-          root.child(`/user-coasters/${uid}`).once((userCoasters) => {
-            let updates = getImageUpdates(userCoasters);
-            console.console.log(updates);
+          root.child(`/user-coasters/${uid}`).once('value', (userCoasters) => {
+            let updates = getImageUpdates(userCoasters.val(), thumbFilePath);
+            root.update(updates);
           })
 
         });

@@ -15,16 +15,13 @@ admin.initializeApp({
 var db = admin.database();
 var root = db.ref("data");
 
-let url = 'this is the new url'
-
 function getImageUpdates (userCoasters, url) {
-	return console.log(Object.keys(userCoasters.posted));
+	// return console.log(Object.keys(userCoasters.posted));
 	let coastersPostedUpdates = Object.keys(userCoasters.posted).reduce((updates, key) => {
-
 		updates[`/user-coasters/${uid}/posted/${key}/postedBy/photoURL`] = url;
-		if (userCoasters[uid]['posted'][key]['coasterHistory']) {
+		if (userCoasters.posted[key]['coasterHistory']) {
 			let coasterHistory = userCoasters[uid]['posted'][key]['coasterHistory'];
-			for (historyItem in coasterHistory) {
+			for (let historyItem in coasterHistory) {
 				if (coasterHistory[historyItem].coveringFor.uid === uid) {
 					updates[`/user-coasters/${uid}/posted/${key}/coasterHistory/${historyItem}/coveringFor/photoURL`] = url;
 					updates[`/coasters/${key}/coasterHistory/${historyItem}/coveringFor/photoURL`] = url;
@@ -40,11 +37,12 @@ function getImageUpdates (userCoasters, url) {
 
 	}, {});
 
+
 	return Object.keys(userCoasters['picked-up']).reduce((updates, key) => {
 
-		if (userCoasters[uid]['picked-up'][key]['coasterHistory']) {
-			let coasterHistory = userCoasters[uid]['picked-up'][key]['coasterHistory'];
-			for (historyItem in coasterHistory) {
+		if (userCoasters['picked-up'][key]['coasterHistory']) {
+			let coasterHistory = userCoasters['picked-up'][key]['coasterHistory'];
+			for (let historyItem in coasterHistory) {
 				if (coasterHistory[historyItem].coveringFor.uid === uid) {
 					updates[`/user-coasters/${uid}/posted/${key}/coasterHistory/${historyItem}/coveringFor/photoURL`] = url;
 					updates[`/coasters/${key}/coasterHistory/${historyItem}/coveringFor/photoURL`] = url;
@@ -63,6 +61,7 @@ function getImageUpdates (userCoasters, url) {
 }
 
 root.child(`/user-coasters/${uid}`).once('value', (userCoasters) => {
-	let updates = getImageUpdates(userCoasters.val());
+	let url = 'this is the new url';
+	let updates = getImageUpdates(userCoasters.val(), url);
 	console.log(updates);
 })
