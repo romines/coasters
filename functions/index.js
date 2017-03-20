@@ -5,6 +5,8 @@
  */
 'use strict';
 
+// require('@google-cloud/debug-agent').start({ allowExpressions: true });
+
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const mkdirp = require('mkdirp-promise');
@@ -28,10 +30,15 @@ const THUMB_PREFIX = 'usr_';
  */
 exports.generateThumbnail = functions.storage.object().onChange(event => {
   const filePath = event.data.name;
+  console.log('***** filePath is: ' + filePath);
   const filePathSplit = filePath.split('/');
+  console.log('***** filePathSplit is: ' + filePathSplit);
   const fileName = filePathSplit.pop();
+  console.log('***** fileName is: ' + fileName);
   const fileDir = filePathSplit.join('/') + (filePathSplit.length > 0 ? '/' : '');
+  console.log('***** fileDir is: ' + fileDir);
   const uid = fileName.split('.')[0];
+  console.log('***** uid is: ' + uid);
   const thumbFilePath = `${fileDir}${THUMB_PREFIX}${fileName}`;
   console.log('***** thumbFilePath is: ' + thumbFilePath);
 
@@ -51,6 +58,7 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
     return;
   }
 
+
   // Exit if this is a move or deletion event.
   if (event.data.resourceState === 'not_exists') {
     console.log('This is a deletion event.');
@@ -61,26 +69,36 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
 
   function getImageUpdates (userCoasters, url) {
 
-  	let coastersPostedUpdates = Object.keys(userCoasters.posted).reduce((updates, key) => {
-  		updates[`/user-coasters/${uid}/posted/${key}/postedBy/photoURL`] = url;
-  		if (userCoasters.posted[key]['coasterHistory']) {
-  			let coasterHistory = userCoasters[uid]['posted'][key]['coasterHistory'];
-  			for (let historyItem in coasterHistory) {
-  				if (coasterHistory[historyItem].coveringFor.uid === uid) {
-  					updates[`/user-coasters/${uid}/posted/${key}/coasterHistory/${historyItem}/coveringFor/photoURL`] = url;
-  					updates[`/coasters/${key}/coasterHistory/${historyItem}/coveringFor/photoURL`] = url;
-  				}
-  				if (coasterHistory[historyItem].pickedUpBy.uid === uid) {
-  					updates[`/user-coasters/${uid}/posted/${key}/coasterHistory/${historyItem}/pickedUpBy/photoURL`] = url;
-  					updates[`/coasters/${key}/coasterHistory/${historyItem}/pickedUpBy/photoURL`] = url;
-  				}
-  			}
-  		}
+    console.log(userCoasters.posted);
+    let coastersPostedUpdates = {}
+    if (userCoasters.posted) {
 
-  		return updates;
+      coastersPostedUpdates = Object.keys(userCoasters.posted).reduce((updates, key) => {
+        updates[`/user-coasters/${uid}/posted/${key}/postedBy/photoURL`] = url;
+        if (userCoasters.posted[key]['coasterHistory']) {
+          if (!userCoasters[uid]) {
+            console.log('why are you checking for ' + uid + ' ??');
+            return;
+          }
+          console.log(userCoasters[uid]);
+          let coasterHistory = userCoasters[uid]['posted'][key]['coasterHistory'];
+          for (let historyItem in coasterHistory) {
+            if (coasterHistory[historyItem].coveringFor.uid === uid) {
+              updates[`/user-coasters/${uid}/posted/${key}/coasterHistory/${historyItem}/coveringFor/photoURL`] = url;
+              updates[`/coasters/${key}/coasterHistory/${historyItem}/coveringFor/photoURL`] = url;
+            }
+            if (coasterHistory[historyItem].pickedUpBy.uid === uid) {
+              updates[`/user-coasters/${uid}/posted/${key}/coasterHistory/${historyItem}/pickedUpBy/photoURL`] = url;
+              updates[`/coasters/${key}/coasterHistory/${historyItem}/pickedUpBy/photoURL`] = url;
+            }
+          }
+        }
 
-  	}, {});
+        return updates;
 
+      }, {});
+
+    }
 
   	return Object.keys(userCoasters['picked-up']).reduce((updates, key) => {
 
@@ -116,7 +134,13 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
           destination: thumbFilePath
         }).then(() => {
           root.child(`/user-coasters/${uid}`).once('value', (userCoasters) => {
+            if (!userCoasters) return;
+            console.log(userCoasters.val());
+            // let updates = {};
+            // updates['/foo'] = 'this is foo';
+            // updates['/bar/baz/'] = 'this is baz';
             let updates = getImageUpdates(userCoasters.val(), thumbFilePath);
+            console.log(updates);
             root.update(updates);
           })
 
