@@ -12,35 +12,33 @@ const admin = require('firebase-admin');
 const mkdirp = require('mkdirp-promise');
 const gcs = require('@google-cloud/storage')();
 const spawn = require('child-process-promise').spawn;
+const getImageUpdates = require('./images.js').getImageUpdates;
+
 const LOCAL_TMP_FOLDER = '/tmp/';
+const DEBUG = true;
+const THUMB_MAX_HEIGHT = 200; // in pixels
+const THUMB_MAX_WIDTH = 200;
+const THUMB_PREFIX = 'usr_';
 
 admin.initializeApp(functions.config().firebase);
 let root = admin.database().ref('data');
-
-
-// Max height and width of the thumbnail in pixels.
-const THUMB_MAX_HEIGHT = 200;
-const THUMB_MAX_WIDTH = 200;
-// Thumbnail prefix added to file names.
-const THUMB_PREFIX = 'usr_';
-
 /**
  * When an image is uploaded in the Storage bucket We generate a thumbnail automatically using
  * ImageMagick.
  */
 exports.generateThumbnail = functions.storage.object().onChange(event => {
   const filePath = event.data.name;
-  console.log('***** filePath is: ' + filePath);
+  DEBUG && console.log('***** filePath is: ' + filePath);
   const filePathSplit = filePath.split('/');
-  console.log('***** filePathSplit is: ' + filePathSplit);
+  DEBUG && console.log('***** filePathSplit is: ' + filePathSplit);
   const fileName = filePathSplit.pop();
-  console.log('***** fileName is: ' + fileName);
+  DEBUG && console.log('***** fileName is: ' + fileName);
   const fileDir = filePathSplit.join('/') + (filePathSplit.length > 0 ? '/' : '');
-  console.log('***** fileDir is: ' + fileDir);
+  DEBUG && console.log('***** fileDir is: ' + fileDir);
   const uid = fileName.split('.')[0];
-  console.log('***** uid is: ' + uid);
+  DEBUG && console.log('***** uid is: ' + uid);
   const thumbFilePath = `${fileDir}${THUMB_PREFIX}${fileName}`;
-  console.log('***** thumbFilePath is: ' + thumbFilePath);
+  DEBUG && console.log('***** thumbFilePath is: ' + thumbFilePath);
 
   const tempLocalDir = `${LOCAL_TMP_FOLDER}${fileDir}`;
   const tempLocalFile = `${tempLocalDir}${fileName}`;
@@ -48,7 +46,7 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
 
   // Exit if this is triggered on a file that is not an image.
   if (!event.data.contentType.startsWith('image/')) {
-    console.log('This is not an image.');
+  console.log('This is not an image.');
     return;
   }
 
@@ -67,62 +65,6 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
 
 
 
-  function getImageUpdates (userCoasters, url) {
-
-    console.log(userCoasters.posted);
-    let coastersPostedUpdates = {}
-    if (userCoasters.posted) {
-
-      coastersPostedUpdates = Object.keys(userCoasters.posted).reduce((updates, key) => {
-        updates[`/user-coasters/${uid}/posted/${key}/postedBy/photoURL`] = url;
-        if (userCoasters.posted[key]['coasterHistory']) {
-          if (!userCoasters[uid]) {
-            console.log('why are you checking for ' + uid + ' ??');
-            return;
-          }
-          console.log(userCoasters[uid]);
-          let coasterHistory = userCoasters[uid]['posted'][key]['coasterHistory'];
-          for (let historyItem in coasterHistory) {
-            if (coasterHistory[historyItem].coveringFor.uid === uid) {
-              updates[`/user-coasters/${uid}/posted/${key}/coasterHistory/${historyItem}/coveringFor/photoURL`] = url;
-              updates[`/coasters/${key}/coasterHistory/${historyItem}/coveringFor/photoURL`] = url;
-            }
-            if (coasterHistory[historyItem].pickedUpBy.uid === uid) {
-              updates[`/user-coasters/${uid}/posted/${key}/coasterHistory/${historyItem}/pickedUpBy/photoURL`] = url;
-              updates[`/coasters/${key}/coasterHistory/${historyItem}/pickedUpBy/photoURL`] = url;
-            }
-          }
-        }
-
-        return updates;
-
-      }, {});
-
-    }
-
-  	return Object.keys(userCoasters['picked-up']).reduce((updates, key) => {
-
-  		if (userCoasters['picked-up'][key]['coasterHistory']) {
-  			let coasterHistory = userCoasters['picked-up'][key]['coasterHistory'];
-  			for (let historyItem in coasterHistory) {
-  				if (coasterHistory[historyItem].coveringFor.uid === uid) {
-  					updates[`/user-coasters/${uid}/posted/${key}/coasterHistory/${historyItem}/coveringFor/photoURL`] = url;
-  					updates[`/coasters/${key}/coasterHistory/${historyItem}/coveringFor/photoURL`] = url;
-  				}
-  				if (coasterHistory[historyItem].pickedUpBy.uid === uid) {
-  					updates[`/user-coasters/${uid}/posted/${key}/coasterHistory/${historyItem}/pickedUpBy/photoURL`] = url;
-  					updates[`/coasters/${key}/coasterHistory/${historyItem}/pickedUpBy/photoURL`] = url;
-  				}
-  			}
-  		}
-
-  		return updates;
-
-  	}, coastersPostedUpdates);
-
-  }
-
-
   return mkdirp(tempLocalDir).then(() => {
     // Download file from bucket.
     const bucket = gcs.bucket(event.data.bucket);
@@ -134,13 +76,13 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
           destination: thumbFilePath
         }).then(() => {
           root.child(`/user-coasters/${uid}`).once('value', (userCoasters) => {
-            if (!userCoasters) return;
-            console.log(userCoasters.val());
-            // let updates = {};
-            // updates['/foo'] = 'this is foo';
-            // updates['/bar/baz/'] = 'this is baz';
-            let updates = getImageUpdates(userCoasters.val(), thumbFilePath);
-            console.log(updates);
+            if (!userCoasters.val()) return;
+            let updates = getImageUpdates(userCoasters.val(), 'this is the new path...', uid);
+            DEBUG && console.log(updates);
+            if (Object.keys(updates).length < 1) {
+              console.log('Updates object was empty . . .');
+              return;
+            }
             root.update(updates);
           })
 

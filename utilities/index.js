@@ -1,11 +1,27 @@
 'use strict'
-var admin = require("firebase-admin");
+const admin = require("firebase-admin");
+const gcloud = require('google-cloud');
 const uid = 'ccCDhUStE2huXKynKlEKQ78SJwZ2';
+const serviceAccount = require("./fBServiceAccountKey_dev.json");
 
-// Fetch the service account key JSON file contents
-var serviceAccount = require("./fBServiceAccountKey_dev.json");
+// gcloud.storage({
+//   projectId: 'srb-coasters-dev', // 559488726085
+//   credentials: serviceAccount
+// }).getBucketsStream()
+//   .on('error', console.error)
+//   .on('data', function(bucket) {
+//     console.log(bucket);
+//   });
 
-// Initialize the app with a service account, granting admin privileges
+
+// .getBuckets((err, buckets) => {
+//   if (err) console.error(err)
+//   else {
+//     console.log(buckets[0].metadata);
+//   }
+// });
+
+
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://srb-coasters-dev.firebaseio.com"
@@ -15,53 +31,14 @@ admin.initializeApp({
 var db = admin.database();
 var root = db.ref("data");
 
-function getImageUpdates (userCoasters, url) {
-	// return console.log(Object.keys(userCoasters.posted));
-	let coastersPostedUpdates = Object.keys(userCoasters.posted).reduce((updates, key) => {
-		updates[`/user-coasters/${uid}/posted/${key}/postedBy/photoURL`] = url;
-		if (userCoasters.posted[key]['coasterHistory']) {
-			let coasterHistory = userCoasters[uid]['posted'][key]['coasterHistory'];
-			for (let historyItem in coasterHistory) {
-				if (coasterHistory[historyItem].coveringFor.uid === uid) {
-					updates[`/user-coasters/${uid}/posted/${key}/coasterHistory/${historyItem}/coveringFor/photoURL`] = url;
-					updates[`/coasters/${key}/coasterHistory/${historyItem}/coveringFor/photoURL`] = url;
-				}
-				if (coasterHistory[historyItem].pickedUpBy.uid === uid) {
-					updates[`/user-coasters/${uid}/posted/${key}/coasterHistory/${historyItem}/pickedUpBy/photoURL`] = url;
-					updates[`/coasters/${key}/coasterHistory/${historyItem}/pickedUpBy/photoURL`] = url;
-				}
-			}
-		}
-
-		return updates;
-
-	}, {});
-
-
-	return Object.keys(userCoasters['picked-up']).reduce((updates, key) => {
-
-		if (userCoasters['picked-up'][key]['coasterHistory']) {
-			let coasterHistory = userCoasters['picked-up'][key]['coasterHistory'];
-			for (let historyItem in coasterHistory) {
-				if (coasterHistory[historyItem].coveringFor.uid === uid) {
-					updates[`/user-coasters/${uid}/posted/${key}/coasterHistory/${historyItem}/coveringFor/photoURL`] = url;
-					updates[`/coasters/${key}/coasterHistory/${historyItem}/coveringFor/photoURL`] = url;
-				}
-				if (coasterHistory[historyItem].pickedUpBy.uid === uid) {
-					updates[`/user-coasters/${uid}/posted/${key}/coasterHistory/${historyItem}/pickedUpBy/photoURL`] = url;
-					updates[`/coasters/${key}/coasterHistory/${historyItem}/pickedUpBy/photoURL`] = url;
-				}
-			}
-		}
-
-		return updates;
-
-	}, coastersPostedUpdates);
-
-}
-
+// bucket.getFilesStream()
+//   .on('error', console.error)
+//   .on('data', (data) => {
+//     console.log(data);
+//   })
+//
 root.child(`/user-coasters/${uid}`).once('value', (userCoasters) => {
 	let url = 'this is the new url';
-	let updates = getImageUpdates(userCoasters.val(), url);
+	let updates = require('../functions/images.js').getImageUpdates(userCoasters.val(), url, uid);
 	console.log(updates);
 })
