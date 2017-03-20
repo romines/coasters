@@ -5,7 +5,7 @@
  */
 'use strict';
 
-// require('@google-cloud/debug-agent').start({ allowExpressions: true });
+require('@google-cloud/debug-agent').start({ allowExpressions: true });
 
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
@@ -15,7 +15,7 @@ const spawn = require('child-process-promise').spawn;
 const getImageUpdates = require('./images.js').getImageUpdates;
 
 const LOCAL_TMP_FOLDER = '/tmp/';
-const DEBUG = true;
+const DEBUG = false;
 const THUMB_MAX_HEIGHT = 200; // in pixels
 const THUMB_MAX_WIDTH = 200;
 const THUMB_PREFIX = 'usr_';
@@ -77,6 +77,7 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
         }).then(() => {
           root.child(`/user-coasters/${uid}`).once('value', (userCoasters) => {
             if (!userCoasters.val()) return;
+            console.log(userCoasters.val());
             let updates = getImageUpdates(userCoasters.val(), 'this is the new path...', uid);
             DEBUG && console.log(updates);
             if (Object.keys(updates).length < 1) {
