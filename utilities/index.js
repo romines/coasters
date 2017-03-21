@@ -1,7 +1,7 @@
 'use strict'
 const admin = require("firebase-admin");
 const gcloud = require('google-cloud');
-const uid = 'ccCDhUStE2huXKynKlEKQ78SJwZ2';
+const uid = 'ZIpb1b0NJjePATkTJRrNUF7WvWu2';
 const serviceAccount = require("./fBServiceAccountKey_dev.json");
 
 // gcloud.storage({
@@ -37,8 +37,13 @@ var root = db.ref("data");
 //     console.log(data);
 //   })
 //
-root.child(`/user-coasters/${uid}`).once('value', (userCoasters) => {
+root.child(`/coasters`).once('value', (coasters) => {
 	let url = 'this is the new url';
-	let updates = require('../functions/images.js').getImageUpdates(userCoasters.val(), url, uid);
+	let updates = require('../functions/images.js').getImageUpdates(coasters.val(), url, uid);
 	console.log(updates);
 })
+// root.child(`/user-coasters/${uid}`).once('value', (userCoasters) => {
+// 	let url = 'this is the new url';
+// 	let updates = require('../functions/images.js').getImageUpdates(userCoasters.val(), url, uid);
+// 	console.log(updates);
+// })

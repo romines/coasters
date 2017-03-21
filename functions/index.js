@@ -74,16 +74,25 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
       return spawn('convert', [tempLocalFile, '-thumbnail', `${THUMB_MAX_WIDTH}x${THUMB_MAX_HEIGHT}>`, tempLocalThumbFile]).then(() => {
         return bucket.upload(tempLocalThumbFile, {
           destination: thumbFilePath
-        }).then(() => {
-          root.child(`/user-coasters/${uid}`).once('value', (userCoasters) => {
-            if (!userCoasters.val()) return;
-            console.log(userCoasters.val());
-            let updates = getImageUpdates(userCoasters.val(), 'this is the new path...', uid);
-            DEBUG && console.log(updates);
-            if (Object.keys(updates).length < 1) {
-              console.log('Updates object was empty . . .');
-              return;
-            }
+        }).then((data) => {
+
+          console.log(data[0].metadata);
+
+          let myUri = data[0].metadata.mediaLink;
+          // root.child(`/user-coasters/${uid}`).once('value', (userCoasters) => {
+          //   if (!userCoasters.val()) return;
+          //   console.log(userCoasters.val());
+          //   let updates = getImageUpdates(userCoasters.val(), 'this is the new path...', uid);
+          //   DEBUG && console.log(updates);
+          //   if (Object.keys(updates).length < 1) {
+          //     console.log('Updates object was empty . . .');
+          //     return;
+          //   }
+          //   root.update(updates);
+          // })
+          root.child('/coasters').once('value', (coasters) => {
+            let updates = getImageUpdates(coasters.val(), myUri, uid);
+            console.log(updates);
             root.update(updates);
           })
 

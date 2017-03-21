@@ -37,7 +37,7 @@ import router from '../router'
 
 
 // Child components
-import Flatpickr from 'vue-flatpickr/vue-flatpickr-airbnb.vue'
+import Flatpickr from 'vue-flatpickr'
 
 
 export default {
