@@ -7,3 +7,4 @@ project.cson
 functions/node_modules/
 utilities/node_modules/
 utilities/*.json
+**/fBServiceAccountKey_dev.json

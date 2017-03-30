@@ -8,7 +8,7 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const mkdirp = require('mkdirp-promise');
-const gcs = require('@google-cloud/storage')();
+const gcs = require('@google-cloud/storage')({keyFilename: 'fBServiceAccountKey_dev.json'});
 const spawn = require('child-process-promise').spawn;
 const getImageUpdates = require('./images.js').getImageUpdates;
 
@@ -61,8 +61,6 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
     return;
   }
 
-
-
   return mkdirp(tempLocalDir).then(() => {
     // Download file from bucket.
     const bucket = gcs.bucket(event.data.bucket);
@@ -70,58 +68,24 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
       destination: tempLocalFile
     }).then(() => {
       return spawn('convert', [tempLocalFile, '-thumbnail', `${THUMB_MAX_WIDTH}x${THUMB_MAX_HEIGHT}>`, tempLocalThumbFile]).then(() => {
-        // return bucket.upload(tempLocalThumbFile, {
-        //   destination: thumbFilePath
-        // }).then((data) => {
+        return bucket.upload(tempLocalThumbFile, {
+          destination: thumbFilePath
+        }).then(() => {
 
-          // console.log(data[0].metadata);
-          //
-          // let myUri = data[0].metadata.mediaLink;
-          // root.child(`/user-coasters/${uid}`).once('value', (userCoasters) => {
-          //   if (!userCoasters.val()) return;
-          //   console.log(userCoasters.val());
-          //   let updates = getImageUpdates(userCoasters.val(), 'this is the new path...', uid);
-          //   DEBUG && console.log(updates);
-          //   if (Object.keys(updates).length < 1) {
-          //     console.log('Updates object was empty . . .');
-          //     return;
-          //   }
-          //   root.update(updates);
-          // })
-          // root.child('/coasters').once('value', (coasters) => {
-          //   let updates = getImageUpdates(coasters.val(), myUri, uid);
-          //   console.log(updates);
-          //   root.update(updates);
-          // })
-        let thumbRef = gcs.ref(thumbFilePath);
-        let tumbUploadTask = thumbRef.put(tempLocalThumbFile);
-        let thumbCompleter = new $.Deferred();
-        tumbUploadTask.on('state_changed', null, error => {
-          thumbCompleter.reject(error);
-          console.error('Error while uploading new thumb', error);
-        }, () => {
-          console.log('New thumb uploaded. Size:', tumbUploadTask.snapshot.totalBytes, 'bytes.');
-          let url = tumbUploadTask.snapshot.metadata.downloadURLs[0];
-          console.log('File available at', url);
-          thumbCompleter.resolve(url);
-        });
+          bucket.file(thumbFilePath).getSignedUrl({action:'read', expires:'03-30-2025'}, (err, url) => {
+            if (err) {
+              console.error(err);
+              return;
+            }
+            root.child('/coasters').once('value', (coasters) => {
+              let updates = getImageUpdates(coasters.val(), url, uid);
+              console.log(updates);
+              root.update(updates);
+            })
+          })
+        })
 
-        // return bucket.upload(tempLocalThumbFile, {
-        //   destination: thumbFilePath
-        // }).then(() => {
-        //   root.child(`/user-coasters/${uid}`).once('value', (userCoasters) => {
-        //     if (!userCoasters.val()) return;
-        //     console.log(userCoasters.val());
-        //     let updates = getImageUpdates(userCoasters.val(), 'this is the new path...', uid);
-        //     DEBUG && console.log(updates);
-        //     if (Object.keys(updates).length < 1) {
-        //       console.log('Updates object was empty . . .');
-        //       return;
-        //     }
-        //     root.update(updates);
-        //   })
-        //
-        // });
+
       });
     });
   });
