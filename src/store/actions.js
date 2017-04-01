@@ -181,8 +181,8 @@ function postComment ({ commit, state }, payload) {
     for (var [key, historyEntry] of Object.entries(coaster.coasterHistory)) {
       let coveringFor = historyEntry.coveringFor
       let pickedUpBy = historyEntry.pickedUpBy
-      updates['/user-coasters/' + pickedUpBy.uid + '/picked-up/' + coaster.key] = coasterData
-      updates['/user-coasters/' + coveringFor.uid + '/posted/' + coaster.key] = coasterData
+      updates['/users/' + pickedUpBy.uid + '/picked-up/' + coaster.key] = coasterData
+      updates['/users/' + coveringFor.uid + '/posted/' + coaster.key] = coasterData
     }
   }
   console.log(updates)
