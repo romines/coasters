@@ -63,10 +63,10 @@ export default {
 
       return this.$store.state.coasters
       .filter((coaster) => {
-        return coaster.coasterHistory
+        return coaster.history
       })
       .filter((coaster) => {
-        let history = coaster.coasterHistory
+        let history = coaster.history
         let lastPickup
         for(var item in history) {
             lastPickup = history[item]

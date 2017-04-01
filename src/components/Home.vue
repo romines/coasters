@@ -39,7 +39,7 @@ export default {
     coasters () {
       return _.chain(this.$store.state.coasters)
       .filter((coaster) => {
-        return !coaster.coasterHistory
+        return !coaster.history
       })
         .sortBy('time')
         .sortBy('date')

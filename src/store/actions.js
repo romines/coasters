@@ -118,18 +118,20 @@ function newCoaster ({ commit, state }, coasterData) {
     return
   }
 
-  let postedBy = {
+  coasterData.postedBy = {
     uid: state.authState.user.uid,
     displayName: state.authState.user.displayName,
     photoURL: state.authState.user.photoURL
   }
-  const key = coastersRef.push().key;
+  coasterData.heldBy = {...coasterData.postedBy}
+  const key = coastersRef.push().key
   coasterData.posted = moment().format()
+  coasterData.available = true
 
   // Write the coaster data simultaneously in the coaster list and the user's coaster list.
   let updates = {};
   updates['/coasters/' + key] = coasterData;
-  updates['/user-coasters/' + postedBy.uid + '/posted/' + key] = coasterData;
+  updates['/users/' + coasterData.postedBy.uid + '/posted/' + key] = coasterData;
 
   return baseRef.update(updates);
 }
@@ -140,7 +142,7 @@ function cancelCoaster ({ commit, state }, key) {
   let uid = state.authState.user.uid
   let updates = {};
   updates['/coasters/' + key] = null
-  updates['/user-coasters/' + uid + '/posted/' + key] = null
+  updates['/users/' + uid + '/posted/' + key] = null
   return baseRef.update(updates);
 
 }
@@ -174,11 +176,12 @@ function postComment ({ commit, state }, payload) {
   console.log(coasterData);
   let updates = {};
   updates['/coasters/' + coaster.key] = coasterData
+  updates[`/users/${user.uid}/coastersCommentedOn/${coaster.key}`] = true
 
   // TODO: abstract to a fanout method
 
-  if (coaster.coasterHistory && coaster.coasterHistory.length > 0) {
-    for (var [key, historyEntry] of Object.entries(coaster.coasterHistory)) {
+  if (coaster.history && coaster.history.length > 0) {
+    for (var [key, historyEntry] of Object.entries(coaster.history)) {
       let coveringFor = historyEntry.coveringFor
       let pickedUpBy = historyEntry.pickedUpBy
       updates['/users/' + pickedUpBy.uid + '/picked-up/' + coaster.key] = coasterData
@@ -194,34 +197,39 @@ function postComment ({ commit, state }, payload) {
 function pickUpCoaster ({ commit, state }, coaster) {
   const now = moment().format()
   const user = state.authState.user
+  let pickedUpBy = {
+    name: user.displayName,
+    uid: user.uid,
+    photoURL: user.photoURL ? user.photoURL : null
+  }
   let newShiftTrade = {
     when: now,
-    pickedUpBy: {
-      name: user.displayName,
-      uid: user.uid,
-      photoURL: user.photoURL ? user.photoURL : null
-    },
+    pickedUpBy,
     coveringFor: {
       name: coaster.postedBy.displayName,
       uid: coaster.postedBy.uid,
       photoURL: coaster.postedBy.photoURL ? coaster.postedBy.photoURL : null
     }
   }
-  const newHistoryItemRef = coastersRef.child(coaster.key).child('coasterComments').push()
+  const newHistoryItemRef = coastersRef.child(coaster.key).child('history').push()
   const newHistoryItemKey = newHistoryItemRef.key
 
-  let coasterHistory = {...coaster.coasterHistory}
+  let coasterHistory = {...coaster.history}
   coasterHistory[newHistoryItemKey] = newShiftTrade
 
   let coasterData = {
     ...coaster,
+    heldBy: {...pickedUpBy},
     coasterHistory
   }
 
+  coasterData.available = false
+
   let updates = {};
   updates['/coasters/' + coaster.key] = coasterData
-  updates['/user-coasters/' + user.uid + '/picked-up/' + coaster.key] = coasterData
-  updates['/user-coasters/' + coaster.postedBy.uid + '/posted/' + coaster.key] = coasterData
+  // updates['/users/' + user.uid + '/picked-up/' + coaster.key] = coasterData
+  updates['/users/' + user.uid + '/holding/' + coaster.key] = coasterData
+  updates['/users/' + coaster.postedBy.uid + '/posted/' + coaster.key] = coasterData
   commit('CLOSE_MODAL')
   return baseRef.update(updates);
 

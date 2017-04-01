@@ -87,8 +87,8 @@ export default {
 
   computed: {
     pickingUpUser () {
-      if (!this.coaster.coasterHistory) return
-      let history = this.coaster.coasterHistory
+      if (!this.coaster.history) return
+      let history = this.coaster.history
       let trades = [];
       for(var item in history) {
           trades.push(history[item])

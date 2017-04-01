@@ -87,7 +87,7 @@ export default {
   computed: {
     pickedUp () {
       return _.chain(this.$store.state.coasters).filter((coaster) => {
-        return coaster.coasterHistory
+        return coaster.history
       })
       .sortBy('time')
       .sortBy('date')
@@ -97,8 +97,8 @@ export default {
   components: { Coaster },
   methods: {
     pickingUpUser (coaster) {
-      if (!coaster.coasterHistory) return
-      let history = coaster.coasterHistory
+      if (!coaster.history) return
+      let history = coaster.history
       let trades = [];
       for(var item in history) {
           trades.push(history[item])

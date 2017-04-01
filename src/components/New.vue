@@ -78,11 +78,11 @@ export default {
           time: this.time,
           shiftType: this.shiftType,
           comment: this.comment,
-          postedBy: {
-            uid: this.$store.state.authState.user.uid,
-            displayName: this.$store.state.authState.user.displayName,
-            photoURL: this.$store.state.authState.user.photoURL,
-          }
+          // postedBy: {
+          //   uid: this.$store.state.authState.user.uid,
+          //   displayName: this.$store.state.authState.user.displayName,
+          //   photoURL: this.$store.state.authState.user.photoURL,
+          // }
       })
       router.push({
         name: 'user',
