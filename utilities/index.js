@@ -2,14 +2,27 @@
 const admin = require("firebase-admin");
 const gcloud = require('google-cloud');
 const serviceAccount = require("./fBServiceAccountKey_dev.json");
+const coasterFanout = require('../functions/coasterFanout.js')
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://srb-coasters-dev.firebaseio.com"
 });
 
-var db = admin.database();
-var root = db.ref("data");
+let db = admin.database();
+let root = db.ref("data");
+
+
+root.child(`/coasters`).on('child_changed', (coaster) => {
+
+  let updates = coasterFanout.getCoasterFanout(coaster.val())
+  // root.update(updates)
+})
+
+// migrateUsers();
+// migrateCoasterHistory();
+// migrateCoasterComments();
+coasterFanout();
 
 function migrateUsers() {
   root.child('user-coasters').once('value', (snap) => {
@@ -58,14 +71,3 @@ function migrateCoasterComments() {
 
   })
 }
-
-// root.child(`/coasters`).on('child_changed', (coaster) => {
-//   // for each poster in history, copy coaster data
-//   // users/${uid}/coasters/${coasterKey}/
-//   // if coaster.heldBy, copy to users/${holdingUserUid}/holding/${coasterKey}
-// 	Object.keys(coaster.coasterHistory)
-// })
-
-// migrateUsers();
-// migrateCoasterHistory();
-// migrateCoasterComments();
