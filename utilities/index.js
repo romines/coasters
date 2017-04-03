@@ -16,13 +16,48 @@ let root = db.ref("data");
 root.child(`/coasters`).on('child_changed', (coaster) => {
 
   let updates = coasterFanout.getCoasterFanout(coaster.val())
-  // root.update(updates)
+  // console.log(updates)
+  root.update(updates)
 })
 
 // migrateUsers();
 // migrateCoasterHistory();
 // migrateCoasterComments();
-coasterFanout();
+// migrateCoveringFor()
+
+function migrateCoveringFor() {
+  setTimeout(doMigrateCoveringFor, 2000)
+}
+
+function doMigrateCoveringFor() {
+  root.child('coasters').once('value', (snap) => {
+    let coasters = snap.val()
+    // console.log(coasters);
+    let updates = Object.keys(coasters).reduce((updates, key) => {
+      let coaster = coasters[key]
+      // console.log(key);
+      // console.log(coaster.history);
+
+      if (coaster.history) {
+        let historyKeys = Object.keys(coaster.history)
+        let historyUpdates = {}
+        for (var i = 0; i < historyKeys.length; i++) {
+          let historyKey = historyKeys[i]
+          let historyItem = coaster.history[historyKey]
+          let postedBy = Object.assign({}, historyItem.coveringFor)
+          historyItem.coveringFor = null
+          historyItem.postedBy = postedBy
+          historyUpdates[historyKey] = historyItem
+
+        }
+        updates[`${key}/history`] = historyUpdates
+      }
+      return updates
+
+    }, {})
+    root.child('coasters').update(updates);
+  })
+}
 
 function migrateUsers() {
   root.child('user-coasters').once('value', (snap) => {
