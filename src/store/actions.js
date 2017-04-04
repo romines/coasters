@@ -148,11 +148,11 @@ function cancelCoaster ({ commit, state }, key) {
 }
 
 function postComment ({ commit, state }, payload) {
+
   const coaster = payload.coaster
   console.log(coaster);
   const now = moment().format()
   const user = state.authState.user
-  console.log(user);
   let newComment = {
     when: now,
     postedBy: {
@@ -195,8 +195,12 @@ function postComment ({ commit, state }, payload) {
 }
 
 function pickUpCoaster ({ commit, state }, coaster) {
+
   const now = moment().format()
   const user = state.authState.user
+  const newHistoryItemRef = coastersRef.child(coaster.key).child('history').push()
+  const newHistoryItemKey = newHistoryItemRef.key
+
   let pickedUpBy = {
     name: user.displayName,
     uid: user.uid,
@@ -206,30 +210,36 @@ function pickUpCoaster ({ commit, state }, coaster) {
     when: now,
     pickedUpBy,
     coveringFor: {
-      name: coaster.postedBy.displayName,
-      uid: coaster.postedBy.uid,
-      photoURL: coaster.postedBy.photoURL ? coaster.postedBy.photoURL : null
+      name: coaster.heldBy.displayName,
+      uid: coaster.heldBy.uid,
+      photoURL: coaster.heldBy.photoURL ? coaster.postedBy.photoURL : null
     }
   }
-  const newHistoryItemRef = coastersRef.child(coaster.key).child('history').push()
-  const newHistoryItemKey = newHistoryItemRef.key
 
   let coasterHistory = {...coaster.history}
   coasterHistory[newHistoryItemKey] = newShiftTrade
 
   let coasterData = {
     ...coaster,
+    coasterHistory,
     heldBy: {...pickedUpBy},
-    coasterHistory
+    available: false
   }
 
-  coasterData.available = false
+  let updates = {}
 
-  let updates = {};
+  if (Object.keys(coaster.history).length) {
+    updates = Object.keys(coaster.history).reduce((updates, key) => {
+      let historyItem = coaster.history[key]
+      let postedBy = historyItem.postedBy
+      updates[`/users/${postedBy.uid}/posted/coaster.key`] = coasterData
+      return updates
+    }, {})
+  }
+
   updates['/coasters/' + coaster.key] = coasterData
-  // updates['/users/' + user.uid + '/picked-up/' + coaster.key] = coasterData
-  updates['/users/' + user.uid + '/holding/' + coaster.key] = coasterData
-  updates['/users/' + coaster.postedBy.uid + '/posted/' + coaster.key] = coasterData
+  updates[`/users/${user.uid}/holding${coaster.key}`] = coasterData
+  updates[`/users/${coaster.heldBy.uid}/holding/${coaster.key}`] = null
   commit('CLOSE_MODAL')
   return baseRef.update(updates);
 
