@@ -178,16 +178,16 @@ function postComment ({ commit, state }, payload) {
   updates['/coasters/' + coaster.key] = coasterData
   updates[`/users/${user.uid}/coastersCommentedOn/${coaster.key}`] = true
 
-  // TODO: abstract to a fanout method
+  // fanout to history items happens in the cloud now
 
-  if (coaster.history && coaster.history.length > 0) {
-    for (var [key, historyEntry] of Object.entries(coaster.history)) {
-      let coveringFor = historyEntry.coveringFor
-      let pickedUpBy = historyEntry.pickedUpBy
-      updates['/users/' + pickedUpBy.uid + '/picked-up/' + coaster.key] = coasterData
-      updates['/users/' + coveringFor.uid + '/posted/' + coaster.key] = coasterData
-    }
-  }
+  // if (coaster.history && coaster.history.length > 0) {
+  //   for (var [key, historyEntry] of Object.entries(coaster.history)) {
+  //     let coveringFor = historyEntry.coveringFor
+  //     let pickedUpBy = historyEntry.pickedUpBy
+  //     updates['/users/' + pickedUpBy.uid + '/picked-up/' + coaster.key] = coasterData
+  //     updates['/users/' + coveringFor.uid + '/posted/' + coaster.key] = coasterData
+  //   }
+  // }
   console.log(updates)
 
   baseRef.update(updates);

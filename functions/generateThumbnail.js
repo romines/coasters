@@ -69,10 +69,27 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
               console.error(err);
               return;
             }
-            root.child('/coasters').once('value', (coasters) => {
-              let updates = getImageUpdates(coasters.val(), url, uid);
-              console.log(updates);
-              root.update(updates);
+            root.child(`/users/${uid}`).once('value', (snap) => {
+
+              let userData = snap.val();
+              let myPostedUpdates = Object.keys(userData.posted).reduce((updates, key) => {
+                let coaster = userData.posted[key];
+                if (coaster.postedBy.uid === uid) {
+                  let coasterKey = coaster.key;
+                  updates[`/coasters/${coasterKey}/postedBy/photoURL`] = url;
+                }
+                return updates;
+              }, {});
+
+              let myPostedAndHoldingUpdates = Object.keys(userData.holding).reduce((updates, key) => {
+                let coaster = userData.holding[key];
+                let coasterKey = coaster.key;
+                updates[`/coasters/${coasterKey}/holding/photoURL`] = url;
+                return updates;
+              }, myPostedUpdates);
+              // let updates = getImageUpdates(coasters.val(), url, uid);
+              console.log(myPostedAndHoldingUpdates);
+              // root.update(updates);
             })
 
           })

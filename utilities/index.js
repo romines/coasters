@@ -20,6 +20,7 @@ root.child(`/coasters`).on('child_changed', (coaster) => {
   root.update(updates)
 })
 
+setHeldBy();
 // migrateUsers();
 // migrateCoasterHistory();
 // migrateCoasterComments();
@@ -78,12 +79,33 @@ function migrateCoasterHistory() {
       if (coaster.coasterHistory) {
         updates[`/${key}/history`] = coaster.coasterHistory;
         updates[`/${key}/coasterHistory`] = null;
+        updates[`/${key}/available`] = false;
       } else {
         updates[`/${key}/available`] = true;
       }
       return updates;
     }, {});
 
+    return root.child('coasters').update(updates);
+
+  })
+}
+
+function setHeldBy() {
+
+  root.child('coasters').once('value', (snap) => {
+    let coasters = snap.val();
+    let updates = Object.keys(coasters).reduce((updates, key) => {
+      let coaster = coasters[key];
+      if (coaster.history) {
+        let historyKeys = Object.keys(coaster.history);
+        let lastKey = historyKeys[historyKeys.length - 1];
+        updates[`/${key}/heldBy`] = coaster.history[lastKey].pickedUpBy;
+        updates[`/${key}/available`] = false;
+      }
+      return updates;
+    }, {});
+    console.log(updates);
     return root.child('coasters').update(updates);
 
   })

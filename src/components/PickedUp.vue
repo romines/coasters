@@ -87,7 +87,7 @@ export default {
   computed: {
     pickedUp () {
       return _.chain(this.$store.state.coasters).filter((coaster) => {
-        return coaster.history
+        return !coaster.available
       })
       .sortBy('time')
       .sortBy('date')

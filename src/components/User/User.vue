@@ -63,16 +63,17 @@ export default {
 
       return this.$store.state.coasters
       .filter((coaster) => {
-        return coaster.history
+        return coaster.heldBy
       })
       .filter((coaster) => {
-        let history = coaster.history
-        let lastPickup
-        for(var item in history) {
-            lastPickup = history[item]
-        }
+        return coaster.heldBy.uid === this.user.uid
+        // let history = coaster.history
+        // let lastPickup
+        // for(var item in history) {
+        //     lastPickup = history[item]
+        // }
 
-        return lastPickup.pickedUpBy.uid === this.user.uid
+        // return lastPickup.pickedUpBy.uid === this.user.uid
 
       })
 
