@@ -3,7 +3,7 @@
     <h3>{{test}}</h3>
     <div class="form">
       <p class="control">
-        <Datepicker :value="date" />
+        <Datepicker v-model="date" :format="'D, MMM ddsu'" />
       </p>
       <p class="control">
         <span class="select">
