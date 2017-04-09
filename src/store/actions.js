@@ -50,24 +50,25 @@ function signUpUser({ dispatch, commit, state }, user) {
 }
 
 function updateUserPhotoURL({ commit }, photoURL) {
-
+  console.log(arguments);
   let currentUser = firebase.auth().currentUser;
   currentUser.updateProfile({
     photoURL
   })
   .then(function () {
-    commit('UPDATE_PHOTO_URL', photoURL)
+    console.log(context.commit);
+    context.commit('UPDATE_PHOTO_URL', photoURL)
   })
   .catch(function(error) {
-    commit('AUTH_ERROR', error.message)
+    context.commit('AUTH_ERROR', error.message)
   });
 
 }
 
-function watchPhotoURL(uid) {
+function watchPhotoURL({dispatch}, uid) {
   const userRef = baseRef.child(`users/${uid}/photoURL`).on('value', (snap) => {
     if (!snap.val()) return
-    updateUserPhotoURL(snap.val())
+    dispatch('updateUserPhotoURL', snap.val())
   })
 }
 
@@ -110,7 +111,7 @@ function getCoasters ({ commit, state }) {
     let coasters = []
     snap.forEach((childSnap) => {
       let coaster = childSnap.val()
-      if (!coaster.key) coaster.key = childSnap.key      
+      if (!coaster.key) coaster.key = childSnap.key
       coasters.push(coaster)
     })
 

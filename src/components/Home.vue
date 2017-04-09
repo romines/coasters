@@ -20,8 +20,8 @@
 
 <script>
 
-import _ from 'lodash'
 import moment from 'moment'
+import _ from 'lodash'
 import Filters from './Filters.vue'
 import Coaster from './Coaster/Coaster.vue'
 import router from '../router'

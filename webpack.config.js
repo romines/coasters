@@ -36,11 +36,12 @@ module.exports = {
         query: {
           name: '[name].[ext]?[hash]'
         }
-      },
-      {
-        test: /\.s[a|c]ss$/,
-        loader: 'style-loader!css-loader!sass-loader'
       }
+      // ,
+      // {
+      //   test: /\.s[a|c]ss$/,
+      //   loader: 'style-loader!css-loader!sass-loader'
+      // }
     ]
   },
   plugins: [
@@ -62,7 +63,7 @@ module.exports = {
 }
 
 if (process.env.NODE_ENV === 'production') {
-  module.exports.devtool = '#source-map'
+  module.exports.devtool = '#eval-source-map'
   // http://vue-loader.vuejs.org/en/workflow/production.html
   module.exports.plugins = (module.exports.plugins || []).concat([
     new webpack.DefinePlugin({
