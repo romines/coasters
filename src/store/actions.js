@@ -14,6 +14,7 @@ function addFilter({ commit }, filter) {
 function listenToFbAuthState({ commit, state }) {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
+      watchPhotoURL(user.uid)
       if (!user.displayName) {
         user.updateProfile({
           displayName: state.authState.tempUserData.displayName
@@ -63,6 +64,13 @@ function updateUserPhotoURL({ commit }, photoURL) {
 
 }
 
+function watchPhotoURL(uid) {
+  const userRef = baseRef.child(`users/${uid}/photoURL`).on('value', (snap) => {
+    if (!snap.val()) return
+    updateUserPhotoURL(snap.val())
+  })
+}
+
 
 function logInUser({ commit, state }, user) {
 
@@ -102,7 +110,7 @@ function getCoasters ({ commit, state }) {
     let coasters = []
     snap.forEach((childSnap) => {
       let coaster = childSnap.val()
-      coaster.key = childSnap.key
+      if (!coaster.key) coaster.key = childSnap.key      
       coasters.push(coaster)
     })
 
@@ -123,13 +131,14 @@ function newCoaster ({ commit, state }, coasterData) {
     displayName: state.authState.user.displayName,
     photoURL: state.authState.user.photoURL
   }
-  coasterData.heldBy = {...coasterData.postedBy}
-  const key = coastersRef.push().key
-  coasterData.posted = moment().format()
+  coasterData.heldBy    = {...coasterData.postedBy}
+  const key             = coastersRef.push().key
+  coasterData.posted    = moment().format()
+  coasterData.key       = key
   coasterData.available = true
 
   // Write the coaster data simultaneously in the coaster list and the user's coaster list.
-  let updates = {};
+  let updates                 = {};
   updates['/coasters/' + key] = coasterData;
   updates['/users/' + coasterData.postedBy.uid + '/posted/' + key] = coasterData;
 

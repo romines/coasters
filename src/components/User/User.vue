@@ -66,7 +66,7 @@ export default {
         return coaster.heldBy
       })
       .filter((coaster) => {
-        return coaster.heldBy.uid === this.user.uid
+        return coaster.heldBy.uid === this.user.uid && coaster.history
         // let history = coaster.history
         // let lastPickup
         // for(var item in history) {

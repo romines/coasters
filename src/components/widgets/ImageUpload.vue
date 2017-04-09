@@ -72,10 +72,10 @@ export default {
           vm.uploadProgress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
 
           switch (snapshot.state) {
-            case firebase.storage.TaskState.PAUSED: // or 'paused'
+            case firebase.storage.TaskState.PAUSED:
               console.log('Upload is paused');
               break;
-            case firebase.storage.TaskState.RUNNING: // or 'running'
+            case firebase.storage.TaskState.RUNNING:
               console.log('Upload is running');
               break;
           }
