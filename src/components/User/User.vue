@@ -24,14 +24,14 @@
     <section class="posted-shifts">
       <span class="title is-5">Posted Shifts</span>
       <ul>
-        <coaster :options="{}" v-for="coaster in myPostedCoasters" :coaster="coaster"></coaster>
+        <coaster :options="{}" v-for="coaster in myPostedCoasters" :coaster="coaster" :key="coaster.key"></coaster>
       </ul>
     </section>
 
     <section class="posted-shifts">
       <span class="title is-5">Shifts I'm Covering</span>
       <ul>
-        <coaster :options="{}" v-for="coaster in myPickedUpCoasters" :coaster="coaster"></coaster>
+        <coaster :options="{}" v-for="coaster in myPickedUpCoasters" :coaster="coaster" :key="coaster.key"></coaster>
       </ul>
     </section>
 

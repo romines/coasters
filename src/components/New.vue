@@ -3,7 +3,7 @@
     <h3>{{test}}</h3>
     <div class="form">
       <p class="control">
-        <Flatpickr @update="pickDate" :value="date" />
+        <Datepicker :value="date" />
       </p>
       <p class="control">
         <span class="select">
@@ -37,7 +37,7 @@ import router from '../router'
 
 
 // Child components
-import Flatpickr from 'vue-flatpickr'
+import Datepicker from 'vuejs-datepicker'
 
 
 export default {
@@ -65,13 +65,13 @@ export default {
     }
   },
   components: {
-    Flatpickr
+    Datepicker
   },
   methods: {
-    pickDate (val) {
-      // this.datePickerMsg = val
-      this.date = val
-    },
+    // pickDate (val) {
+    //   // this.datePickerMsg = val
+    //   this.date = val
+    // },
     newCoaster () {
       this.$store.dispatch('newCoaster', {
           date: this.myDate,

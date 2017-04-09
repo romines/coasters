@@ -8,7 +8,7 @@
         <div class="day-title title is-4">{{day.date}}</div>
 
         <ul>
-          <coaster :options="{}" v-for="coaster in day.shifts" :coaster="coaster">
+          <coaster :options="{}" v-for="coaster in day.shifts" :coaster="coaster" :key="coaster.key">
 
           </coaster>
         </ul>
@@ -20,8 +20,8 @@
 
 <script>
 
-import moment from 'moment'
 import _ from 'lodash'
+import moment from 'moment'
 import Filters from './Filters.vue'
 import Coaster from './Coaster/Coaster.vue'
 import router from '../router'

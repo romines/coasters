@@ -3,7 +3,7 @@
     <h1 class="title header">Covered Shifts</h1>
     <div class="list">
       <ul>
-        <coaster :options="{}" v-for="coaster in pickedUp" :coaster="coaster">
+        <coaster :options="{}" v-for="coaster in pickedUp" :coaster="coaster" :key="coaster.key">
 
           <div slot="cardHeader">
 

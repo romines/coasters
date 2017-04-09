@@ -2,7 +2,7 @@
   <div class="list">
     <filters v-show="!options.noFilters" v-on:setDay="setDay($event)"></filters>
     <ul>
-      <coaster :options="options" v-for="coaster in filteredCoasters" :coaster="coaster">
+      <coaster :options="options" v-for="coaster in filteredCoasters" :coaster="coaster" :key="coaster.key">
         <!-- <div slot="titleBar">Hi, I'm the title bar from the List view</div> -->
 
         <div v-show="options.showPickedUp" class="picked-up">this coaster was picked up</div>
