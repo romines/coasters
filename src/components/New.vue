@@ -101,6 +101,12 @@ export default {
     border: 1px solid grey;
     padding: 1.4em;
     margin-bottom: 6em;
+    @include mobile {
+      .calendar {
+        position: fixed;
+        left: 0;
+      }
+    }
 
     .submit-button { margin-top: 10px; }
   }
