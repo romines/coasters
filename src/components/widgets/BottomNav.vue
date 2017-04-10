@@ -102,8 +102,8 @@ export default {
 	// TODO: get node package import working inside style loader
 	@import '../../../node_modules/bulma/sass/utilities/mixins.sass';
 	.safari .bottom-nav {
-		bottom: 44px;
-		margin-bottom: -44px;
+		// bottom: 44px;
+		// margin-bottom: -44px;
 	}
 	.fullscreen.safari .bottom-nav {
 		margin-bottom: 0;
@@ -114,9 +114,13 @@ export default {
 
 	.bottom-nav {
 		// height: 11vh;
+		max-width: 100%;
 		width: 100%;
+		// width: 260px;
 		position: fixed;
 		bottom: 0;
+		white-space:nowrap;
+		overflow:hidden;
 		// display: flex;
 		justify-content: space-around;
 		align-items: center;
@@ -125,8 +129,8 @@ export default {
 		.bottom-nav-item {
 			display: inline-block;
 			padding: 1em 0;
-
-			width: 24%;
+			width: 25%;
+			margin-right: -3px;
 			text-align: center;
 			color: rgb(33, 33, 33);
 			.fa {
