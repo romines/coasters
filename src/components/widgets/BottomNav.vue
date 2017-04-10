@@ -13,7 +13,7 @@
 			<i class="fa fa-plus"></i>
 		</span>
 
-		<span @click="toUserHome" class="bottom-nav-item user">
+		<span @click="toUserHome" class="bottom-nav-item user" :class="{ 'is-active': navState.userHome }">
 			<i class="fa fa-user"></i>
 		</span>
 
@@ -38,6 +38,7 @@ export default {
         home: this.$store.state.route.path === '/',
         history: this.$store.state.route.path === '/picked-up',
         post: this.$store.state.route.path === '/new',
+        userHome: this.$store.state.route.path.startsWith('/user'),
       }
     }
   },
@@ -112,19 +113,28 @@ export default {
 	}
 
 	.bottom-nav {
-		height: 11vh;
+		// height: 11vh;
 		width: 100%;
 		position: fixed;
 		bottom: 0;
-		display: flex;
+		// display: flex;
 		justify-content: space-around;
 		align-items: center;
 		background-color: #4679c7;
 
 		.bottom-nav-item {
+			display: inline-block;
+			padding: 1em 0;
+
+			width: 24%;
+			text-align: center;
 			color: rgb(33, 33, 33);
 			.fa {
 				font-size: 6.5vh;
+			}
+			&.is-active {
+				background-color: #344c71;
+				color: #ececec;
 			}
 		}
 		@include desktop {
