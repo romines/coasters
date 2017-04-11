@@ -97,14 +97,14 @@ export default {
 </script>
 
 <style lang="scss" rel="stylesheet/scss">
+  @import '../../node_modules/bulma/sass/utilities/mixins.sass';
   .new {
     border: 1px solid grey;
     padding: 1.4em;
     margin-bottom: 6em;
     @include mobile {
       .calendar {
-        position: fixed;
-        left: 0;
+        width: 100%;
       }
     }
 

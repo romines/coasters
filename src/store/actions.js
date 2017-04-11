@@ -238,14 +238,14 @@ function pickUpCoaster ({ commit, state }, coaster) {
 
   let updates = {}
 
-  if (Object.keys(coaster.history).length) {
-    updates = Object.keys(coaster.history).reduce((updates, key) => {
-      let historyItem = coaster.history[key]
-      let postedBy = historyItem.postedBy
-      updates[`/users/${postedBy.uid}/posted/coaster.key`] = coasterData
-      return updates
-    }, {})
-  }
+  // if (Object.keys(coaster.history).length) {
+  //   updates = Object.keys(coaster.history).reduce((updates, key) => {
+  //     let historyItem = coaster.history[key]
+  //     let postedBy = historyItem.postedBy
+  //     updates[`/users/${postedBy.uid}/posted/coaster.key`] = coasterData
+  //     return updates
+  //   }, {})
+  // }
 
   updates['/coasters/' + coaster.key] = coasterData
   updates[`/users/${user.uid}/holding${coaster.key}`] = coasterData
