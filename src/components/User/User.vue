@@ -90,10 +90,8 @@ export default {
       this.$store.dispatch('logOutUser')
     }
 
-  },
-  created () {
-    if (this.$store.state.coasters.length < 1) this.$store.dispatch('getCoasters')
   }
+
 }
 </script>
 

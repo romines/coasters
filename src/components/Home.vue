@@ -32,9 +32,7 @@ export default {
     }
   },
   components: { Filters, Coaster },
-  created () {
-    this.$store.dispatch('getCoasters')
-  },
+
   computed: {
     coasters () {
       return _.chain(this.$store.state.coasters)

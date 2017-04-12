@@ -37,9 +37,7 @@ export default {
       return this.contents.component
     }
   },
-  mounted () {
-    console.log(this.contents);
-  },
+
   methods: {
     close () {
       this.$store.commit('CLOSE_MODAL')

@@ -1,6 +1,5 @@
 <template lang="html">
-  <div v-if="coaster" @click="makeDetail()" class="coaster">
-    <div class="card is-fullwidth">
+  <div v-if="coaster" @click="makeDetail()" class="coaster card is-fullwidth">
 
       <slot name="cardHeader">
 
@@ -61,7 +60,6 @@
 
       </div>
 
-    </div>
   </div>
 </template>
 
@@ -151,6 +149,7 @@ export default {
 @import '../../../node_modules/bulma/sass/utilities/mixins.sass';
 
 .coaster {
+  padding: 0;
   &:hover {
     cursor: pointer;
   }

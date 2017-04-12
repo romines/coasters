@@ -1,5 +1,6 @@
 import VueRouter from 'vue-router'
 import App from './components/App.vue'
+import store from './store'
 import Login from './components/Login.vue'
 import Home from './components/Home.vue'
 import PickedUp from './components/PickedUp.vue'
@@ -55,6 +56,16 @@ const routes = [
  }
 ]
 
-export default new VueRouter({
+const router = new VueRouter({
   routes
 })
+
+router.beforeEach((to, from, next) => {
+  if (store.state.coasters.length) {
+    next()
+  } else {
+    store.dispatch('getPromisedCoasters').then(next())
+  }
+})
+
+export default router

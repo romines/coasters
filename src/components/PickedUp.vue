@@ -81,34 +81,31 @@ import Coaster from './Coaster/Coaster.vue'
 
 export default {
   mixins: [mixins],
-  beforeRouteEnter (to, from, next) {
-    let today = moment().format('YYYY-MM-DD')
-    let listRef = coastersRef.orderByChild('date').startAt(today)
-
-    listRef.once('value', (snap) => {
-      let coasters = []
-      snap.forEach((childSnap) => {
-        let coaster = childSnap.val()
-        if (!coaster.key) coaster.key = childSnap.key
-        coasters.push(coaster)
-      })
-      store.commit('GET_COASTERS', coasters)
-      next()
-    })
-  },
+  // beforeRouteEnter (to, from, next) {
+  //
+  //
+  //   // let today = moment().format('YYYY-MM-DD')
+  //   // let listRef = coastersRef.orderByChild('date').startAt(today)
+  //   //
+  //   // listRef.once('value', (snap) => {
+  //   //   let coasters = []
+  //   //   snap.forEach((childSnap) => {
+  //   //     let coaster = childSnap.val()
+  //   //     if (!coaster.key) coaster.key = childSnap.key
+  //   //     coasters.push(coaster)
+  //   //   })
+  //   //   store.commit('GET_COASTERS', coasters)
+  //   //   next()
+  //   // })
+  // },
   data () {
     return {
     }
   },
-  created () {
-    let pickedUpLength = this.pickedUp.length
-    console.log({pickedUpLength});
-    if (this.pickedUp.length <1) this.$store.dispatch('getCoasters')
-  },
+
   computed: {
     pickedUp () {
       return _.chain(this.$store.state.coasters).filter((coaster) => {
-        console.log(coaster.heldBy);
         return !coaster.available
       })
       .sortBy('time')

@@ -100,9 +100,7 @@ function logOutUser({}) {
   console.log('logging out');
   firebase.auth().signOut()
 }
-// TODO: use a once that returns a promise in getCoasters
-      // plus maybe a separate method for starting to listen?
-      //
+
 function getCoasters ({ commit, state }) {
   console.log('Getting coasters . . .');
   let today = moment().format('YYYY-MM-DD')
@@ -120,6 +118,29 @@ function getCoasters ({ commit, state }) {
     commit('GET_COASTERS', coasters)
 
   })
+
+}
+
+function getPromisedCoasters ({ commit, state }) {
+  let today = moment().format('YYYY-MM-DD')
+  let listRef = coastersRef.orderByChild('date').startAt(today)
+  return new Promise((resolve, reject) => {
+    // if (state.coasters) resolve()
+    listRef.on('value', (snap) => {
+      let coasters = snap.val()
+      let preparedCoasters = Object.keys(coasters).map((key) => {
+        let coaster = coasters[key]
+        coaster.key = key
+        return coaster
+      })
+
+      commit('GET_COASTERS', preparedCoasters)
+      resolve()
+
+    })
+  })
+
+
 
 }
 
@@ -293,6 +314,7 @@ export {
   , logInWithFacebook
   , logOutUser
   , getCoasters
+  , getPromisedCoasters
   , newCoaster
   , postComment
   , pickUpCoaster
