@@ -100,7 +100,9 @@ function logOutUser({}) {
   console.log('logging out');
   firebase.auth().signOut()
 }
-
+// TODO: use a once that returns a promise in getCoasters
+      // plus maybe a separate method for starting to listen?
+      //
 function getCoasters ({ commit, state }) {
   console.log('Getting coasters . . .');
   let today = moment().format('YYYY-MM-DD')

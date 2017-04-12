@@ -42,8 +42,8 @@
               <div class="posted-by media">
                 <div class="media-left">
                   <figure class="user">
-                    <img v-if="pickingUpUser(coaster)['photoURL']" :src="pickingUpUser(coaster)['photoURL']" alt="">
-                    <span v-if="!pickingUpUser(coaster)['photoURL']" class="icon is-large">
+                    <img v-if="coaster.heldBy.photoURL" :src="coaster.heldBy.photoURL" alt="">
+                    <span v-if="!coaster.heldBy.photoURL" class="icon is-large">
                       <i class="fa fa-user"></i>
                     </span>
                   </figure>
@@ -51,7 +51,7 @@
 
                 <div class="media-content">
                   <p>covering:</p>
-                  <h3 class="title">{{pickingUpUser(coaster)['name']}}</h3>
+                  <h3 class="title">{{coaster.heldBy.name}}</h3>
                 </div>
               </div>
             </div>
@@ -69,42 +69,75 @@
 </template>
 
 <script>
+import store from '../store'
+import { firebase } from '../libs'
 import moment from 'moment'
 import _ from 'lodash'
 import mixins from '../mixins'
+const db = firebase.database()
+const coastersRef = db.ref('data/coasters')
 
 import Coaster from './Coaster/Coaster.vue'
 
 export default {
   mixins: [mixins],
+  beforeRouteEnter (to, from, next) {
+    let today = moment().format('YYYY-MM-DD')
+    let listRef = coastersRef.orderByChild('date').startAt(today)
+
+    listRef.once('value', (snap) => {
+      let coasters = []
+      snap.forEach((childSnap) => {
+        let coaster = childSnap.val()
+        if (!coaster.key) coaster.key = childSnap.key
+        coasters.push(coaster)
+      })
+      store.commit('GET_COASTERS', coasters)
+      next()
+    })
+  },
   data () {
     return {
     }
   },
   created () {
+    let pickedUpLength = this.pickedUp.length
+    console.log({pickedUpLength});
     if (this.pickedUp.length <1) this.$store.dispatch('getCoasters')
   },
   computed: {
     pickedUp () {
       return _.chain(this.$store.state.coasters).filter((coaster) => {
+        console.log(coaster.heldBy);
         return !coaster.available
       })
       .sortBy('time')
       .sortBy('date')
       .value()
     }
+    // pickingUpUser (coaster) {
+    //   // if (!coaster.history) return
+    //   // let history = coaster.history
+    //   // let trades = [];
+    //   // for(var item in history) {
+    //   //     trades.push(history[item])
+    //   // }
+    //   // return trades[trades.length -1].pickedUpBy
+    //   return coaster.heldBy
+    // },
   },
   components: { Coaster },
   methods: {
-    pickingUpUser (coaster) {
-      if (!coaster.history) return
-      let history = coaster.history
-      let trades = [];
-      for(var item in history) {
-          trades.push(history[item])
-      }
-      return trades[trades.length -1].pickedUpBy
-    },
+    // pickingUpUser (coaster) {
+    //   // if (!coaster.history) return
+    //   // let history = coaster.history
+    //   // let trades = [];
+    //   // for(var item in history) {
+    //   //     trades.push(history[item])
+    //   // }
+    //   // return trades[trades.length -1].pickedUpBy
+    //   return coaster.heldBy
+    // },
     shortDate (myDate) {
       return moment(myDate).format('ddd M/D')
     },
