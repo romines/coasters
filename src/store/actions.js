@@ -1,4 +1,4 @@
-import { firebase, moment, facebookAuthProvider } from '../libs'
+import { firebase, moment, facebookAuthProvider, cloud } from '../libs'
 
 const db = firebase.database()
 const auth = firebase.auth()
@@ -160,7 +160,6 @@ function cancelCoaster ({ commit, state }, key) {
 function postComment ({ commit, state }, payload) {
 
   const coaster = payload.coaster
-  console.log(coaster);
   const now = moment().format()
   const user = state.authState.user
   let newComment = {
@@ -173,17 +172,17 @@ function postComment ({ commit, state }, payload) {
     text: payload.comment
   }
 
-  const newCommentRef = coastersRef.child(coaster.key).child('coasterComments').push()
+  const newCommentRef = coastersRef.child(coaster.key).child('comments').push()
   const newCommentKey = newCommentRef.key
-  let coasterComments = {...coaster.coasterComments}
+  let coasterComments = {...coaster.comments}
 
   coasterComments[newCommentKey] = newComment
 
   let coasterData = {
     ...coaster,
-    coasterComments
+    comments: {...coasterComments}
   }
-  console.log(coasterData);
+
   let updates = {};
   updates['/coasters/' + coaster.key] = coasterData
   updates[`/users/${user.uid}/coastersCommentedOn/${coaster.key}`] = true
@@ -198,7 +197,8 @@ function postComment ({ commit, state }, payload) {
   //     updates['/users/' + coveringFor.uid + '/posted/' + coaster.key] = coasterData
   //   }
   // }
-  console.log(updates)
+
+  cloud.log(updates)
 
   baseRef.update(updates);
 
@@ -231,7 +231,7 @@ function pickUpCoaster ({ commit, state }, coaster) {
 
   let coasterData = {
     ...coaster,
-    coasterHistory,
+    history: {...coasterHistory},
     heldBy: {...pickedUpBy},
     available: false
   }
@@ -247,8 +247,9 @@ function pickUpCoaster ({ commit, state }, coaster) {
   //   }, {})
   // }
 
+
   updates['/coasters/' + coaster.key] = coasterData
-  updates[`/users/${user.uid}/holding${coaster.key}`] = coasterData
+  updates[`/users/${user.uid}/holding/${coaster.key}`] = coasterData
   updates[`/users/${coaster.heldBy.uid}/holding/${coaster.key}`] = null
   commit('CLOSE_MODAL')
   return baseRef.update(updates);
