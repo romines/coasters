@@ -121,9 +121,42 @@ function getCoasters ({ commit, state }) {
 
 }
 
-function getPromisedCoasters ({ commit, state }) {
-  let today = moment().format('YYYY-MM-DD')
-  let listRef = coastersRef.orderByChild('date').startAt(today)
+function getPromisedCoasters ({ commit, state }, options) {
+  const defaults = {
+    beginning: moment().format('YYYY-MM-DD'),
+    ending: null
+  }
+  options = options ? options : defaults
+
+  let listRef = coastersRef.orderByChild('date').startAt(options.beginning)
+  return new Promise((resolve, reject) => {
+    // if (state.coasters) resolve()
+    listRef.on('value', (snap) => {
+      let coasters = snap.val()
+      let preparedCoasters = Object.keys(coasters).map((key) => {
+        let coaster = coasters[key]
+        coaster.key = key
+        return coaster
+      })
+
+      commit('GET_COASTERS', preparedCoasters)
+      resolve()
+
+    })
+  })
+
+
+
+}
+
+function getPromisedUserData ({ commit, state }, options) {
+  const defaults = {
+    beginning: moment().format('YYYY-MM-DD'),
+    ending: null
+  }
+  options = options ? options : defaults
+
+  let listRef = coastersRef.orderByChild('date').startAt(options.beginning)
   return new Promise((resolve, reject) => {
     // if (state.coasters) resolve()
     listRef.on('value', (snap) => {

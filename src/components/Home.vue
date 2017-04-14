@@ -5,7 +5,7 @@
     <div class="list">
       <div v-for="day in days">
 
-        <div class="day-title title is-4">{{day.date}}</div>
+        <div class="day-title title is-5">{{day.date}}</div>
 
         <ul>
           <coaster :options="{}" v-for="coaster in day.shifts" :coaster="coaster" :key="coaster.key">

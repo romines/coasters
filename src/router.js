@@ -61,6 +61,8 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+
+  // promise all: user, coastersWithinDateRange
   if (store.state.coasters.length) {
     next()
   } else {
