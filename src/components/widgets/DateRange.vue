@@ -1,21 +1,18 @@
 <template lang="html">
 	<div class="date-range">
-		<div class="mask" v-show="picking" @click="picking = null"></div>
-		<h3 class="title is-5">Viewing</h3>
-		<i class="fa fa-calendar" @click="picking = 'BEG'" v-show="picking != 'BEG'"></i>
+		<div class="mask" v-show="picking" @click="picking = false"></div>
+		<h3 @click="picking = true" class="title is-5">
+			<i class="fa fa-calendar"></i>
+			Jump to date . . .</h3>
 		<span class="info">from: {{begString}} to:</span>
 
 		<datepicker
 			v-model="beginning"
-			v-show="picking == 'BEG'"
+			v-show="picking"
 			:format="'D, MMM ddsu'"
 			:inline="true"
-			@selected="onSelected"
+			v-on:selected="onSelected"
 			class="datepicker"></datepicker>
-		<datepicker
-			v-model="end"
-			v-show="picking == 'END'"
-			:format="'D, MMM ddsu'"></datepicker>
 	</div>
 
 </template>
@@ -24,6 +21,7 @@
 
 import moment from 'moment'
 import Datepicker from 'vuejs-datepicker'
+import Vue from 'vue'
 
 export default {
 	components: {
@@ -32,8 +30,8 @@ export default {
 	data () {
 		return {
 			beginning: moment().format('YYYY-MM-DD'),
-			end:       moment().add(6, 'months').format('YYYY-MM-DD'),
-			picking:   null
+			// end:       moment().add(6, 'months').format('YYYY-MM-DD'),
+			picking:   false
 		}
 	},
 	computed: {
@@ -44,6 +42,15 @@ export default {
 	methods: {
 		onSelected () {
 			this.picking = null
+			let vm = this
+			Vue.nextTick(function () {
+				console.log('selected date: ', moment(vm.beginning).format('YYYY-MM-DD'));
+			  // DOM updated
+				vm.$store.dispatch('getPromisedCoasters', {
+					beginning: moment(vm.beginning).format('YYYY-MM-DD'),
+					ending: null
+				}).then(() => console.log('new coasters fetched . . .'))
+			})
 		}
 	}
 }

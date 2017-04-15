@@ -6,7 +6,7 @@
       <footer slot="primaryButtons" class="card-footer">
 
         <span class="coaster-actions default card-footer-item">
-          <a v-if="!elligibleForPickup" @click.stop="pickUp" class="button is-primary">Pick Up</a>
+          <a @click.stop="pickUp" class="button is-primary">Pick Up</a>
           <a @click.stop="startCommenting()" class="button">Comment</a>
           <a v-if="elligibleForPickup" @click.stop="cancelCoaster()" class="button">Remove</a>
         </span>

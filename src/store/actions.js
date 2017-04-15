@@ -127,7 +127,7 @@ function getPromisedCoasters ({ commit, state }, options) {
     ending: null
   }
   options = options ? options : defaults
-
+console.log(options);
   let listRef = coastersRef.orderByChild('date').startAt(options.beginning)
   return new Promise((resolve, reject) => {
     // if (state.coasters) resolve()
