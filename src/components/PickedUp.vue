@@ -2,7 +2,7 @@
   <div class="covered">
     <h1 class="title header">Covered Shifts</h1>
 
-    <date-range/>
+    <date-range v-on:selected="onDateSelected"/>
 
     <div class="list">
       <div v-for="day in days">
@@ -92,7 +92,7 @@ export default {
 
   data () {
     return {
-
+      beginning: moment()
     }
   },
 
@@ -100,6 +100,10 @@ export default {
     pickedUp () {
       return _.chain(this.$store.state.coasters).filter((coaster) => {
         return !coaster.available
+      }).filter((coaster) => {
+        let coasterMoment = moment(coaster.date)
+        let beginningMoment = moment(this.beginning)
+        return (coasterMoment.diff(beginningMoment) >= 0)
       })
       .sortBy('time')
       .sortBy('date')
@@ -110,7 +114,6 @@ export default {
         let when = moment(coaster.date).format('dddd, MMM Do')
         days[when] = days[when] ? days[when] : []
         days[when].push(coaster)
-        // days[when] = _.sortBy(days[when], 'time')
         return days
       }, {})
 
@@ -124,15 +127,14 @@ export default {
   },
   components: { Coaster, DateRange },
   methods: {
+    onDateSelected (date) {
+      let selectedWasOlder = moment(date).isBefore(this.$store.state.coasters[0].date)
+      if (selectedWasOlder) this.$store.dispatch('getPromisedCoasters', {beginning: date})
 
+      this.beginning = moment(date)
+    },
     shortDate (myDate) {
       return moment(myDate).format('ddd M/D')
-    },
-    tomorrow() {
-      let today = new Date()
-      let tomorrow = new Date()
-      tomorrow.setDate(today.getDate()+1)
-      return moment(tomorrow)
     },
     shiftTypeCode (coaster) {
 

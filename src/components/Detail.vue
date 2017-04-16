@@ -6,9 +6,9 @@
       <footer slot="primaryButtons" class="card-footer">
 
         <span class="coaster-actions default card-footer-item">
-          <a @click.stop="pickUp" class="button is-primary">Pick Up</a>
+          <a v-if="elligibleForPickup" @click.stop="pickUp" class="button is-primary">Pick Up</a>
           <a @click.stop="startCommenting()" class="button">Comment</a>
-          <a v-if="elligibleForPickup" @click.stop="cancelCoaster()" class="button">Remove</a>
+          <a v-if="elligibleForRemove" @click.stop="cancelCoaster()" class="button">Remove</a>
         </span>
 
       </footer>
@@ -69,8 +69,16 @@ export default {
     coaster () {
       return this.$store.getters.detailCoaster
     },
+    myOwnCoaster () {
+      if (!this.$store.state.authState.user) return false
+      console.log('my own coaster: ', (this.coaster.heldBy.uid === this.$store.state.authState.user.uid));
+      return this.coaster.heldBy.uid == this.$store.state.authState.user.uid
+    },
     elligibleForPickup () {
-      return true
+      return this.coaster.available
+    },
+    elligibleForRemove () {
+      return this.coaster.available && this.myOwnCoaster
     },
     detailKey () {
       return this.$store.getters.detailKey
@@ -190,12 +198,8 @@ export default {
 
     dateCommentPosted (dateString) {
       return moment(dateString).fromNow()
-    },
-
-    myOwnCoaster () {
-      if (!(this.$store.state.authState.user && this.coaster)) return
-      return this.coaster.postedBy.uid === this.$store.state.authState.user.uid
     }
+
   }
 
 

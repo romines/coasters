@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="home container">
     <h1 class="title header">Available Shifts</h1>
-    <filters></filters>
+    <filters/>
     <div class="list">
       <div v-for="day in days">
 
