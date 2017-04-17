@@ -103,9 +103,9 @@ export default {
     firebase.auth().signOut()
   }
 
-  , sendPasswordReset ({ commit, state }, email) {
-    auth.sendPasswordResetEmail(email).then(() => {
-      commit('CLOSE_MODAL')
+  , sendPasswordReset ({ commit, state }, options) {
+    auth.sendPasswordResetEmail(options.email).then(() => {
+      options.onSuccess()
       // Email sent.
     }, (e) => {
       console.log(e);
