@@ -46,6 +46,7 @@
           <button @click="signUp" class="button is-primary">Sign up</button>
           <button type="button" v-on:click="wantsToSignUp = false" class="button">Login</button>
         </div>
+        <div @click="onForgotPasswordClick" class="forgot">Forgot Password</div>
       </div>
 
       <button v-show="authState.user" @click="logOut" class="button">Log out</button>
@@ -53,10 +54,8 @@
       <div v-if="authError" class="auth-error">{{authError}}</div>
     </div>
 
-    <hr>
     <div class="social-providers">
       <span @click="startFacebookLogin"><i class="fa fa-facebook-square" aria-hidden="true"></i></span>
-      <div class="is-small">Login/sign-up with Facebook . . .</div>
     </div>
   </div>
 </template>
@@ -91,6 +90,9 @@
       logOut () {
         this.$store.dispatch('logOutUser')
       },
+      onForgotPasswordClick () {
+        this.$store.commit('SHOW_MODAL', {component: 'ForgotPassword'})
+      },
       startFacebookLogin () {
         this.$store.dispatch('logInWithFacebook')
       }
@@ -112,6 +114,11 @@
 
     .button {
       margin-top: .5em;
+    }
+
+    .forgot {
+      font-size: .9em;
+      padding: .6em 0;
     }
 
   }

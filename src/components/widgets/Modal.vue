@@ -13,6 +13,7 @@
 
 <script>
 import Login from '../Login.vue'
+import ForgotPassword from './ForgotPassword.vue'
 import Confirmation from './Confirmation.vue'
 import ImageUpload from './ImageUpload.vue'
 
@@ -23,6 +24,7 @@ export default {
   },
   components: {
     Login,
+    ForgotPassword,
     Confirmation,
     ImageUpload
   },
