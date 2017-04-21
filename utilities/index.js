@@ -2,7 +2,8 @@
 const admin = require("firebase-admin");
 const gcloud = require('google-cloud');
 const serviceAccount = require("./fBServiceAccountKey_dev.json");
-const coasterFanout = require('../functions/coasterFanout.js')
+const coasterFanout = require('../functions/coasterFanout.js');
+const pickupNotifications = require('../functions/pickupNotifications.js')
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -13,12 +14,17 @@ let db = admin.database();
 let root = db.ref("data");
 
 
-// root.child(`/coasters`).on('child_changed', (coaster) => {
-//
-//   let updates = coasterFanout.getCoasterFanout(coaster.val())
-//   // console.log(updates)
-//   root.update(updates)
-// })
+root.child(`/coasters`).on('child_changed', (refData) => {
+
+  const coaster = refData.val();
+  const historyKeys = Object.keys(coaster.history);
+  const latestPickup = coaster.history[historyKeys[historyKeys.length -1]]
+
+  const userKey = pickupNotifications.getUserToNofify(latestPickup)
+  const notieKey = root.child(`/users/${userKey}/notifications`).push().key
+  console.log(pickupNotifications.getNotieUpdates(latestPickup, userKey, notieKey));
+  // root.update(updates)
+})
 
 // migrateUsers();
 // migrateCoasterHistory();
@@ -102,6 +108,8 @@ function setHeldBy() {
         let lastKey = historyKeys[historyKeys.length - 1];
         updates[`/${key}/heldBy`] = coaster.history[lastKey].pickedUpBy;
         updates[`/${key}/available`] = false;
+      } else {
+        updates[`/${key}/heldBy`] = coaster.postedBy;
       }
       return updates;
     }, {});
