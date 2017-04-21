@@ -307,9 +307,17 @@ export default {
     updates[`/users/${coaster.heldBy.uid}/holding/${coaster.key}`] = null
     commit('CLOSE_MODAL')
     return baseRef.update(updates);
-
   }
+
+  , dismissNotification ({ state }, notieKey) {
+    let updates = {}
+    const userKey = state.authState.user.uid
+    updates[`/users/${userKey}/notifications/${notieKey}/status`] = 'read'
+    return baseRef.update(updates);
+  }
+
 }
+
 
 /**
  *

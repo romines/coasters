@@ -23,7 +23,7 @@
 
     <section class="notifications">
       <div v-for="notification in notifications" :key="notification.key" class="notification is-primary">
-        <button class="delete"></button>
+        <button @click="dismiss(notification.key)" class="delete"></button>
         {{notification.message}}
       </div>
     </section>
@@ -61,7 +61,7 @@ export default {
     },
 
     notifications () {
-      return this.$store.state.notifications
+      return this.$store.state.notifications.filter(notification => notification.status === 'unread')
     },
 
     myPostedCoasters () {
@@ -99,6 +99,9 @@ export default {
     logOut () {
       router.push('/')
       this.$store.dispatch('logOutUser')
+    },
+    dismiss (key) {
+      this.$store.dispatch('dismissNotification', key)
     }
 
   }

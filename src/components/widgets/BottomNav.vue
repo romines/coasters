@@ -15,7 +15,7 @@
 
 		<span @click="toUserHome" class="bottom-nav-item user" :class="{ 'is-active': navState.userHome }">
 			<i class="fa fa-user"></i>
-			<span class="num-alerts">2</span>
+			<span v-if="numUnreadNoties" class="num-alerts">{{numUnreadNoties}}</span>
 		</span>
 
 	</div>
@@ -41,7 +41,11 @@ export default {
         post: this.$store.state.route.path === '/new',
         userHome: this.$store.state.route.path.startsWith('/user'),
       }
-    }
+    },
+		numUnreadNoties () {
+			return this.$store.state.notifications
+				.filter(notification => notification.status === 'unread').length
+		}
   },
 	// TODO: use navigation guards?
 	methods: {
