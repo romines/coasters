@@ -17,6 +17,7 @@ export default {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         dispatch('watchPhotoURL', user.uid)
+        dispatch('watchUserNotifications', user.uid)
         if (!user.displayName) {
           user.updateProfile({
             displayName: state.authState.tempUserData.displayName
@@ -48,7 +49,20 @@ export default {
     .catch(function(error) {
       commit('AUTH_ERROR', error.message)
     });
+  }
 
+  , watchUserNotifications ({commit}, uid) {
+    const userRef = baseRef.child(`users/${uid}/notifications`).on('value', (snap) => {
+      if (!snap.val()) return
+      // dispatch('updateUserPhotoURL', snap.val())
+      let notifications = []
+      snap.forEach((childSnap) => {
+        let notification = childSnap.val()
+        if (!notification.key) notification.key = childSnap.key
+        notifications.push(notification)
+      })
+      commit('GET_NOTIFICATIONS', notifications)
+    })
   }
 
   , updateUserPhotoURL ({ commit }, photoURL) {

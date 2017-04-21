@@ -31,6 +31,7 @@ const store = new Vuex.Store({
     },
     count: 0,
     coasters: [],
+    notifications: [],
     historical: [],
     coasterFilters: {
       days: [],
@@ -47,8 +48,7 @@ const store = new Vuex.Store({
         onSuccess () {
           console.log('modal successfully modalized . . .')
         }
-      },
-      notifications: []
+      }
     },
     commenting: false,
     daysOfTheWeek: ['S', 'M', 'T', 'W', 'R', 'F', 'S'],
@@ -94,6 +94,9 @@ const store = new Vuex.Store({
     },
     GET_COASTER (state, coasterId) {
       state.detailCoaster.id = coasterId
+    },
+    GET_NOTIFICATIONS (state, notifications) {
+      state.notifications = notifications
     },
     ADD_FILTER (state, {filterType, filter}) {
       state.coasterFilters[filterType] = [...state.coasterFilters[filterType], filter]

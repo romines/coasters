@@ -13,18 +13,18 @@ let db = admin.database();
 let root = db.ref("data");
 
 
-root.child(`/coasters`).on('child_changed', (coaster) => {
+// root.child(`/coasters`).on('child_changed', (coaster) => {
+//
+//   let updates = coasterFanout.getCoasterFanout(coaster.val())
+//   // console.log(updates)
+//   root.update(updates)
+// })
 
-  let updates = coasterFanout.getCoasterFanout(coaster.val())
-  // console.log(updates)
-  root.update(updates)
-})
-
-setHeldBy();
 // migrateUsers();
 // migrateCoasterHistory();
 // migrateCoasterComments();
 // migrateCoveringFor()
+// setHeldBy();
 
 function migrateCoveringFor() {
   setTimeout(doMigrateCoveringFor, 2000)

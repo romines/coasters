@@ -15,6 +15,7 @@
 
 		<span @click="toUserHome" class="bottom-nav-item user" :class="{ 'is-active': navState.userHome }">
 			<i class="fa fa-user"></i>
+			<span class="num-alerts">2</span>
 		</span>
 
 	</div>
@@ -128,6 +129,7 @@ export default {
 
 		.bottom-nav-item {
 			display: inline-block;
+			position: relative;
 			padding: 1em 0;
 			width: 25%;
 			margin-right: -3px;
@@ -140,6 +142,20 @@ export default {
 				background-color: #344c71;
 				color: #ececec;
 			}
+		}
+		.num-alerts {
+			text-align: center;
+			vertical-align: middle;
+			position: absolute;
+			bottom: .4em;
+			left: 3.6em;
+			width: 1.4em;
+			height: 1.4em;
+			line-height: 1.4em;
+			border-radius: 50%;
+			display: inline-block;
+			background-color: red;
+			color: white;
 		}
 		@include desktop {
 			display: none;

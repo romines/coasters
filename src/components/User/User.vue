@@ -21,6 +21,13 @@
       </div>
     </div>
 
+    <section class="notifications">
+      <div v-for="notification in notifications" :key="notification.key" class="notification is-primary">
+        <button class="delete"></button>
+        {{notification.message}}
+      </div>
+    </section>
+
     <section class="posted-shifts">
       <span class="title is-5">Posted Shifts</span>
       <ul>
@@ -51,6 +58,10 @@ export default {
   computed: {
     user () {
       return this.$store.state.authState.user
+    },
+
+    notifications () {
+      return this.$store.state.notifications
     },
 
     myPostedCoasters () {
