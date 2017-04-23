@@ -1,5 +1,6 @@
 import { firebase, facebookAuthProvider } from './firebase'
 import moment from 'moment'
+import { encode, decode } from 'firebase-encode'
 
 const db = firebase.database()
 
@@ -12,4 +13,4 @@ let cloud = {
 }
 
 
-export { firebase, moment, facebookAuthProvider, cloud }
+export { firebase, moment, facebookAuthProvider, cloud, encode, decode }

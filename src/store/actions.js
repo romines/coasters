@@ -1,4 +1,9 @@
-import { firebase, moment, facebookAuthProvider, cloud } from '../libs'
+import { firebase
+  , moment
+  , facebookAuthProvider
+  , cloud
+  , decode
+ } from '../libs'
 
 const db = firebase.database()
 const auth = firebase.auth()
@@ -59,6 +64,9 @@ export default {
       snap.forEach((childSnap) => {
         let notification = childSnap.val()
         if (!notification.key) notification.key = childSnap.key
+        console.log('before: ', notification.message);
+        notification.message = decode(notification.message)
+        console.log('after: ', notification.message);
         notifications.push(notification)
       })
       commit('GET_NOTIFICATIONS', notifications)

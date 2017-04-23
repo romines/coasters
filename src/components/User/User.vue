@@ -24,7 +24,7 @@
     <section class="notifications">
       <div v-for="notification in notifications" :key="notification.key" class="notification is-primary">
         <button @click="dismiss(notification.key)" class="delete"></button>
-        {{notification.message}}
+        <span v-html="notification.message" class="notieLink"></span>
       </div>
     </section>
 
@@ -111,6 +111,10 @@ export default {
 
 <style lang="scss">
 .user {
+  .notieLink a {
+    color: white;
+    text-decoration: underline;
+  }
   .media img {
     width: 74px;
     height: 74px;

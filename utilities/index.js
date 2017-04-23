@@ -22,7 +22,8 @@ root.child(`/coasters`).on('child_changed', (refData) => {
 
   const userKey = pickupNotifications.getUserToNofify(latestPickup)
   const notieKey = root.child(`/users/${userKey}/notifications`).push().key
-  const updates = pickupNotifications.getNotieUpdates(coaster, userKey, notieKey, latestPickup);
+  let updates = {};
+  updates = pickupNotifications.getNotieUpdates(coaster, userKey, notieKey, latestPickup, updates);
   console.log(updates);
   root.update(updates);
 })

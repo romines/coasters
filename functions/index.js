@@ -11,8 +11,6 @@ exports.fanoutAndNotifications = functions.database.ref('/data/coasters/{coaster
     // On coaster write, write updated coaster to /posted and /holding of
     // all posters in history, and currently hodling user respectively
 
-    // TODO detect pickup, 'send' notifications to user
-
     const coaster = event.data.val();
     const historyKeys = Object.keys(coaster.history);
     const latestPickup = coaster.history[historyKeys[historyKeys.length -1]];
@@ -20,24 +18,15 @@ exports.fanoutAndNotifications = functions.database.ref('/data/coasters/{coaster
     const notieKey = root.child(`/users/${userKey}/notifications`).push().key
 
     let updates = coasterFanout.getCoasterFanout(coaster);
+
+    // then add notifications for holding user to updates object
+    //
     updates = pickupNotifications.getNotieUpdates(coaster, userKey, notieKey, latestPickup, updates);
+
+    // get root reference and write all updates
+    //
     let rootRef = event.data.ref.parent.parent.parent;
     let dataRef = rootRef.child('data')
     dataRef.update(updates);
 
-  });
-
-exports.notifyOnPickup = functions.database.ref('/data/coasters/{coasterId}/history/{transactionKey}')
-  .onWrite(event => {
-    // On coaster write, write updated coaster to /posted and /holding of
-    // all posters in history, and currently hodling user respectively
-
-    // TODO detect pickup, 'send' notifications to user
-
-    const transaction = event.data.val();
-    let updates = pickupNotifications(transaction);
-    let rootRef = event.data.ref.parent.parent.parent.parent.parent;
-    let dataRef = rootRef.child('data')
-    // dataRef.update(updates);
-    console.log(updates);
   });
