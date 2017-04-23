@@ -1,5 +1,5 @@
 <template lang="html">
-  <div v-if="user" class="user">
+  <div v-if="user" class="user container">
     <h1 class="title header">My Coasters</h1>
 
     <div class="media">

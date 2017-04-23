@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="covered">
+  <div class="covered container">
     <h1 class="title header">Covered Shifts</h1>
 
     <date-range v-on:selected="onDateSelected"/>

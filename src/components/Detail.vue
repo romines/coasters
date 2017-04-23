@@ -73,6 +73,7 @@ export default {
       if (!this.$store.state.authState.user) return false
       console.log('my own coaster: ', (this.coaster.heldBy.uid === this.$store.state.authState.user.uid));
       return this.coaster.heldBy.uid == this.$store.state.authState.user.uid
+      return false
     },
     elligibleForPickup () {
       return this.coaster.available

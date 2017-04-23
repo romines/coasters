@@ -22,8 +22,9 @@ root.child(`/coasters`).on('child_changed', (refData) => {
 
   const userKey = pickupNotifications.getUserToNofify(latestPickup)
   const notieKey = root.child(`/users/${userKey}/notifications`).push().key
-  console.log(pickupNotifications.getNotieUpdates(latestPickup, userKey, notieKey));
-  // root.update(updates)
+  const updates = pickupNotifications.getNotieUpdates(coaster, userKey, notieKey, latestPickup);
+  console.log(updates);
+  root.update(updates);
 })
 
 // migrateUsers();
@@ -33,7 +34,7 @@ root.child(`/coasters`).on('child_changed', (refData) => {
 // setHeldBy();
 
 function migrateCoveringFor() {
-  setTimeout(doMigrateCoveringFor, 2000)
+  setTimeout(doMigrateCoveringFor, 2000);
 }
 
 function doMigrateCoveringFor() {
