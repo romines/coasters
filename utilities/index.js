@@ -1,9 +1,9 @@
 'use strict'
 const admin = require("firebase-admin");
 const gcloud = require('google-cloud');
-const serviceAccount = require("./fBServiceAccountKey_dev.json");
-const coasterFanout = require('../functions/coasterFanout.js');
-const pickupNotifications = require('../functions/pickupNotifications.js')
+const serviceAccount = require("./fBServiceAccountKey_admin.json");
+const coasterFanout = require('./coasterFanout.js');
+const pickupNotifications = require('./pickupNotifications.js')
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
