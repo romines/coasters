@@ -1,32 +1,37 @@
 <template lang="html">
 
   <div class="filters">
-
-    <span
-      v-for="shiftType in shiftTypes"
-      @click="toggleFilter('shiftTypes', shiftType)"
-      v-bind:class="{ 'is-active': isActiveFilter('shiftTypes', shiftType) }"
-      class="shiftType button">
-      <img v-bind:src="loadSvg(shiftType)" alt="">
+    <div class="header title is-5">Show only</div>
+    <div class="shift-types">
+      <span
+        v-for="shiftType in shiftTypes"
+        @click="toggleFilter('shiftTypes', shiftType)"
+        v-bind:class="{ 'is-active': isActiveFilter('shiftTypes', shiftType) }"
+        class="shiftType button">
+        <img v-bind:src="loadSvg(shiftType)" alt="">
+      </span>
+    </div>
+    <div class="days-of-the-week">
+      <span v-for="(day, index) in daysOfTheWeek"
+      @click="toggleFilter('days', index)"
+      v-bind:class="{ 'is-active': isActiveFilter('days', index) }"
+      class="dayOfWeek button">{{day}}
     </span>
-    &nbsp;
 
-    <span
+    </div>
+
+
+    &nbsp;
+    <div class="times">
+      <span
       v-for="time in times"
       @click="toggleFilter('times', time)"
       v-bind:class="{ 'is-active': isActiveFilter('times', time) }"
       class="time button">
       {{time}}
     </span>
-    <br>
-
-    <span v-for="(day, index) in daysOfTheWeek"
-      @click="toggleFilter('days', index)"
-      v-bind:class="{ 'is-active': isActiveFilter('days', index) }"
-      class="dayOfWeek button">{{day}}
-    </span>
-    &nbsp;
-    <span @click="clearDayFilter" class="button"><i class="fa fa-close"></i></span>
+  </div>
+  <span @click="clearDayFilter" class="button">Clear Filters</i></span>
 
   </div>
 

@@ -16,16 +16,23 @@ let root = db.ref("data");
 
 root.child(`/coasters`).on('child_changed', (refData) => {
 
+  let updates   = {};
   const coaster = refData.val();
-  const historyKeys = Object.keys(coaster.history);
-  const latestPickup = coaster.history[historyKeys[historyKeys.length -1]]
 
-  const userKey = pickupNotifications.getUserToNofify(latestPickup)
-  const notieKey = root.child(`/users/${userKey}/notifications`).push().key
-  let updates = {};
-  updates = pickupNotifications.getNotieUpdates(coaster, userKey, notieKey, latestPickup, updates);
-  console.log(updates);
+  if (coaster.history) {
+    const historyKeys  = Object.keys(coaster.history);
+    const lastKey      = historyKeys[historyKeys.length -1];
+    const latestPickup = coaster.history[historyKeys[historyKeys.length -1]];
+    latestPickup.key   = lastKey;
+    const userKey      = pickupNotifications.getUserToNofify(latestPickup);
+    const notieKey     = root.child(`/users/${userKey}/notifications`).push().key;
+    updates            = pickupNotifications.getNotieUpdates(coaster, userKey, notieKey, latestPickup, updates);
+  }
+
+  updates = coasterFanout(coaster, updates);
+
   root.update(updates);
+
 })
 
 // migrateUsers();

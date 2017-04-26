@@ -1,16 +1,19 @@
 'use strict';
 
-exports.getCoasterFanout = function (coaster) {
+function getCoasterFanout (coaster, updates) {
 
-  let updates = {}
+  console.log({coaster});
+
   if (coaster.heldBy) updates[`/users/${coaster.heldBy.uid}/holding/${coaster.key}`] = coaster
 
-  return Object.keys(coaster.history).reduce((updates, key) => {
-    let postedBy = coaster.history[key].postedBy
-    // let postedBy = coaster.history[key].coveringFor
-    // console.log({key, postedBy});
-    updates[`/users/${postedBy.uid}/posted/${coaster.key}`] = coaster
-    return updates
-  }, updates)
-
+  if (coaster.history) {
+    updates = Object.keys(coaster.history).reduce((updates, key) => {
+      let coveringFor = coaster.history[key].coveringFor;
+      updates[`/users/${coveringFor.uid}/posted/${coaster.key}`] = coaster
+      return updates
+    }, updates)
+  }
+  return updates;
 }
+
+module.exports = getCoasterFanout;

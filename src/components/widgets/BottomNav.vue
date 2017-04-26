@@ -14,8 +14,10 @@
 		</span>
 
 		<span @click="toUserHome" class="bottom-nav-item user" :class="{ 'is-active': navState.userHome }">
-			<i class="fa fa-user"></i>
-			<span v-if="numUnreadNoties" class="num-alerts">{{numUnreadNoties}}</span>
+			<span class="icon-contain">
+				<i class="fa fa-user"></i>
+				<span v-if="numUnreadNoties" class="num-alerts">{{numUnreadNoties}}</span>
+			</span>
 		</span>
 
 	</div>
@@ -147,12 +149,17 @@ export default {
 				color: #ececec;
 			}
 		}
+		.icon-contain {
+			position: relative;
+			display: inline-block;
+			padding: 0 .4em;
+		}
 		.num-alerts {
 			text-align: center;
 			vertical-align: middle;
 			position: absolute;
-			bottom: .4em;
-			left: 3.6em;
+			bottom: 0;
+			right: 0;
 			width: 1.4em;
 			height: 1.4em;
 			line-height: 1.4em;

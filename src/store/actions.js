@@ -64,9 +64,7 @@ export default {
       snap.forEach((childSnap) => {
         let notification = childSnap.val()
         if (!notification.key) notification.key = childSnap.key
-        console.log('before: ', notification.message);
         notification.message = decode(notification.message)
-        console.log('after: ', notification.message);
         notifications.push(notification)
       })
       commit('GET_NOTIFICATIONS', notifications)
@@ -74,13 +72,11 @@ export default {
   }
 
   , updateUserPhotoURL ({ commit }, photoURL) {
-    console.log(arguments);
     let currentUser = firebase.auth().currentUser;
     currentUser.updateProfile({
       photoURL
     })
     .then(function () {
-      console.log(commit);
       commit('UPDATE_PHOTO_URL', photoURL)
     })
     .catch(function(error) {
