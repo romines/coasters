@@ -6,7 +6,6 @@
         <header class="card-header">
           <p class="card-header-title">
             <img class="shift-icon" :src="coaster ? loadSvg(coaster.shiftType) : ''" alt="">
-            <span class="date">{{mediumDateString}}</span>
             <span class="time"><i class="fa" :class="timeIcon"></i></span>
           </p>
 
@@ -157,8 +156,11 @@ export default {
       justify-content: space-between;
     }
     img.shift-icon {
-      width: 8vw;
-      max-height: 50px;
+      width: 14vw;
+      max-height: 40px;
+    }
+    .time i.fa {
+      font-size: 2.3em;
     }
     @include tablet {
       .date {
@@ -180,14 +182,14 @@ export default {
     }
     figure.user {
       img {
-        width: 74px;
-        height: 74px;
+        width: 96px;
+        height: 96px;
         object-fit: cover;
       }
       .icon {
-        width: 74px;
-        height: 74px;
-        line-height: 74px;
+        width: 96px;
+        height: 96px;
+        line-height: 96px;
         vertical-align: bottom;
         border: 1px solid grey;
         border-radius: 3px;
@@ -203,6 +205,10 @@ export default {
 
       }
     }
+  }
+  .media-content {
+    font-size: 1.2em;
+    padding-left: 1.2em;
   }
   .desktop-comments {
     display: none;

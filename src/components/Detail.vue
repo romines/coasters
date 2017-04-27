@@ -1,22 +1,17 @@
 <template lang="html">
   <div class="detail">
-    <coaster :options="{}" v-if="coaster" :coaster="coaster">
+    <coaster :options="{}" v-if="coaster" :coaster="coaster" :class="{ isCommenting : commenting}">
 
 
-      <footer slot="primaryButtons" class="card-footer">
 
-        <span v-if="!commenting" class="coaster-actions default card-footer-item">
-          <a v-if="elligibleForPickup" @click.stop="pickUp" class="button is-primary">Pick Up</a>
-          <a @click.stop="startCommenting()" class="button comment-button"><i class="fa fa-comment"></i></a>
-          <a v-if="elligibleForRemove" @click.stop="cancelCoaster()" class="button">Remove</a>
-        </span>
-
-      </footer>
 
       <div slot="comments" class="comments">
+
         <div class="top-level-comment">
           <div class="comment title is-5">{{coaster.comment}}</div>
+          <i @click.stop="startCommenting()" class="fa fa-comment comment-button"></i>
         </div>
+
         <div v-for="comment in comments" class="comment-container">
           <figure class="commenting-user">
             <img v-if="comment.postedBy.photoURL" :src="comment.postedBy.photoURL" class="image is-48x48">
@@ -30,14 +25,24 @@
             <div class="date"><small>{{dateCommentPosted(comment.when)}}</small></div>
           </div>
         </div>
-
       </div>
+
+
+      <footer slot="primaryButtons" class="card-footer">
+
+        <span v-if="!commenting" class="coaster-actions default card-footer-item">
+          <a v-if="elligibleForPickup" @click.stop="pickUp" class="button is-info">Pick Up Shift</a>
+          <a v-if="elligibleForRemove" @click.stop="cancelCoaster()" class="button">Remove</a>
+        </span>
+
+      </footer>
+
 
       <div slot="newComment" v-show="commenting" class="newComment">
         <textarea v-model="comment" ref="newCommentBox" class="textarea"></textarea>
         <span class="coaster-actions card-footer-item">
           <a @click.stop="cancelComment" class="button">Cancel</a>
-          <a @click.stop="postComment" class="button is-primary">Post Comment</a>
+          <a @click.stop="postComment" class="button is-primary">Post</a>
         </span>
       </div>
 
@@ -211,26 +216,46 @@ export default {
 </script>
 
 <style lang="scss">
-.coaster-actions {
-  justify-content: space-around;
-}
-.top-level-comment { padding-bottom: 1em; }
-.comment-button {
-  filter: invert(100%);
-}
-.comment-container {
-  display: flex;
-  align-items: center;
-  padding: .25em 0;
-  border-top: 1px solid #dbdbdb;
-  .commenting-user {
-    display: inline-flex;
-    flex-shrink: 0;
-    margin-right: .8em;
-    img {
-      object-fit: cover;
-      object-position: center;
+.detail {
+
+  .top-level-comment {
+    padding-bottom: 1.2em;
+    display: flex;
+    .comment {
+      width: 90%;
+    }
+    & > * {
+      // display: inline-block;
+    }
+
+  }
+  .card-footer {
+    text-align: right;
+    .card-footer-item { display: inline-block; }
+  }
+  .isCommenting .card-footer-item { justify-content: space-around; }
+  // .top-level-comment { padding-bottom: 1em; }
+  .comment-button {
+    color: #45494d;
+  }
+  .isCommenting .comment-button {
+    color: #4679c7;
+  }
+  .comment-container {
+    display: flex;
+    align-items: center;
+    padding: .25em 0;
+    border-top: 1px solid #dbdbdb;
+    .commenting-user {
+      display: inline-flex;
+      flex-shrink: 0;
+      margin-right: .8em;
+      img {
+        object-fit: cover;
+        object-position: center;
+      }
     }
   }
+
 }
 </style>

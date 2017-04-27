@@ -172,9 +172,17 @@ export default {
 
 <style lang="scss">
 .covered {
-  .card-header-title {
-    font-size: 1.45em;
-    .fa {vertical-align: super;}
+
+  .card-header {
+    .card-header-title {
+      font-size: 1.45em;
+      .fa {vertical-align: super;}
+    }
+    .time i.fa { font-size: 1.5em; }
+    img.shift-icon {
+      width: 10vw;
+    }
   }
+
 }
 </style>

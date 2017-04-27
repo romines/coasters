@@ -4,8 +4,12 @@
 		<div class="question">
 			{{contents.message}}
 		</div>
-    <span v-for="button in contents.buttons" @click="button.action" :class="button.classList" class="button">{{button.label}}</span>
-		<span @click="close" class="button">Cancel</span>
+
+    <div class="action-buttons">
+      <span @click="close" class="button">Cancel</span>
+      <span v-for="button in contents.buttons" @click="button.action" :class="button.classList" class="button">{{button.label}}</span>
+    </div>
+
   </div>
 </template>
 
@@ -29,5 +33,10 @@ export default {
 }
 </script>
 
-<style lang="css">
+<style lang="scss">
+  .action-buttons {
+    padding-top: 1em;
+    display: flex;
+    justify-content: space-around;
+  }
 </style>
