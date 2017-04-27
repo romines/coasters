@@ -10,7 +10,13 @@
         <div class="day-title title is-5">{{day.date}}</div>
 
         <ul>
+          <!--
+            **
+             * Coaster
+             *
+              -->
           <coaster :options="{}" v-for="coaster in day.shifts" :coaster="coaster" :key="coaster.key">
+
             <div slot="cardHeader">
 
               <header class="card-header">
@@ -24,7 +30,8 @@
                 </p>
               </header>
 
-            </div>
+            </div>  <!--  End 'cardHeader' slot -->
+
 
             <div slot="main">
 
@@ -62,10 +69,15 @@
                 </div>
               </div>
 
-              <div class="desktop-comments">{{ coaster.comment }}</div>
+            </div> <!--  End 'main' slot -->
 
-            </div>
+
           </coaster>
+          <!--
+            **
+            * End Coaster
+            *
+          -->
         </ul>
         <hr>
       </div>

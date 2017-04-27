@@ -5,15 +5,18 @@
 
       <footer slot="primaryButtons" class="card-footer">
 
-        <span class="coaster-actions default card-footer-item">
+        <span v-if="!commenting" class="coaster-actions default card-footer-item">
           <a v-if="elligibleForPickup" @click.stop="pickUp" class="button is-primary">Pick Up</a>
-          <a @click.stop="startCommenting()" class="button">Comment</a>
+          <a @click.stop="startCommenting()" class="button comment-button"><i class="fa fa-comment"></i></a>
           <a v-if="elligibleForRemove" @click.stop="cancelCoaster()" class="button">Remove</a>
         </span>
 
       </footer>
 
       <div slot="comments" class="comments">
+        <div class="top-level-comment">
+          <div class="comment title is-5">{{coaster.comment}}</div>
+        </div>
         <div v-for="comment in comments" class="comment-container">
           <figure class="commenting-user">
             <img v-if="comment.postedBy.photoURL" :src="comment.postedBy.photoURL" class="image is-48x48">
@@ -33,8 +36,8 @@
       <div slot="newComment" v-show="commenting" class="newComment">
         <textarea v-model="comment" ref="newCommentBox" class="textarea"></textarea>
         <span class="coaster-actions card-footer-item">
-          <a @click.stop="postComment" class="button is-primary">Post Comment</a>
           <a @click.stop="cancelComment" class="button">Cancel</a>
+          <a @click.stop="postComment" class="button is-primary">Post Comment</a>
         </span>
       </div>
 
@@ -103,7 +106,7 @@ export default {
         this.$store.commit('SHOW_MODAL', {component: 'Login'})
       }
 
-      if (!this.$store.state.authState.user) {
+      if (!this.$store.state.authState.user) {      // TODO: use app wide standard 'not logged in' behavior w/ navi guards
         this.$store.commit('SHOW_MODAL', {
           component:'Confirmation',
           heading: 'You Must Login',
@@ -119,7 +122,6 @@ export default {
       } else {
         this.commenting = true
         this.$nextTick(() => {
-          console.log(this.$refs.newCommentBox)
           this.$refs.newCommentBox.focus()
         })
       }
@@ -128,7 +130,7 @@ export default {
       this.commenting = false
     },
     postComment () {
-      // console.log(this.comment);
+
       let payload = {}
 
       payload.coaster = this.coaster
@@ -211,6 +213,10 @@ export default {
 <style lang="scss">
 .coaster-actions {
   justify-content: space-around;
+}
+.top-level-comment { padding-bottom: 1em; }
+.comment-button {
+  filter: invert(100%);
 }
 .comment-container {
   display: flex;

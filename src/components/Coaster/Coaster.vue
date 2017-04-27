@@ -47,11 +47,9 @@
 
         <div class="bottom">
 
-          <span class="mobile-comments">{{ coaster.comment }}</span>
+          <slot name="comments"></slot>
 
           <slot name="primaryButtons"></slot>
-
-          <slot name="comments"></slot>
 
           <slot name="newComment"></slot>
 

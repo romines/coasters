@@ -8,9 +8,15 @@
         <div class="day-title title is-5">{{day.date}}</div>
 
         <ul>
+
           <coaster :options="{}" v-for="coaster in day.shifts" :coaster="coaster" :key="coaster.key">
 
+            <div slot="comments">
+              <div class="top-level-comment">{{ coaster.comment }}</div>
+            </div>
+            
           </coaster>
+
         </ul>
         <hr>
       </div>
