@@ -32,7 +32,8 @@ export default {
         } else {
           commit('LOG_IN_USER', user)
         }
-        // commit('CLOSE_MODAL')
+        if (user.photoURL) commit('CLOSE_MODAL')
+
       } else {
         commit('LOG_OUT_USER', user)
       }
@@ -245,17 +246,6 @@ export default {
     updates['/coasters/' + coaster.key] = coasterData
     updates[`/users/${user.uid}/coastersCommentedOn/${coaster.key}`] = true
 
-    // fanout to history items happens in the cloud now
-
-    // if (coaster.history && coaster.history.length > 0) {
-    //   for (var [key, historyEntry] of Object.entries(coaster.history)) {
-    //     let coveringFor = historyEntry.coveringFor
-    //     let pickedUpBy = historyEntry.pickedUpBy
-    //     updates['/users/' + pickedUpBy.uid + '/picked-up/' + coaster.key] = coasterData
-    //     updates['/users/' + coveringFor.uid + '/posted/' + coaster.key] = coasterData
-    //   }
-    // }
-
     cloud.log(updates)
 
     baseRef.update(updates);
@@ -275,13 +265,14 @@ export default {
       photoURL: user.photoURL ? user.photoURL : null
     }
     let newShiftTrade = {
-      when: now,
+      pickedUp: now,
       pickedUpBy,
       coveringFor: {
-        name: coaster.heldBy.displayName,
+        name: coaster.heldBy.name,
         uid: coaster.heldBy.uid,
         photoURL: coaster.heldBy.photoURL ? coaster.postedBy.photoURL : null
-      }
+      },
+      posted: coaster.posted
     }
 
     let coasterHistory = {...coaster.history}
@@ -296,21 +287,32 @@ export default {
 
     let updates = {}
 
-    // if (Object.keys(coaster.history).length) {
-    //   updates = Object.keys(coaster.history).reduce((updates, key) => {
-    //     let historyItem = coaster.history[key]
-    //     let postedBy = historyItem.postedBy
-    //     updates[`/users/${postedBy.uid}/posted/coaster.key`] = coasterData
-    //     return updates
-    //   }, {})
-    // }
-
-
     updates['/coasters/' + coaster.key] = coasterData
     updates[`/users/${user.uid}/holding/${coaster.key}`] = coasterData
     updates[`/users/${coaster.heldBy.uid}/holding/${coaster.key}`] = null
     commit('CLOSE_MODAL')
+    console.log(updates);
+    // return baseRef.update(updates);
+  }
+
+  , repostCoaster ({ commit, state }, coaster) {
+    const now = moment().format()
+    const user = state.authState.user
+    const postedBy = {
+      name: user.displayName,
+      uid: user.uid,
+      photoURL: user.photoURL ? user.photoURL : null
+
+    }
+    let coasterData       = {...coaster}
+    coasterData.postedBy  = postedBy
+    coasterData.posted    = now
+    coasterData.available = true
+
+    let updates = {}
+    updates['/coasters/' + coaster.key] = coasterData
     return baseRef.update(updates);
+
   }
 
   , dismissNotification ({ state }, notieKey) {

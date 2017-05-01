@@ -45,7 +45,7 @@ export default {
   data () {
     return {
       datePickerMsg: 'lalalala',
-      date: moment().add(7, 'day').format('YYYY-MM-DD'),
+      date: moment().add(1, 'day').format('YYYY-MM-DD'),
       time: 'AM',
       shiftType: 'Serve',
       comment: '',

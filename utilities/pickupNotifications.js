@@ -4,11 +4,12 @@ const encode = require('firebase-encode').encode;
 
 const methods = {
 	getUserToNofify (transaction) {
+		console.log(transaction);
 		return transaction.coveringFor.uid;
 	},
 
 	getNotieUpdates (coaster, userKey, notieKey, latestPickup, updates) {
-		
+
 		if (!latestPickup.notieSent) {
 			const dateString  = moment(coaster.date).format('ddd. MMM, Do');
 			const markup      = `<a href="/#/coasters/${coaster.key}">${dateString} ${coaster.time} ${coaster.shiftType} shift</a>`;

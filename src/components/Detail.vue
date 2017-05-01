@@ -3,7 +3,13 @@
     <coaster :options="{}" v-if="coaster" :coaster="coaster" :class="{ isCommenting : commenting}">
 
 
-
+      <div v-if="coaster.history" slot="main">
+        <ul>
+          <li>{{longDateString}}</li>
+          <li><strong>{{coaster.time + ' ' + coaster.shiftType}}</strong></li>
+        </ul>
+        <trade-detail :coaster="coaster" :whenPosted="whenPosted"></trade-detail>
+      </div>
 
       <div slot="comments" class="comments">
 
@@ -32,7 +38,8 @@
 
         <span v-if="!commenting" class="coaster-actions default card-footer-item">
           <a v-if="elligibleForPickup" @click.stop="pickUp" class="button is-info">Pick Up Shift</a>
-          <a v-if="elligibleForRemove" @click.stop="cancelCoaster()" class="button">Remove</a>
+          <a v-if="elligibleForRemove" @click.stop="cancelCoaster" class="button">Remove</a>
+          <a v-if="elligibleForRepost" @click.stop="repost" class="button is-primary">Repost</a>
         </span>
 
       </footer>
@@ -55,13 +62,15 @@
 <script>
 
 import Coaster from './Coaster/Coaster.vue'
+import TradeDetail from './Coaster/TradeDetail.vue'
 import router from '../router'
 import moment from 'moment'
 
 export default {
 
   components: {
-    Coaster
+    Coaster,
+    TradeDetail
   },
 
   data () {
@@ -84,10 +93,13 @@ export default {
       return false
     },
     elligibleForPickup () {
-      return this.coaster.available
+      return this.coaster.available && !this.myOwnCoaster
     },
     elligibleForRemove () {
       return this.coaster.available && this.myOwnCoaster
+    },
+    elligibleForRepost () {
+      return !this.coaster.available && this.myOwnCoaster
     },
     detailKey () {
       return this.$store.getters.detailKey
@@ -101,7 +113,17 @@ export default {
         }
       }
       return comments
-    }
+    },
+    longDateString () {
+      return moment(this.coaster.date).format('dddd, MMM Do')
+    },
+    whenPosted () {
+      if (this.coaster.history) {
+        const historyKeys  = Object.keys(this.coaster.history);
+        const firstKey     = historyKeys[0];
+        return moment(this.coaster.history[firstKey].posted).fromNow()
+      }
+    },
 
   },
 
@@ -184,8 +206,27 @@ export default {
         })
       }
 
-
     },
+
+    repost () {
+      const repostIt = () => {
+        this.$store.dispatch('repostCoaster', this.coaster)
+        this.$store.commit('CLOSE_MODAL')
+      }
+      this.$store.commit('SHOW_MODAL', {
+        component:'Confirmation',
+        heading: 'Confirm Repost',
+        message: 'You are responsible for this shift until someone else picks it up.',
+        buttons: [
+          {
+            label: 'I understand',
+            action: repostIt,
+            classList: 'is-primary'
+          }
+        ]
+      })
+    },
+
     cancelCoaster () {
 
       let cancel = () => {

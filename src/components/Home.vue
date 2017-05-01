@@ -14,7 +14,7 @@
             <div slot="comments">
               <div class="top-level-comment">{{ coaster.comment }}</div>
             </div>
-            
+
           </coaster>
 
         </ul>
@@ -35,6 +35,7 @@ import router from '../router'
 export default {
   data () {
     return {
+      beginning: moment()
     }
   },
   components: { Filters, Coaster },
@@ -43,7 +44,7 @@ export default {
     coasters () {
       return _.chain(this.$store.state.coasters)
       .filter((coaster) => {
-        return !coaster.history
+        return coaster.available
       })
         .sortBy('time')
         .sortBy('date')
@@ -70,7 +71,13 @@ export default {
     },
     filteredCoasters () {
 
-      const withinSelectedDays = (coaster) => {
+      const withinDateRange = (coaster) => {
+        let coasterMoment = moment(coaster.date)
+        let beginningMoment = moment(this.beginning)
+        return (coasterMoment.diff(beginningMoment, 'days') >= 0)
+      }
+
+      const withinSelectedDaysOfTheWeek = (coaster) => {
         if (this.filters.days.length === 0) return true
         let coasterDay = moment(coaster.date).day()
         return this.filters.days.some((day) => {
@@ -98,7 +105,8 @@ export default {
       //   .value()
 
       return this.coasters
-        .filter(withinSelectedDays)
+        .filter(withinDateRange)
+        .filter(withinSelectedDaysOfTheWeek)
         .filter(withinSelectedShiftTypes)
         .filter(withinSelectedTimes)
 

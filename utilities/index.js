@@ -40,12 +40,10 @@ root.child(`/coasters`).on('child_changed', (refData) => {
 // migrateCoasterComments();
 // migrateCoveringFor()
 // setHeldBy();
+// setOriginallyPostedData();
+
 
 function migrateCoveringFor() {
-  setTimeout(doMigrateCoveringFor, 2000);
-}
-
-function doMigrateCoveringFor() {
   root.child('coasters').once('value', (snap) => {
     let coasters = snap.val()
     // console.log(coasters);
@@ -71,6 +69,32 @@ function doMigrateCoveringFor() {
       return updates
 
     }, {})
+    root.child('coasters').update(updates);
+  })
+}
+
+function setOriginallyPostedData() {
+  root.child('coasters').once('value', (snap) => {
+    let coasters = snap.val()
+    let updates = Object.keys(coasters).reduce((updates, key) => {
+      let coaster = coasters[key]
+
+      if (coaster.history) {
+        let originallyPosted = coaster.posted;
+        let orginalPoster = coaster.postedBy;
+        let historyKeys = Object.keys(coaster.history);
+        let firstHistoryKey = historyKeys[0];
+        let firstHistoryItem = Object.assign({}, coaster.history[firstHistoryKey]);
+        firstHistoryItem.coveringFor = coaster.postedBy;
+        firstHistoryItem.posted = originallyPosted;
+        firstHistoryItem.pickedUp = firstHistoryItem.when;
+        firstHistoryItem.when = null;
+        updates[`${key}/history/${firstHistoryKey}`] = firstHistoryItem;
+      }
+      return updates
+
+    }, {})
+    console.log(updates);
     root.child('coasters').update(updates);
   })
 }

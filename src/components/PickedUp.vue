@@ -33,43 +33,8 @@
             </div>  <!--  End 'cardHeader' slot -->
 
 
-            <div slot="main">
-
-              <div class="posted-by media">
-                <div class="media-left">
-                  <figure class="user">
-                    <img v-if="coaster.postedBy.photoURL" :src="coaster.postedBy.photoURL" alt="">
-                    <span v-if="!coaster.postedBy.photoURL" class="icon is-large">
-                      <i class="fa fa-user"></i>
-                    </span>
-                  </figure>
-                </div>
-
-                <div class="media-content">
-                  <p>Originally posted by:</p>
-                  <h3 class="title">{{coaster.postedBy.displayName}}</h3>
-                </div>
-              </div>
-
-              <div class="picked-up-by">
-                <div class="posted-by media">
-                  <div class="media-left">
-                    <figure class="user">
-                      <img v-if="coaster.heldBy.photoURL" :src="coaster.heldBy.photoURL" alt="">
-                      <span v-if="!coaster.heldBy.photoURL" class="icon is-large">
-                        <i class="fa fa-user"></i>
-                      </span>
-                    </figure>
-                  </div>
-
-                  <div class="media-content">
-                    <p>Covering:</p>
-                    <h3 class="title">{{coaster.heldBy.name}}</h3>
-                  </div>
-                </div>
-              </div>
-
-            </div> <!--  End 'main' slot -->
+            <trade-detail slot="main" :coaster='coaster'></trade-detail>
+            <!--  End 'main' slot -->
 
 
           </coaster>
@@ -92,15 +57,17 @@ import { firebase } from '../libs'
 import moment from 'moment'
 import _ from 'lodash'
 import mixins from '../mixins'
+import Coaster from './Coaster/Coaster.vue'
 import DateRange from './widgets/DateRange.vue'
+import TradeDetail from './Coaster/TradeDetail.vue'
 
 const db = firebase.database()
 const coastersRef = db.ref('data/coasters')
 
-import Coaster from './Coaster/Coaster.vue'
 
 export default {
   mixins: [mixins],
+  components: { Coaster, DateRange, TradeDetail },
 
   data () {
     return {
@@ -111,11 +78,11 @@ export default {
   computed: {
     pickedUp () {
       return _.chain(this.$store.state.coasters).filter((coaster) => {
-        return !coaster.available
+        return coaster.history
       }).filter((coaster) => {
         let coasterMoment = moment(coaster.date)
         let beginningMoment = moment(this.beginning)
-        return (coasterMoment.diff(beginningMoment) >= 0)
+        return (coasterMoment.diff(beginningMoment, 'days') >= 0)
       })
       .sortBy('time')
       .sortBy('date')
@@ -137,7 +104,7 @@ export default {
     },
 
   },
-  components: { Coaster, DateRange },
+
   methods: {
     onDateSelected (date) {
       let selectedWasOlder = moment(date).isBefore(this.$store.state.coasters[0].date)
