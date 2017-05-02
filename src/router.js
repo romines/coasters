@@ -40,7 +40,11 @@ const routes = [
       {
         path: '/user/:key',
         name: 'user',
-        component: User
+        component: User,
+        beforeEnter: (to, from, next) => {
+          store.dispatch('getPromisedUserData', to.params.key)
+          setTimeout(() => next(), 100)
+        }
       },
       {
         path: '/new',
@@ -61,13 +65,14 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  store.dispatch('getPromisedCoasters').then(next())
 
-  // promise all: user, coastersWithinDateRange
-  if (store.state.coasters.length) {
-    next()
-  } else {
-    store.dispatch('getPromisedCoasters').then(next())
-  }
+  // if (store.state.coasters.length) {
+  //   next()
+  // } else {
+  //   store.dispatch('getPromisedCoasters').then(next())
+  // }
+
 })
 
 export default router

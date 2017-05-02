@@ -1,5 +1,6 @@
 'use strict'
 const admin = require("firebase-admin");
+const moment = require('moment');
 const gcloud = require('google-cloud');
 const serviceAccount = require("./fBServiceAccountKey_admin.json");
 const coasterFanout = require('./coasterFanout.js');
@@ -26,9 +27,18 @@ root.child(`/coasters`).on('child_changed', (refData) => {
     latestPickup.key   = lastKey;
     const userKey      = pickupNotifications.getUserToNofify(latestPickup);
     const notieKey     = root.child(`/users/${userKey}/notifications`).push().key;
-    updates            = pickupNotifications.getNotieUpdates(coaster, userKey, notieKey, latestPickup, updates);
-  }
+    //
+    //
+    // if change was due to a pickup event
+    // ...modify in place w/ pickup notifications
+    //
+    updates = pickupNotifications.getNotieUpdates(coaster, userKey, notieKey, latestPickup, updates);
 
+  }
+  //
+  // Always apply fanout though
+  //
+  //
   updates = coasterFanout(coaster, updates);
 
   root.update(updates);
@@ -41,7 +51,8 @@ root.child(`/coasters`).on('child_changed', (refData) => {
 // migrateCoveringFor()
 // setHeldBy();
 // setOriginallyPostedData();
-
+// doMigrateDisplayName();
+// doTouchAll();
 
 function migrateCoveringFor() {
   root.child('coasters').once('value', (snap) => {
@@ -96,6 +107,43 @@ function setOriginallyPostedData() {
     }, {})
     console.log(updates);
     root.child('coasters').update(updates);
+  })
+}
+
+function doMigrateDisplayName() {
+  setTimeout(migratePostedFromDisplayNameToName, 300);
+}
+
+function migratePostedFromDisplayNameToName() {
+
+  root.child('coasters').once('value', (snap) => {
+    let coasters = snap.val()
+    let updates = Object.keys(coasters).reduce((updates, key) => {
+      if (coasters[key].postedBy.displayName) {
+        updates[`${key}/postedBy/displayName`] = null;
+        updates[`${key}/postedBy/name`] = coasters[key].postedBy.displayName;
+      }
+      return updates;
+    }, {});
+    return root.child('coasters').update(updates);
+  })
+
+}
+
+
+function doTouchAll() {
+  setTimeout(touchAll, 400)
+}
+function touchAll() {
+  root.child('coasters').once('value', (snap) => {
+    let coasters = snap.val();
+    let now = moment().format();
+    let updates = Object.keys(coasters).reduce((updates, key) => {
+      updates[`${key}/meta/touched`] = now;
+      return updates;
+    }, {});
+    return root.child('coasters').update(updates);
+
   })
 }
 

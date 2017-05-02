@@ -4,8 +4,11 @@ const encode = require('firebase-encode').encode;
 
 const methods = {
 	getUserToNofify (transaction) {
-		console.log(transaction);
-		return transaction.coveringFor.uid;
+		if (!transaction.coveringFor) {
+			console.log(transaction);
+		} else {
+			return transaction.coveringFor.uid;
+		}
 	},
 
 	getNotieUpdates (coaster, userKey, notieKey, latestPickup, updates) {

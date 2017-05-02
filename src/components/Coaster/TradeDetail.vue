@@ -50,7 +50,6 @@ export default {
 		originalPoster () {
 			const historyKeys  = Object.keys(this.coaster.history)
 			const firstKey     = historyKeys[0]
-			console.log(this.coaster.history[firstKey].coveringFor);
 			return this.coaster.history[firstKey].coveringFor
 		},
 		interimHolds () {

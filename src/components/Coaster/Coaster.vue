@@ -35,7 +35,7 @@
               <ul>
                 <li v-show="!options.showPickedUp">{{longDateString}}</li>
                 <li v-show="!options.showPickedUp"><strong>{{coaster.time + ' ' + coaster.shiftType}}</strong></li>
-                <li>for <strong>{{coaster.postedBy.displayName}}</strong></li>
+                <li>for <strong>{{coaster.postedBy.name}}</strong></li>
                 <li><small>{{datePosted}}</small></li>
               </ul>
               <span class="desktop-comments">{{ coaster.comment }}</span>

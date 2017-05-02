@@ -9,6 +9,7 @@ const db = firebase.database()
 const auth = firebase.auth()
 const baseRef = db.ref('data')
 const coastersRef = db.ref('data/coasters')
+const usersRef = db.ref('data/users')
 
 
 export default {
@@ -159,22 +160,46 @@ export default {
     }
     options = options ? options : defaults
 
-    let listRef = coastersRef.orderByChild('date').startAt(options.beginning)
+    let listRef = coastersRef.orderByChild('date') //.startAt(options.beginning)
+    resolve()
     return new Promise((resolve, reject) => {
-      // if (state.coasters) resolve()
       listRef.on('value', (snap) => {
         let coasters = snap.val()
-        let preparedCoasters = Object.keys(coasters).map((key) => {
-          let coaster = coasters[key]
-          coaster.key = key
-          return coaster
-        })
+        console.log(coasters);
+        // let preparedCoasters = Object.keys(coasters).map((key) => {
+        //   let coaster = coasters[key]
+        //   coaster.key = key
+        //   return coaster
+        // })
 
         commit('GET_COASTERS', preparedCoasters)
         resolve()
 
       })
     })
+
+  }
+
+  , getPromisedUserData ({ commit, state }, uid) {
+    console.log('getPromisedUserData called with: ' + uid);
+
+    let userRef = usersRef.child(uid)
+    userRef.on('value', (snap) => {
+      let userData = snap.val()
+      console.log(userData);
+      commit('GET_USER_DATA', userData)
+      resolve()
+    })
+
+    // return new Promise((resolve, reject) => {
+    //
+    //   userRef.on('value', (snap) => {
+    //     let userData = snap.val()
+    //     commit('GET_USER_DATA', userData)
+    //     resolve()
+    //   })
+    //
+    // })
 
   }
 
@@ -188,7 +213,7 @@ export default {
 
     coasterData.postedBy = {
       uid: state.authState.user.uid,
-      displayName: state.authState.user.displayName,
+      name: state.authState.user.displayName,
       photoURL: state.authState.user.photoURL
     }
     coasterData.heldBy    = {...coasterData.postedBy}
@@ -210,8 +235,7 @@ export default {
 
     let uid = state.authState.user.uid
     let updates = {};
-    updates['/coasters/' + key] = null
-    updates['/users/' + uid + '/posted/' + key] = null
+    updates[`/coasters/${key}/available`] = false
     return baseRef.update(updates);
 
   }
@@ -253,7 +277,6 @@ export default {
   }
 
   , pickUpCoaster ({ commit, state }, coaster) {
-
     const now = moment().format()
     const user = state.authState.user
     const newHistoryItemRef = coastersRef.child(coaster.key).child('history').push()
@@ -291,8 +314,7 @@ export default {
     updates[`/users/${user.uid}/holding/${coaster.key}`] = coasterData
     updates[`/users/${coaster.heldBy.uid}/holding/${coaster.key}`] = null
     commit('CLOSE_MODAL')
-    console.log(updates);
-    // return baseRef.update(updates);
+    return baseRef.update(updates);
   }
 
   , repostCoaster ({ commit, state }, coaster) {
@@ -311,6 +333,7 @@ export default {
 
     let updates = {}
     updates['/coasters/' + coaster.key] = coasterData
+    updates[`/users/${user.uid}/posted/${coaster.key}`] = coasterData
     return baseRef.update(updates);
 
   }

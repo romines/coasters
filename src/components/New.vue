@@ -45,7 +45,7 @@ export default {
   data () {
     return {
       datePickerMsg: 'lalalala',
-      date: moment().add(1, 'day').format('YYYY-MM-DD'),
+      date: new Date(), //moment().format('YYYY-MM-DD'), // add(1, 'day')
       time: 'AM',
       shiftType: 'Serve',
       comment: '',
@@ -78,11 +78,6 @@ export default {
           time: this.time,
           shiftType: this.shiftType,
           comment: this.comment,
-          // postedBy: {
-          //   uid: this.$store.state.authState.user.uid,
-          //   displayName: this.$store.state.authState.user.displayName,
-          //   photoURL: this.$store.state.authState.user.photoURL,
-          // }
       })
       router.push({
         name: 'user',

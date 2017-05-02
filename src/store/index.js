@@ -31,6 +31,8 @@ const store = new Vuex.Store({
     },
     count: 0,
     coasters: [],
+    userData: {
+    },
     notifications: [],
     historical: [],
     coasterFilters: {
@@ -88,6 +90,9 @@ const store = new Vuex.Store({
     GET_COASTERS (state, coasters) {
       state.count = coasters.length
       state.coasters = coasters
+    },
+    GET_USER_DATA (state, userData) {
+      state.userData = userData
     },
     GET_HISTORICAL (state, coasters) {
       state.historical = coasters

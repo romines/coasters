@@ -65,28 +65,30 @@ export default {
     },
 
     myPostedCoasters () {
-      return this.$store.state.coasters.filter((coaster) => {
-        return coaster.postedBy.uid === this.user.uid
-      })
+      return this.$store.state.userData.posted
+
+      // .filter((coaster) => {
+      //   return coaster.postedBy.uid === this.user.uid
+      // })
     },
 
     myPickedUpCoasters () {
 
-      return this.$store.state.coasters
-      .filter((coaster) => {
-        return coaster.heldBy
-      })
-      .filter((coaster) => {
-        return coaster.heldBy.uid === this.user.uid && coaster.history
-        // let history = coaster.history
-        // let lastPickup
-        // for(var item in history) {
-        //     lastPickup = history[item]
-        // }
-
-        // return lastPickup.pickedUpBy.uid === this.user.uid
-
-      })
+      return this.$store.state.userData.holding
+      // .filter((coaster) => {
+      //   return coaster.heldBy
+      // })
+      // .filter((coaster) => {
+      //   return coaster.heldBy.uid === this.user.uid && coaster.history
+      //   // let history = coaster.history
+      //   // let lastPickup
+      //   // for(var item in history) {
+      //   //     lastPickup = history[item]
+      //   // }
+      //
+      //   // return lastPickup.pickedUpBy.uid === this.user.uid
+      //
+      // })
 
     }
   },
