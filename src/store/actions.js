@@ -46,6 +46,7 @@ export default {
 
       } else {
         commit('LOG_OUT_USER', user)
+        commit('GET_USER_DATA', {posted: [], holding: []})
       }
     })
   }

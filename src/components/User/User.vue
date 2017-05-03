@@ -1,6 +1,9 @@
 <template lang="html">
   <div v-if="user" class="user container">
-    <h1 class="title header">My Coasters</h1>
+    <div class="title header">
+      <span class="text">My Coasters</span>
+      <i @click="logOut" class="fa fa-power-off"></i>
+    </div>
 
     <div class="media">
       <div class="media-left">
@@ -16,7 +19,7 @@
         <ul>
           <li>{{user.displayName}}</li>
           <li>{{user.email}}</li>
-          <li><a @click="logOut">Log out</a></li>
+          <!-- <li><a @click="logOut">Log out</a></li> -->
         </ul>
       </div>
     </div>
@@ -45,7 +48,7 @@
               PICKED UP BY: {{pickedUpBy(coaster)}}
             </div>
           </div>
-          
+
         </coaster>
 
       </ul>
@@ -119,7 +122,6 @@ export default {
       return coaster.heldBy.uid === coaster.postedBy.uid
     },
     pickedUpBy (coaster) {
-      console.log(coaster);
       if (coaster.heldBy.uid === this.user.uid) return false
       else {
         return coaster.heldBy.name
@@ -133,6 +135,11 @@ export default {
 
 <style lang="scss">
 .user {
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
   .notieLink a {
     color: white;
     text-decoration: underline;
