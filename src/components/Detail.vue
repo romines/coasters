@@ -38,7 +38,7 @@
 
         <span v-if="!commenting" class="coaster-actions default card-footer-item">
           <a v-if="elligibleForPickup" @click.stop="pickUp" class="button is-info">Pick Up Shift</a>
-          <a v-if="elligibleForRemove" @click.stop="cancelCoaster" class="button">Remove</a>
+          <a v-if="elligibleForRemove" @click.stop="cancelCoaster" class="button">Delete Post</a>
           <a v-if="elligibleForRepost" @click.stop="repost" class="button is-primary">Repost</a>
         </span>
 

@@ -32,6 +32,8 @@ const store = new Vuex.Store({
     count: 0,
     coasters: [],
     userData: {
+      posted: [],
+      holding: []
     },
     notifications: [],
     historical: [],

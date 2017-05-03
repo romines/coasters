@@ -96,6 +96,7 @@ export default {
       }, () => {
         this.uploading = false;
         this.$store.dispatch('updateUserPhotoURL', uploadTask.snapshot.downloadURL)
+        this.$store.commit('CLOSE_MODAL')
       });
     }
   }

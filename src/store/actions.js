@@ -19,8 +19,15 @@ export default {
   }
 
 
-  , listenToFbAuthState ({ commit, state, dispatch }) {
+  , listenToAuthState ({ commit, state, dispatch }) {
+
+
     firebase.auth().onAuthStateChanged(user => {
+
+      const trimUser = ({uid, displayName, photoURL, email}) => {
+        return {uid, displayName, photoURL, email}
+      }
+
       if (user) {
         dispatch('watchPhotoURL', user.uid)
         dispatch('watchUserNotifications', user.uid)
@@ -28,10 +35,12 @@ export default {
           user.updateProfile({
             displayName: state.authState.tempUserData.displayName
           }).then(() => {
-            commit('LOG_IN_USER', user)
+
+            commit('LOG_IN_USER', trimUser(user))
           }, (error) => console.log(error))
         } else {
-          commit('LOG_IN_USER', user)
+
+          commit('LOG_IN_USER', trimUser(user))
         }
         if (user.photoURL) commit('CLOSE_MODAL')
 
@@ -49,11 +58,12 @@ export default {
       commit('SHOW_MODAL', {
         component:'ImageUpload',
         heading: 'One More Thing...',
-        message: 'Please add a profile picture',
+        message: 'Adding a photo makes people more likely to pick up your shifts',
         onSuccess: state.modal.contents.onSuccess
       })
     })
     .catch(function(error) {
+      console.log(error);
       commit('AUTH_ERROR', error.message)
     });
   }
@@ -183,12 +193,15 @@ export default {
   }
 
   , getPromisedUserData ({ commit, state }, uid) {
-    
+
     return new Promise((resolve, reject) => {
       let userRef = usersRef.child(uid)
       userRef.on('value', (snap) => {
         let userData = snap.val()
-        console.log(userData);
+        if (!userData) {
+          resolve()
+          return
+        }
         commit('GET_USER_DATA', userData)
         resolve()
       })
@@ -379,7 +392,7 @@ export default {
 
 // export {
 //
-//    listenToFbAuthState
+//    listenToAuthState
 //   , signUpUser
 //   , updateUserPhotoURL
 //   , logInUser

@@ -69,31 +69,42 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
               console.error(err);
               return;
             }
+
+
             root.child(`/users/${uid}`).once('value', (snap) => {
 
-              let userData                          = snap.val();
               let userUpdates                       = {};
               userUpdates[`/users/${uid}/photoURL`] = url;
 
-              if (userData.posted) {
-                userUpdates = Object.keys(userData.posted).reduce((updates, key) => {
-                  let coaster = userData.posted[key];
-                  if (coaster.postedBy.uid === uid) {
+              let userData                          = snap.val();
+
+              if (userData !== null) {
+
+                if (userData.posted) {
+                  userUpdates = Object.keys(userData.posted).reduce((updates, key) => {
+                    let coaster = userData.posted[key];
+                    if (coaster.postedBy.uid === uid) {
+                      let coasterKey = coaster.key;
+                      updates[`/coasters/${coasterKey}/postedBy/photoURL`] = url;
+                    }
+                    return updates;
+                  }, userUpdates);
+                }
+
+                if (userData.holding) {
+                  userUpdates = Object.keys(userData.holding).reduce((updates, key) => {
+                    let coaster = userData.holding[key];
                     let coasterKey = coaster.key;
-                    updates[`/coasters/${coasterKey}/postedBy/photoURL`] = url;
-                  }
-                  return updates;
-                }, userUpdates);
+                    updates[`/coasters/${coasterKey}/holding/photoURL`] = url;
+                    return updates;
+                  }, userUpdates);
+                }
+
+              } else {
+                console.log(`HOWDY. No data was found at /users/${uid}/`);
               }
 
-              if (userData.holding) {
-                userUpdates = Object.keys(userData.holding).reduce((updates, key) => {
-                  let coaster = userData.holding[key];
-                  let coasterKey = coaster.key;
-                  updates[`/coasters/${coasterKey}/holding/photoURL`] = url;
-                  return updates;
-                }, userUpdates);
-              }
+              console.log({userUpdates});
               root.update(userUpdates);
             })
 

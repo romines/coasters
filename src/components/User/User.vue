@@ -31,14 +31,43 @@
     <section class="posted-shifts">
       <span class="title is-5">Posted Shifts</span>
       <ul>
-        <coaster :options="{}" v-for="coaster in myPostedCoasters" :coaster="coaster" :key="coaster.key"></coaster>
+        <coaster
+          :options="{}"
+          v-for="coaster in myPostedCoasters"
+          :coaster="coaster"
+          :key="coaster.key">
+
+          <div slot="notice" class="notices">
+            <div v-if="isReposted(coaster)" class="warn">
+              REPOSTED
+            </div>
+            <div v-if="!!pickedUpBy(coaster)" class="success">
+              PICKED UP BY: {{pickedUpBy(coaster)}}
+            </div>
+          </div>
+          
+        </coaster>
+
       </ul>
     </section>
 
     <section class="posted-shifts">
       <span class="title is-5">Shifts I'm Covering</span>
       <ul>
-        <coaster :options="{}" v-for="coaster in myPickedUpCoasters" :coaster="coaster" :key="coaster.key"></coaster>
+        <coaster
+          :options="{}"
+          v-for="coaster in myPickedUpCoasters"
+          :coaster="coaster"
+          :key="coaster.key">
+            <div slot="notice" class="notices">
+              <div v-if="isReposted(coaster)" class="warn">
+                REPOSTED
+              </div>
+              <div v-if="!!pickedUpBy(coaster)" class="success">
+                PICKED UP BY: {{pickedUpBy(coaster)}}
+              </div>
+            </div>
+          </coaster>
       </ul>
     </section>
 
@@ -66,30 +95,10 @@ export default {
 
     myPostedCoasters () {
       return this.$store.state.userData.posted
-
-      // .filter((coaster) => {
-      //   return coaster.postedBy.uid === this.user.uid
-      // })
     },
 
     myPickedUpCoasters () {
-
       return this.$store.state.userData.holding
-      // .filter((coaster) => {
-      //   return coaster.heldBy
-      // })
-      // .filter((coaster) => {
-      //   return coaster.heldBy.uid === this.user.uid && coaster.history
-      //   // let history = coaster.history
-      //   // let lastPickup
-      //   // for(var item in history) {
-      //   //     lastPickup = history[item]
-      //   // }
-      //
-      //   // return lastPickup.pickedUpBy.uid === this.user.uid
-      //
-      // })
-
     }
   },
   components: {
@@ -104,6 +113,17 @@ export default {
     },
     dismiss (key) {
       this.$store.dispatch('dismissNotification', key)
+    },
+    isReposted (coaster) {
+      if (!coaster.history) return
+      return coaster.heldBy.uid === coaster.postedBy.uid
+    },
+    pickedUpBy (coaster) {
+      console.log(coaster);
+      if (coaster.heldBy.uid === this.user.uid) return false
+      else {
+        return coaster.heldBy.name
+      }
     }
 
   }
@@ -124,6 +144,10 @@ export default {
   }
   .media-left {
     max-width: 50%;
+  }
+  .notices {
+    .warn { color: red; }
+    .success { color: green; }
   }
   .posted-shifts {
     padding-top: 1em;

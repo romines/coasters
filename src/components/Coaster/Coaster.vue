@@ -16,6 +16,7 @@
 
       </slot>
 
+      <slot name="notice"></slot>
 
       <div class="card-content">
 

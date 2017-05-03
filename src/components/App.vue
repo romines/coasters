@@ -51,7 +51,7 @@ export default {
     BottomNav
   },
   created () {
-    this.$store.dispatch('listenToFbAuthState')
+    this.$store.dispatch('listenToAuthState')
   },
   data: function () {
     return {
