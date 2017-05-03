@@ -160,17 +160,19 @@ export default {
     }
     options = options ? options : defaults
 
-    let listRef = coastersRef.orderByChild('date') //.startAt(options.beginning)
-    resolve()
+    let listRef = coastersRef.orderByChild('date').startAt(options.beginning)
     return new Promise((resolve, reject) => {
       listRef.on('value', (snap) => {
         let coasters = snap.val()
-        console.log(coasters);
-        // let preparedCoasters = Object.keys(coasters).map((key) => {
-        //   let coaster = coasters[key]
-        //   coaster.key = key
-        //   return coaster
-        // })
+        if (!coasters) {
+          resolve()
+          return
+        }
+        let preparedCoasters = Object.keys(coasters).map((key) => {
+          let coaster = coasters[key]
+          coaster.key = key
+          return coaster
+        })
 
         commit('GET_COASTERS', preparedCoasters)
         resolve()
@@ -181,14 +183,16 @@ export default {
   }
 
   , getPromisedUserData ({ commit, state }, uid) {
-    console.log('getPromisedUserData called with: ' + uid);
+    
+    return new Promise((resolve, reject) => {
+      let userRef = usersRef.child(uid)
+      userRef.on('value', (snap) => {
+        let userData = snap.val()
+        console.log(userData);
+        commit('GET_USER_DATA', userData)
+        resolve()
+      })
 
-    let userRef = usersRef.child(uid)
-    userRef.on('value', (snap) => {
-      let userData = snap.val()
-      console.log(userData);
-      commit('GET_USER_DATA', userData)
-      resolve()
     })
 
     // return new Promise((resolve, reject) => {
