@@ -82,10 +82,13 @@ import List from '../List.vue'
 import Coaster from '../Coaster/Coaster.vue'
 import ImageUpload from '../widgets/ImageUpload.vue'
 import router from '../../router'
+import moment from 'moment'
 
 export default {
   data () {
-    return {}
+    return {
+      beginning: moment()
+    }
   },
   computed: {
     user () {
@@ -97,11 +100,17 @@ export default {
     },
 
     myPostedCoasters () {
-      return this.$store.state.userData.posted
+      if (!this.$store.state.userData.posted) return
+      return Object.keys(this.$store.state.userData.posted).filter((key) => {
+        return this.withinDateRange(this.$store.state.userData.posted[key])
+      })
     },
 
     myPickedUpCoasters () {
-      return this.$store.state.userData.holding
+      if (!this.$store.state.userData.holding) return
+      return Object.keys(this.$store.state.userData.holding).filter((key) => {
+        return this.withinDateRange(this.$store.state.userData.holding[key])
+      })
     }
   },
   components: {
@@ -126,7 +135,13 @@ export default {
       else {
         return coaster.heldBy.name
       }
+    },
+    withinDateRange (coaster) {
+      let coasterMoment = moment(coaster.date)
+      let beginningMoment = moment(this.beginning)
+      return (coasterMoment.diff(beginningMoment, 'days') >= 0)
     }
+
 
   }
 
