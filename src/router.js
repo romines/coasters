@@ -43,8 +43,7 @@ const routes = [
         component: User
         ,
         beforeEnter: (to, from, next) => {
-          store.dispatch('getPromisedUserData', to.params.key).then(next())
-          // setTimeout(() => next(), 100)
+          store.dispatch('getPromisedUserData', to.params.key).then(() => next())
         }
       },
       {
@@ -54,7 +53,10 @@ const routes = [
       {
         name: 'detail',
         path: 'coasters/:id',
-        component: Detail
+        component: Detail,
+        beforeEnter: (to, from, next) => {
+          store.dispatch('getPromisedDetailCoaster', to.params.id).then(() => next())
+        }
       }
 
     ]
@@ -66,13 +68,13 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  // store.dispatch('getPromisedCoasters').then(next())
 
-  if (store.state.coasters.length) {
-    next()
-  } else {
-    store.dispatch('getPromisedCoasters').then(next())
-  }
+  let promised = [store.dispatch('getPromisedCoasters')] // this can be added to
+
+  Promise.all(promised).then(() => next())
+
+  // store.dispatch('getPromisedCoasters').then(() => next())
+
 
 })
 

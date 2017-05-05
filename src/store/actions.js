@@ -18,7 +18,6 @@ export default {
     commit('ADD_FILTER', filter)
   }
 
-
   , listenToAuthState ({ commit, state, dispatch }) {
 
 
@@ -29,6 +28,7 @@ export default {
       }
 
       if (user) {
+        dispatch('getUserData', user.uid)
         dispatch('watchPhotoURL', user.uid)
         dispatch('watchUserNotifications', user.uid)
         if (!user.displayName) {
@@ -105,7 +105,6 @@ export default {
     })
   }
 
-
   , logInUser ({ commit, state }, user) {
 
     auth.signInWithEmailAndPassword(user.email, user.password).then((user) => {
@@ -145,10 +144,9 @@ export default {
   }
 
   , getCoasters ({ commit, state }) {
-    console.log('Getting coasters . . .');
+
     let today = moment().format('YYYY-MM-DD')
     let listRef = coastersRef.orderByChild('date').startAt(today)
-
 
     listRef.on('value', (snap) => {
       let coasters = []
@@ -165,20 +163,26 @@ export default {
   }
 
   , getPromisedCoasters ({ commit, state }, options) {
+
     const defaults = {
       beginning: moment().format('YYYY-MM-DD'),
       ending: null
     }
-    options = options ? options : defaults
 
-    let listRef = coastersRef.orderByChild('date').startAt(options.beginning)
+    const beginning = options ? options.beginning : defaults.beginning
+    let listRef = coastersRef.orderByChild('date').startAt(beginning)
+
     return new Promise((resolve, reject) => {
+
+      if (state.coasters.length && !options) {
+        // console.log('Guess we\'re good with the coasters we\'ve got . . .');
+        return resolve()
+      }
+
       listRef.on('value', (snap) => {
         let coasters = snap.val()
-        if (!coasters) {
-          resolve()
-          return
-        }
+        if (!coasters) return resolve()
+
         let preparedCoasters = Object.keys(coasters).map((key) => {
           let coaster = coasters[key]
           coaster.key = key
@@ -193,31 +197,56 @@ export default {
 
   }
 
-  , getPromisedUserData ({ commit, state }, uid) {
+  , getUserData ({ commit, state }, uid) {
+    let userRef = usersRef.child(uid)
+    userRef.on('value', (snap) => {
+      let userData = snap.val()
+      if (userData) commit('GET_USER_DATA', userData)
+    })
+  }
 
+  , getPromisedUserData ({ commit, state }, uid) {
+    console.log('Direct navigation to User Home . . . fetching userData');
     return new Promise((resolve, reject) => {
       let userRef = usersRef.child(uid)
       userRef.on('value', (snap) => {
         let userData = snap.val()
         if (!userData) {
-          resolve()
-          return
+          console.log('hit ref and no data . . .');
+          return resolve()
         }
         commit('GET_USER_DATA', userData)
         resolve()
       })
 
     })
+  }
 
-    // return new Promise((resolve, reject) => {
-    //
-    //   userRef.on('value', (snap) => {
-    //     let userData = snap.val()
-    //     commit('GET_USER_DATA', userData)
-    //     resolve()
-    //   })
-    //
-    // })
+  , getPromisedDetailCoaster ({ commit, state }, key) {
+
+    const detailFromCurrent = (key) => {
+      return state.coasters.filter((coaster) => {
+        return coaster.key === key
+      })[0]
+    }
+
+    return new Promise((resolve, reject) => {
+
+      if (detailFromCurrent(key)) {
+        console.log(detailFromCurrent(key));
+        commit('GET_DETAIL_COASTER', detailFromCurrent(key))
+        resolve()
+      }
+      let coasterRef = coastersRef.child(key)
+      coasterRef.on('value', (snap) => {
+        let coaster = snap.val()
+        coaster.key = key
+        console.log('fetched detail coaster from cloud');
+        commit('GET_DETAIL_COASTER', coaster)
+        resolve()
+      })
+
+    })
 
   }
 
@@ -295,6 +324,7 @@ export default {
   }
 
   , pickUpCoaster ({ commit, state }, coaster) {
+
     const now = moment().format()
     const user = state.authState.user
     const newHistoryItemRef = coastersRef.child(coaster.key).child('history').push()
@@ -333,6 +363,7 @@ export default {
     updates[`/users/${coaster.heldBy.uid}/holding/${coaster.key}`] = null
     commit('CLOSE_MODAL')
     return baseRef.update(updates);
+
   }
 
   , repostCoaster ({ commit, state }, coaster) {

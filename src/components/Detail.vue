@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="detail">
-    <coaster :options="{}" v-if="coaster" :coaster="coaster" :class="{ isCommenting : commenting}">
+    <coaster :options="{}" :coaster="coaster" :class="{ isCommenting : commenting}">
 
 
       <div v-if="coaster.history" slot="main">
@@ -84,11 +84,10 @@ export default {
   computed: {
 
     coaster () {
-      return this.$store.getters.detailCoaster
+      return this.$store.state.detailCoaster
     },
     myOwnCoaster () {
       if (!this.$store.state.authState.user) return false
-      console.log('my own coaster: ', (this.coaster.heldBy.uid === this.$store.state.authState.user.uid));
       return this.coaster.heldBy.uid == this.$store.state.authState.user.uid
       return false
     },
