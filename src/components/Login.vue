@@ -34,7 +34,7 @@
         </p>
         <div v-show="wantsToSignUp">
           <p class="control has-icon">
-            <input v-model="confirmPassword" class="input" type="password" placeholder="Confirm Password">
+            <input v-model="confirmPassword" @focus="confirmFocused = true" @blur="confirmFocused = false" class="input" type="password" placeholder="Confirm Password">
             <i class="fa fa-lock"></i>
           </p>
         </div>
@@ -43,15 +43,18 @@
           <button type="button" v-on:click="wantsToSignUp = true" class="button">Sign up</button>
         </div>
         <div v-show="wantsToSignUp">
-          <button @click="signUp" class="button is-primary">Sign up</button>
+          <button @click="signUp" :disabled="notReadyForSubmit" class="button is-primary">Sign up</button>
           <button type="button" v-on:click="wantsToSignUp = false" class="button">Login</button>
         </div>
-        <div @click="onForgotPasswordClick" class="forgot">Forgot Password</div>
+        <div class="forgot">
+          <span @click="onForgotPasswordClick" class="target">Forgot Password</span>
+        </div>
       </div>
 
       <button v-show="authState.user" @click="logOut" class="button">Log out</button>
 
       <div v-if="authError" class="auth-error">{{authError}}</div>
+      <div v-if="passwordMismatch && !confirmFocused" class="auth-error password-mismatch">Your passwords do not match</div>
     </div>
 
     <div class="social-providers">
@@ -66,7 +69,12 @@
     },
     computed : {
       authState () { return this.$store.state.authState },
-      authError () { return this.authState.error }
+      authError () { return this.authState.error },
+      passwordMismatch () {
+        if (!this.confirmPassword.length) return false
+        return this.password !== this.confirmPassword
+      },
+      notReadyForSubmit () { return !this.email.length || !this.displayName.length || !this.confirmPassword.length || this.passwordMismatch}
     },
     data () {
       return {
@@ -74,7 +82,8 @@
         password: '',
         confirmPassword: '',
         displayName: '',
-        wantsToSignUp: false
+        wantsToSignUp: false,
+        confirmFocused: false
       }
     },
     methods: {
@@ -114,6 +123,10 @@
 
     .button {
       margin-top: .5em;
+    }
+
+    .password-mismatch {
+      margin-bottom: .7em;
     }
 
     .forgot {

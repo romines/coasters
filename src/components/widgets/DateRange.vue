@@ -2,7 +2,7 @@
 	<div class="date-range">
 		<div class="mask" v-show="picking" @click="picking = false"></div>
 		<i @click="picking = true" class="fa fa-calendar"></i>
-		<span class="info">from: {{begString}} to:</span>
+		<span class="info">Showing from: {{begString}}</span>
 
 		<datepicker
 			v-model="beginning"

@@ -3,7 +3,7 @@
     <h3>{{test}}</h3>
     <div class="form">
       <p class="control">
-        <Datepicker v-model="date" :format="'D, MMM ddsu'" />
+        <Datepicker v-model="date" :format="'D, MMM dsu'" :disabled="disabledDates"/>
       </p>
       <p class="control">
         <span class="select">
@@ -44,7 +44,6 @@ export default {
 
   data () {
     return {
-      datePickerMsg: 'lalalala',
       date: new Date(), //moment().format('YYYY-MM-DD'), // add(1, 'day')
       time: 'AM',
       shiftType: 'Serve',
@@ -62,16 +61,15 @@ export default {
     },
     isPM () {
       return this.time === 'PM'
+    },
+    disabledDates () {
+      return {to: moment().subtract(1, 'days').toDate()}
     }
   },
   components: {
     Datepicker
   },
   methods: {
-    // pickDate (val) {
-    //   // this.datePickerMsg = val
-    //   this.date = val
-    // },
     newCoaster () {
       this.$store.dispatch('newCoaster', {
           date: this.myDate,
@@ -104,6 +102,26 @@ export default {
     }
 
     .submit-button { margin-top: 10px; }
+    .vdp-datepicker input[type='text'] {
+      -moz-appearance: none;
+      -webkit-appearance: none;
+      align-items: center;
+      background-color: white;
+      border: 1px solid #dbdbdb;
+      border-radius: 3px;
+      color: #363636;
+      display: inline-flex;
+      font-size: 14px;
+      height: 32px;
+      justify-content: flex-start;
+      line-height: 24px;
+      padding-left: 8px;
+      padding-right: 8px;
+      position: relative;
+      vertical-align: top;
+      box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.1);
+    }
+
   }
   html {}
 </style>

@@ -8,7 +8,7 @@
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
-    "babel-runtime": "^6.20.0",
+    "babel-runtime": "^6.23.0",
     "bulma": "^0.2.3",
     "firebase": "^3.7.2",
     "firebase-encode": "0.0.5",
@@ -16,7 +16,7 @@
     "moment": "^2.15.2",
     "vue": "^2.2.6",
     "vue-router": "^2.4.0",
-    "vuejs-datepicker": "^0.6.5",
+    "vuejs-datepicker": "^0.7.11",
     "vuex": "^2.2.1",
     "vuex-router-sync": "^4.1.2"
   },

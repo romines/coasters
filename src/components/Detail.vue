@@ -18,7 +18,7 @@
           <i @click.stop="startCommenting()" class="fa fa-comment comment-button"></i>
         </div>
 
-        <div v-for="comment in comments" class="comment-container">
+        <div v-for="comment in coaster.comments" class="comment-container">
           <figure class="commenting-user">
             <img v-if="comment.postedBy.photoURL" :src="comment.postedBy.photoURL" class="image is-48x48">
             <span v-if="!comment.postedBy.photoURL" class="icon is-large">
@@ -103,16 +103,16 @@ export default {
     detailKey () {
       return this.$store.getters.detailKey
     },
-    comments () {
-      if (!this.coaster) return []
-      let comments = []
-      if (this.coaster.coasterComments) {
-        for (var [key, comment] of Object.entries(this.coaster.coasterComments)) {
-          comments.push(comment)
-        }
-      }
-      return comments
-    },
+    // comments () {
+    //   if (!this.coaster) return []
+    //   let comments = []
+    //   if (this.coaster.coasterComments) {
+    //     for (var [key, comment] of Object.entries(this.coaster.coasterComments)) {
+    //       comments.push(comment)
+    //     }
+    //   }
+    //   return comments
+    // },
     longDateString () {
       return moment(this.coaster.date).format('dddd, MMM Do')
     },
