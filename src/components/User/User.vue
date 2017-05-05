@@ -34,7 +34,8 @@
     <section class="posted-shifts">
       <span class="title is-5">Posted Shifts</span>
       <ul>
-        <coaster
+        <template v-if="myPostedCoasters.length">
+          <coaster
           :options="{}"
           v-for="coaster in myPostedCoasters"
           :coaster="coaster"
@@ -50,6 +51,7 @@
           </div>
 
         </coaster>
+      </template>
 
       </ul>
     </section>
@@ -57,11 +59,12 @@
     <section class="posted-shifts">
       <span class="title is-5">Shifts I'm Covering</span>
       <ul>
-        <coaster
-          :options="{}"
-          v-for="coaster in myPickedUpCoasters"
-          :coaster="coaster"
-          :key="coaster.key">
+        <template v-if="myPickedUpCoasters">
+          <coaster
+            :options="{}"
+            v-for="coaster in myPickedUpCoasters"
+            :coaster="coaster"
+            :key="coaster.key">
             <div slot="notice" class="notices">
               <div v-if="isReposted(coaster)" class="warn">
                 REPOSTED
@@ -71,6 +74,8 @@
               </div>
             </div>
           </coaster>
+
+        </template>
       </ul>
     </section>
 
@@ -82,10 +87,14 @@ import List from '../List.vue'
 import Coaster from '../Coaster/Coaster.vue'
 import ImageUpload from '../widgets/ImageUpload.vue'
 import router from '../../router'
+import moment from 'moment'
+
 
 export default {
   data () {
-    return {}
+    return {
+      beginning: moment()
+    }
   },
   computed: {
     user () {
@@ -97,13 +106,24 @@ export default {
     },
 
     myPostedCoasters () {
-      return this.$store.state.userData.posted
+      if (!this.$store.state.userData.posted) return
+      return Object.keys(this.$store.state.userData.posted).map((key) => {
+        let coaster = this.$store.state.userData.posted[key]
+        coaster.key = key
+        return coaster
+      }).filter(this.withinDateRange)
     },
 
     myPickedUpCoasters () {
-      return this.$store.state.userData.holding
+      if (!this.$store.state.userData.holding) return
+      return Object.keys(this.$store.state.userData.holding).map((key) => {
+        let coaster = this.$store.state.userData.holding[key]
+        coaster.key = key
+        return coaster
+      }).filter(this.withinDateRange)
     }
   },
+
   components: {
     Coaster,
     ImageUpload
@@ -126,10 +146,25 @@ export default {
       else {
         return coaster.heldBy.name
       }
+    },
+    withinDateRange (coaster) {
+      let coasterMoment = moment(coaster.date)
+      let beginningMoment = moment(this.beginning)
+      return (coasterMoment.diff(beginningMoment, 'days') >= 0)
     }
 
   }
 
+}
+
+function withinDateRange (coaster, beginning) {
+  let coasterMoment = moment(coaster.date)
+  let beginningMoment = moment(beginning)
+  let diff = coasterMoment.diff(beginningMoment, 'days')
+  let truthy = (coasterMoment.diff(beginningMoment, 'days') >= 0)
+  console.log({coasterMoment, beginningMoment, diff, truthy});
+  return (coasterMoment.diff(beginningMoment, 'days') >= 0)
+  // return true
 }
 </script>
 
