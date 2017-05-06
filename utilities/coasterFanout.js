@@ -2,7 +2,7 @@
 
 function getCoasterFanout (coaster, updates) {
 
-  console.log({coaster});
+  console.log(`fanning out updates to: ${coaster.key}`);
 
   if (coaster.heldBy) updates[`/users/${coaster.heldBy.uid}/holding/${coaster.key}`] = coaster
 

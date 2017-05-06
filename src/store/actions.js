@@ -47,6 +47,7 @@ export default {
       } else {
         commit('LOG_OUT_USER', user)
         commit('GET_USER_DATA', {posted: [], holding: []})
+        commit('GET_NOTIFICATIONS', [])
       }
     })
   }
@@ -180,6 +181,7 @@ export default {
       }
 
       listRef.on('value', (snap) => {
+        console.log('coasters value event ! ! ! ');
         let coasters = snap.val()
         if (!coasters) return resolve()
 
@@ -224,24 +226,12 @@ export default {
 
   , getPromisedDetailCoaster ({ commit, state }, key) {
 
-    const detailFromCurrent = (key) => {
-      return state.coasters.filter((coaster) => {
-        return coaster.key === key
-      })[0]
-    }
-
     return new Promise((resolve, reject) => {
 
-      if (detailFromCurrent(key)) {
-        console.log(detailFromCurrent(key));
-        commit('GET_DETAIL_COASTER', detailFromCurrent(key))
-        resolve()
-      }
       let coasterRef = coastersRef.child(key)
       coasterRef.on('value', (snap) => {
         let coaster = snap.val()
         coaster.key = key
-        console.log('fetched detail coaster from cloud');
         commit('GET_DETAIL_COASTER', coaster)
         resolve()
       })

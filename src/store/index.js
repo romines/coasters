@@ -31,6 +31,7 @@ const store = new Vuex.Store({
     },
     count: 0,
     coasters: [],
+    detailCoaster: {},
     userData: {
       posted: [],
       holding: [],

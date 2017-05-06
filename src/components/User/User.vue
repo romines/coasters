@@ -34,7 +34,7 @@
     <section class="posted-shifts">
       <span class="title is-5">Posted Shifts</span>
       <ul>
-        <template v-if="myPostedCoasters.length">
+        <!-- <template v-if="myPostedCoasters.length"> -->
           <coaster
           :options="{}"
           v-for="coaster in myPostedCoasters"
@@ -51,7 +51,7 @@
           </div>
 
         </coaster>
-      </template>
+      <!-- </template> -->
 
       </ul>
     </section>
@@ -59,7 +59,7 @@
     <section class="posted-shifts">
       <span class="title is-5">Shifts I'm Covering</span>
       <ul>
-        <template v-if="myPickedUpCoasters">
+        <!-- <template v-if="myPickedUpCoasters"> -->
           <coaster
             :options="{}"
             v-for="coaster in myPickedUpCoasters"
@@ -75,7 +75,7 @@
             </div>
           </coaster>
 
-        </template>
+        <!-- </template> -->
       </ul>
     </section>
 
@@ -83,7 +83,6 @@
 </template>
 
 <script>
-import List from '../List.vue'
 import Coaster from '../Coaster/Coaster.vue'
 import ImageUpload from '../widgets/ImageUpload.vue'
 import router from '../../router'
@@ -118,6 +117,7 @@ export default {
       if (!this.$store.state.userData.holding) return
       return Object.keys(this.$store.state.userData.holding).map((key) => {
         let coaster = this.$store.state.userData.holding[key]
+        // if (this.isReposted(coaster)) return
         coaster.key = key
         return coaster
       }).filter(this.withinDateRange)

@@ -2,7 +2,7 @@
   <div class="home container">
     <h1 class="title header">Available Shifts</h1>
     <filters/>
-    <div class="list">
+    <div v-if="days.length" class="list">
       <div v-for="day in days">
 
         <div class="day-title title is-5">{{day.date}}</div>
@@ -21,6 +21,10 @@
         <hr>
       </div>
     </div>
+    <div v-if="!days.length" class="no-coasters">
+      <div class="title is-4">Looks like no coasters match the filters you have set</div>
+    </div>
+
   </div>
 </template>
 
@@ -120,7 +124,11 @@ export default {
 </script>
 
 <style lang="scss">
+.home {
   .day-title {
     margin: .4em 0;
   }
+  .no-coasters { margin-top: 1em; }
+}
+
 </style>
