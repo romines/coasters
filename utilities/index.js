@@ -12,7 +12,7 @@ let root = database.ref("data");
 
 
 root.child(`/coasters`).on('child_changed', (refData) => {
-
+  console.log('there was a change . . .');
   let updates   = {};
   const coaster = refData.val();
   if (!coaster.key) {console.log(coaster);}
