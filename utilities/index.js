@@ -4,6 +4,7 @@ const moment = require('moment');
 const coasterFanout = require('./coasterFanout.js');
 const getPickupNotifications = require('./pickupNotifications.js');
 const database = require('./firebase.js');
+// const environment = process.env.NODE_ENV === 'production' ? production : development
 
 console.log('Utils index running . . .');
 
@@ -19,12 +20,12 @@ root.child(`/coasters`).on('child_changed', (refData) => {
 
     updates = coasterFanout(coaster, updates);
 
-    root.update(updates);
 
   }
 
   updates = getPickupNotifications(coaster, updates);
 
+  root.update(updates);
 
 })
 
