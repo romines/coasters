@@ -49,6 +49,7 @@ export default {
         commit('LOG_OUT_USER', user)
         commit('GET_USER_DATA', {posted: [], holding: []})
         commit('GET_NOTIFICATIONS', [])
+        commit('SET_ADMIN', false)
       }
     })
   }
@@ -93,8 +94,10 @@ export default {
       'l7xfJmDG87OQQtSpgpOVbU97aUc2', // Christine
       'KiF3yuJGLAaNHbiAlUJgGydzNG43', // Lisa
       '1vItiaETkEhMRKDGsY2rK7B5eHj1', // thom.penn@yahoo.com
+      'seU5FflQ83N4RAfOnz5WudWsGVR2'  // DEV: lenny / 050803@email.com
     ].includes(uid)) {
-      console.log('this is an admin user');
+      console.log('this is an admin user')
+      commit('SET_ADMIN', true)
     }
   }
 
@@ -386,6 +389,13 @@ export default {
     let updates = {}
     updates['/coasters/' + coaster.key] = coasterData
     updates[`/users/${user.uid}/posted/${coaster.key}`] = coasterData
+    return baseRef.update(updates);
+
+  }
+
+  , flagCoaster ({ state }, coaster) {
+    let updates = {};
+    updates[`/coasters/${coaster.key}/flagged`] = coaster.flagged
     return baseRef.update(updates);
 
   }

@@ -24,17 +24,18 @@ const store = new Vuex.Store({
 
   state: {
     authState: {
-      user: null,
-      error: '',
-      tempUserData: {},
-      passwordResetError: ''
+      user:               null,
+      error:              '',
+      tempUserData:       {},
+      passwordResetError: '',
+      isAdmin:            false
     },
     count: 0,
     coasters: [],
     detailCoaster: {},
     userData: {
-      posted: [],
-      holding: [],
+      posted:        [],
+      holding:       [],
       notifications: []
     },
     notifications: [],
@@ -90,6 +91,9 @@ const store = new Vuex.Store({
     },
     SAVE_TEMP_USER (state, user) {
       state.authState.tempUserData = user
+    },
+    SET_ADMIN (state, isAdmin) {
+      state.authState.isAdmin = isAdmin
     },
     GET_COASTERS (state, coasters) {
       state.count = coasters.length

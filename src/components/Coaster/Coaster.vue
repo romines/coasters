@@ -1,5 +1,5 @@
 <template lang="html">
-  <div v-if="coaster" @click="makeDetail()" class="coaster card is-fullwidth">
+  <div v-if="coaster" @click="makeDetail()" class="coaster card is-fullwidth" :class="{ flagged : coaster.flagged && this.$store.state.authState.isAdmin }">
 
       <slot name="cardHeader">
 
@@ -150,6 +150,9 @@ export default {
   padding: 0;
   &:hover {
     cursor: pointer;
+  }
+  &.flagged {
+    border: 2px solid #a02020;
   }
   .card-header {
     .card-header-title {

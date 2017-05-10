@@ -15,10 +15,11 @@
 
         <div class="top-level-comment">
           <div class="comment title is-5">{{coaster.comment}}</div>
+          <i @click.stop="flagCoaster()" v-if="$store.state.authState.isAdmin" class="fa fa-flag flag-button" :class="{ flagged : coaster.flagged }"></i>
           <i @click.stop="startCommenting()" class="fa fa-comment comment-button"></i>
         </div>
 
-        <div v-for="comment in coaster.comments" class="comment-container">
+        <div v-for="comment in coaster.comments" v-if="!selectingFlags" class="comment-container">
           <figure class="commenting-user">
             <img v-if="comment.postedBy.photoURL" :src="comment.postedBy.photoURL" class="image is-48x48">
             <span v-if="!comment.postedBy.photoURL" class="icon is-large">
@@ -76,6 +77,7 @@ export default {
   data () {
     return {
       commenting: false,
+      selectingFlags: false,
       comment: ''
 
     }
@@ -164,7 +166,13 @@ export default {
       this.$store.dispatch('postComment', payload)
       this.comment = ''
       this.commenting = false
-
+    },
+    flagCoaster () {
+      if (!this.coaster.flagged) this.coaster.flagged = true
+      else {
+        this.coaster.flagged = false
+      }
+      this.$store.dispatch('flagCoaster', this.coaster )
     },
     pickUp () {
 
@@ -277,6 +285,12 @@ export default {
   // .top-level-comment { padding-bottom: 1em; }
   .comment-button {
     color: #45494d;
+  }
+  .flag-button {
+    margin-right: .55em;
+    &.flagged {
+      color: #a02020;
+    }
   }
   .isCommenting .comment-button {
     color: #4679c7;
