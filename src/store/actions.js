@@ -31,6 +31,7 @@ export default {
         dispatch('getUserData', user.uid)
         dispatch('watchPhotoURL', user.uid)
         dispatch('watchUserNotifications', user.uid)
+        dispatch('setAdminStatus', user.uid)
         if (!user.displayName) {
           user.updateProfile({
             displayName: state.authState.tempUserData.displayName
@@ -83,6 +84,18 @@ export default {
       })
       commit('GET_NOTIFICATIONS', notifications)
     })
+  }
+
+  , setAdminStatus ({commit}, uid) {
+    if ([
+      '82juzj8tWOcJecVVXlfwkVdXbes1', // Faraday
+      'CSjUY4tX6GcW7foEEEonGIWEbWk1', // Melissa
+      'l7xfJmDG87OQQtSpgpOVbU97aUc2', // Christine
+      'KiF3yuJGLAaNHbiAlUJgGydzNG43', // Lisa
+      '1vItiaETkEhMRKDGsY2rK7B5eHj1', // thom.penn@yahoo.com
+    ].includes(uid)) {
+      console.log('this is an admin user');
+    }
   }
 
   , updateUserPhotoURL ({ commit }, photoURL) {

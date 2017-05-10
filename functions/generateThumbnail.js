@@ -9,7 +9,10 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const mkdirp = require('mkdirp-promise');
 const spawn = require('child-process-promise').spawn;
-const gcs = require('@google-cloud/storage')({keyFilename: 'fBServiceAccountKey_admin.json'});
+const environment = process.env.GCLOUD_PROJECT === 'srb-coasters' ? 'production' : 'development';
+
+// deal with this
+const gcs = require('@google-cloud/storage')({keyFilename: `firebase_account_key-${environment}.json`});
 const getImageUpdates = require('./getImageUpdates.js').getImageUpdates;
 
 const LOCAL_TMP_FOLDER = '/tmp/';
