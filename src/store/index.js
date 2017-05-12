@@ -38,6 +38,7 @@ const store = new Vuex.Store({
       holding:       [],
       notifications: []
     },
+    usersList: [],
     notifications: [],
     historical: [],
     coasterFilters: {
@@ -101,6 +102,9 @@ const store = new Vuex.Store({
     },
     GET_USER_DATA (state, userData) {
       state.userData = userData
+    },
+    GET_ALL_USERS (state, users) {
+      state.usersList = users
     },
     GET_HISTORICAL (state, coasters) {
       state.historical = coasters

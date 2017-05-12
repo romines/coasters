@@ -240,6 +240,26 @@ export default {
     })
   }
 
+  , getPromisedUsers ({ commit, state }) {
+    console.log('getting all users . . . ');
+
+    return new Promise((resolve, reject) => {
+      let usersRef = baseRef.child('users')
+      usersRef.on('value', (snap) => {
+        let users = snap.val()
+        let mappedUsers = Object.keys(users).map((key) => {
+          let user = users[key]
+          user.uid = key
+          return user
+        })
+
+        commit('GET_ALL_USERS', mappedUsers)
+        resolve()
+      })
+
+    })
+  }
+
   , getPromisedDetailCoaster ({ commit, state }, key) {
 
     return new Promise((resolve, reject) => {

@@ -223,7 +223,9 @@ export default {
     },
 
     pickUpAs () {
-      this.$store.commit('SHOW_MODAL', {component: 'PickUpAs'})
+      this.$store.dispatch('getPromisedUsers').then(() => {
+        this.$store.commit('SHOW_MODAL', {component: 'PickUpAs'})
+      })
     },
 
     adminRepost () {
