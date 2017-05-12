@@ -31,7 +31,7 @@ export default {
         dispatch('getUserData', user.uid)
         dispatch('watchPhotoURL', user.uid)
         dispatch('watchUserNotifications', user.uid)
-        dispatch('setAdminStatus', user.uid)
+        dispatch('setAdminStatus', user)
         if (!user.displayName) {
           user.updateProfile({
             displayName: state.authState.tempUserData.displayName
@@ -87,15 +87,15 @@ export default {
     })
   }
 
-  , setAdminStatus ({commit}, uid) {
+  , setAdminStatus ({commit}, user) {
     if ([
-      '82juzj8tWOcJecVVXlfwkVdXbes1', // Faraday
-      'CSjUY4tX6GcW7foEEEonGIWEbWk1', // Melissa
-      'l7xfJmDG87OQQtSpgpOVbU97aUc2', // Christine
-      'KiF3yuJGLAaNHbiAlUJgGydzNG43', // Lisa
-      '1vItiaETkEhMRKDGsY2rK7B5eHj1', // thom.penn@yahoo.com
-      'seU5FflQ83N4RAfOnz5WudWsGVR2'  // DEV: lenny / 050803@email.com
-    ].includes(uid)) {
+      'faraday@snakeriverbrewing.com'
+      ,'melissa@snakeriverbrewing.com'
+      ,'christine@snakeriverbrewing.com'
+      ,'lisa@snakeriverbrewing.com'
+      ,'thom.penn@yahoo.com'
+      ,'050803@email.com'              // DEV: lenny
+    ].includes(user.email)) {
       console.log('this is an admin user')
       commit('SET_ADMIN', true)
     }

@@ -1,33 +1,78 @@
 'use strict'
 const moment = require('moment');
+const _ = require('underscore');
 // const gcloud = require('google-cloud');
 const coasterFanout = require('./coasterFanout.js');
 const getPickupNotifications = require('./pickupNotifications.js');
 const database = require('./firebase.js');
-// const environment = process.env.NODE_ENV === 'production' ? production : development
+const authUsers = require('./users')['users']; //.filter(rmTestUsers);
 
-console.log('Utils index running . . .');
+
+// console.log(authUsers.length);
+
+function rmTestUsers(user) {
+  return !(user.email.includes('@email.com') || user.email.includes('@test.com'))
+}
 
 let root = database.ref("data");
 
-
-root.child(`/coasters`).on('child_changed', (refData) => {
-  console.log('there was a change . . .');
-  let updates   = {};
-  const coaster = refData.val();
-  if (!coaster.key) {console.log(coaster);}
-  else {
-
-    updates = coasterFanout(coaster, updates);
+// mergeUsers();
 
 
-  }
+function mergeUsers() {
+  console.log('running mergeUsers . . .');
+  const indexedAuthUsers = _.indexBy(authUsers, 'localId');
+  // console.log(indexedAuthUsers);
+  root.child('users').once('value', (snap) => {
+    let dbUsers = snap.val();
+    console.log(`num users from db: ${Object.keys(dbUsers).length}`);
+    console.log(`num users from auth: ${authUsers.length}`);
 
-  updates = getPickupNotifications(coaster, updates);
+    // console.log({count});
+    let updates = Object.keys(indexedAuthUsers).reduce((updates, uid) => {
+      let userData = dbUsers[uid] ? dbUsers[uid] : {};
+      let authUserData = indexedAuthUsers[uid];
+      userData.uid = uid;
+      userData.email = authUserData.email;
+      userData.emailVerified = authUserData.emailVerified;
+      userData.displayName = authUserData.displayName;
+      if (!userData.photoURL) {
+        if (authUserData.photoURL) {
+          userData.photoURL = authUserData.photoURL;
+        }
+      }
+      updates[`${uid}`] = userData;
+      return updates;
+    }, {});
+    console.log(updates);
+    return root.child('users').set(updates);
+  })
+}
 
-  root.update(updates);
 
-})
+
+
+
+
+
+// root.child(`/coasters`).on('child_changed', (refData) => {
+//   console.log('there was a change . . .');
+//   let updates   = {};
+//   const coaster = refData.val();
+//   if (!coaster.key) {console.log(coaster);}
+//   else {
+//
+//     updates = coasterFanout(coaster, updates);
+//
+//
+//   }
+//
+//   updates = getPickupNotifications(coaster, updates);
+//
+//   root.update(updates);
+//
+// })
+
 
 /**
  *

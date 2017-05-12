@@ -20,4 +20,8 @@ export default {
     })[0]
 
   }
+
+  , isAdmin (state) {
+    return state.authState.isAdmin
+  }
 }

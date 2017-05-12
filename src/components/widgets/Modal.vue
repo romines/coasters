@@ -16,6 +16,7 @@ import Login from '../Login.vue'
 import ForgotPassword from './ForgotPassword.vue'
 import Confirmation from './Confirmation.vue'
 import ImageUpload from './ImageUpload.vue'
+import PickUpAs from '../Coaster/PickUpAs.vue'
 
 export default {
   data () {
@@ -26,7 +27,8 @@ export default {
     Login,
     ForgotPassword,
     Confirmation,
-    ImageUpload
+    ImageUpload,
+    PickUpAs
   },
   computed: {
     show () {

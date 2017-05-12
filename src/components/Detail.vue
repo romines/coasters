@@ -15,7 +15,7 @@
 
         <div class="top-level-comment">
           <div class="comment title is-5">{{coaster.comment}}</div>
-          <i @click.stop="flagCoaster()" v-if="$store.state.authState.isAdmin" class="fa fa-flag flag-button" :class="{ flagged : coaster.flagged }"></i>
+          <i @click.stop="flagCoaster()" v-if="$store.getters.isAdmin" class="fa fa-flag flag-button" :class="{ flagged : coaster.flagged }"></i>
           <i @click.stop="startCommenting()" class="fa fa-comment comment-button"></i>
         </div>
 
@@ -41,6 +41,13 @@
           <a v-if="elligibleForPickup" @click.stop="pickUp" class="button is-info">Pick Up Shift</a>
           <a v-if="elligibleForRemove" @click.stop="cancelCoaster" class="button">Delete Post</a>
           <a v-if="elligibleForRepost" @click.stop="repost" class="button is-primary">Repost</a>
+
+          <span v-if="$store.getters.isAdmin" class="admin-actions">
+            <a v-if="elligibleForPickup" @click.stop="pickUpAs" class="button is-info">Pick Up As User</a>
+            <a v-if="coaster.available" @click.stop="adminRemove" class="button">Delete Post</a>
+            <a v-if="!coaster.available" @click.stop="adminRepost" class="button is-primary">Repost</a>
+          </span>
+
         </span>
 
       </footer>
@@ -212,6 +219,18 @@ export default {
           ]
         })
       }
+
+    },
+
+    pickUpAs () {
+      this.$store.commit('SHOW_MODAL', {component: 'PickUpAs'})
+    },
+
+    adminRepost () {
+
+    },
+
+    adminRemove () {
 
     },
 
