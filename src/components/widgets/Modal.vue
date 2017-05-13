@@ -17,6 +17,7 @@ import ForgotPassword from './ForgotPassword.vue'
 import Confirmation from './Confirmation.vue'
 import ImageUpload from './ImageUpload.vue'
 import PickUpAs from '../Coaster/PickUpAs.vue'
+import UserSearch from './UserSearch.vue'
 
 export default {
   data () {
@@ -28,6 +29,7 @@ export default {
     ForgotPassword,
     Confirmation,
     ImageUpload,
+    UserSearch,
     PickUpAs
   },
   computed: {
