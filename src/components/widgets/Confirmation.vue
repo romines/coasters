@@ -6,8 +6,8 @@
 		</div>
 
     <div class="action-buttons">
-      <span @click="close" class="button">Cancel</span>
       <span v-for="button in contents.buttons" @click="button.action" :class="button.classList" class="button">{{button.label}}</span>
+      <span @click="close" class="button">Cancel</span>
     </div>
 
   </div>
@@ -20,7 +20,7 @@ export default {
 		return {}
 	},
 	props: ['contents'],
-
+created () {console.log(this.contents);}, // TODO temp . . .
 	methods: {
     close () {
       this.$store.commit('CLOSE_MODAL')
@@ -38,5 +38,8 @@ export default {
     padding-top: 1em;
     display: flex;
     justify-content: space-around;
+    .button {
+      margin-right: .3em;
+    }
   }
 </style>

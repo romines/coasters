@@ -3,7 +3,7 @@
   	<span class="title is-4">Pick Up Shift As User</span>
 		<input v-model="searchString" class="input" placeholder="Enter part of the user's name">
 		<ul class="results-list">
-			<li v-for="user in searchResults" class="result" @click="logUser(user)">
+			<li v-for="user in searchResults" class="result" @click="proposePickupAs(user)">
 				<span class="name">{{user.displayName}}</span>
 			</li>
 		</ul>
@@ -21,13 +21,20 @@ export default {
 		searchResults () {
 			if (this.searchString.length < 2) return []
 			return this.$store.state.usersList.filter((user) => {
+        if (!user.displayName) return false
 				return user.displayName.toLowerCase().includes(this.searchString.toLowerCase())
 			})
 		}
 	},
 	methods: {
-		logUser (user) {
-			console.log(user);
+		proposePickupAs (user) {
+      this.$store.commit('SHOW_MODAL', {
+        component:'PickUpAs',
+        props: {
+          coaster: this.$store.state.modal.contents.props.coaster
+          , user
+        }
+      })
 		}
 	}
 }

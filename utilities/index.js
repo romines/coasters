@@ -19,6 +19,42 @@ let root = database.ref("data");
 // mergeUsers();
 
 
+root.child(`/coasters`).on('child_changed', (refData) => {
+  console.log('there was a change . . .');
+  let updates   = {};
+  const coaster = refData.val();
+  if (!coaster.key) {console.log(coaster);}
+  else {
+
+    updates = coasterFanout(coaster, updates);
+
+
+  }
+
+  updates = getPickupNotifications(coaster, updates);
+
+  root.update(updates);
+
+})
+
+
+/**
+ *
+ * Migration utils
+ *
+ *
+ */
+
+// migrateUsers();
+// migrateCoasterHistory();
+//
+// Turn fanOut ON after migrateUsers and migrateCoasterHistory
+//
+// migrateCoasterComments();
+// migratePostedFromDisplayNameToName();
+// setHistoryData();
+// setHeldBy();
+
 function mergeUsers() {
   console.log('running mergeUsers . . .');
   const indexedAuthUsers = _.indexBy(authUsers, 'localId');
@@ -48,48 +84,6 @@ function mergeUsers() {
     return root.child('users').set(updates);
   })
 }
-
-
-
-
-
-
-
-// root.child(`/coasters`).on('child_changed', (refData) => {
-//   console.log('there was a change . . .');
-//   let updates   = {};
-//   const coaster = refData.val();
-//   if (!coaster.key) {console.log(coaster);}
-//   else {
-//
-//     updates = coasterFanout(coaster, updates);
-//
-//
-//   }
-//
-//   updates = getPickupNotifications(coaster, updates);
-//
-//   root.update(updates);
-//
-// })
-
-
-/**
- *
- * Migration utils
- *
- *
- */
-
-// migrateUsers();
-// migrateCoasterHistory();
-//
-// Turn fanOut ON after migrateUsers and migrateCoasterHistory
-//
-// migrateCoasterComments();
-// migratePostedFromDisplayNameToName();
-// setHistoryData();
-// setHeldBy();
 
 
 function migrateUsers() {

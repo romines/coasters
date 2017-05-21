@@ -12,6 +12,8 @@ function getCoasterFanout (coaster, updates) {
       updates[`/users/${coveringFor.uid}/posted/${coaster.key}`] = coaster
       return updates
     }, updates)
+  } else {
+    updates[`/users/${coaster.postedBy.uid}/posted/${coaster.key}`] = coaster
   }
   return updates;
 }

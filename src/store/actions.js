@@ -10,7 +10,9 @@ const auth = firebase.auth()
 const baseRef = db.ref('data')
 const coastersRef = db.ref('data/coasters')
 const usersRef = db.ref('data/users')
-
+const trimUser = ({uid, displayName, photoURL, email}) => {
+  return {uid, displayName, photoURL, email}
+}
 
 export default {
 
@@ -22,10 +24,6 @@ export default {
 
 
     firebase.auth().onAuthStateChanged(user => {
-
-      const trimUser = ({uid, displayName, photoURL, email}) => {
-        return {uid, displayName, photoURL, email}
-      }
 
       if (user) {
         dispatch('getUserData', user.uid)
@@ -55,10 +53,20 @@ export default {
   }
 
   , signUpUser ({ dispatch, commit, state }, user) {
+
+    const userDataToDb = (response) => {
+      let updates = {}
+      let authenticatedUser = trimUser(response)
+      let mergedUser = {...authenticatedUser, displayName: user.displayName}
+      updates[`/users/${mergedUser.uid}`] = mergedUser
+      console.log(updates)
+      baseRef.update(updates)
+    }
+
     commit('SAVE_TEMP_USER', user)
     firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
-    .then(function () {
-
+    .then(function (repsonse) {
+      userDataToDb(repsonse);
       commit('SHOW_MODAL', {
         component:'ImageUpload',
         heading: 'One More Thing...',
@@ -306,9 +314,9 @@ export default {
 
   , cancelCoaster ({ commit, state }, key) {
 
-    let uid = state.authState.user.uid
     let updates = {};
     updates[`/coasters/${key}/available`] = false
+    updates[`/coasters/${key}/deleted`] = true
     return baseRef.update(updates);
 
   }
@@ -349,10 +357,11 @@ export default {
 
   }
 
-  , pickUpCoaster ({ commit, state }, coaster) {
+  , pickUpCoaster ({ commit, state }, options) {
 
     const now = moment().format()
-    const user = state.authState.user
+    const user = options.user ? options.user : state.authState.user
+    const coaster = options.coaster
     const newHistoryItemRef = coastersRef.child(coaster.key).child('history').push()
     const newHistoryItemKey = newHistoryItemRef.key
 
@@ -411,6 +420,13 @@ export default {
     updates[`/users/${user.uid}/posted/${coaster.key}`] = coasterData
     return baseRef.update(updates);
 
+  }
+
+  , adminRemoveCoaster ({ state }, coaster) {
+    let updates = {}
+    updates[`/coasters/${coaster.key}/available`] = false
+    updates[`/coasters/${coaster.key}/deleted`] = true
+    return baseRef.update(updates);
   }
 
   , flagCoaster ({ state }, coaster) {

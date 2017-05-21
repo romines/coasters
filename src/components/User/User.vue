@@ -105,22 +105,26 @@ export default {
     },
 
     myPostedCoasters () {
+
       if (!this.$store.state.userData.posted) return
       return Object.keys(this.$store.state.userData.posted).map((key) => {
         let coaster = this.$store.state.userData.posted[key]
         coaster.key = key
         return coaster
-      }).filter(this.withinDateRange)
+      })
+      .filter(this.notDeleted)
+      .filter(this.withinDateRange)
     },
 
     myPickedUpCoasters () {
       if (!this.$store.state.userData.holding) return
       return Object.keys(this.$store.state.userData.holding).map((key) => {
         let coaster = this.$store.state.userData.holding[key]
-        // if (this.isReposted(coaster)) return
         coaster.key = key
         return coaster
-      }).filter(this.withinDateRange)
+      })
+      .filter(this.withinDateRange)
+      .filter(this.notDeleted)
     }
   },
 
@@ -151,6 +155,9 @@ export default {
       let coasterMoment = moment(coaster.date)
       let beginningMoment = moment(this.beginning)
       return (coasterMoment.diff(beginningMoment, 'days') >= 0)
+    },
+    notDeleted (coaster) {
+      return !coaster.deleted
     }
 
   }

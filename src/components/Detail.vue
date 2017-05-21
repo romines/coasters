@@ -38,13 +38,13 @@
       <footer slot="primaryButtons" class="card-footer">
 
         <span v-if="!commenting" class="coaster-actions default card-footer-item">
-          <a v-if="elligibleForPickup" @click.stop="pickUp" class="button is-info">Pick Up Shift</a>
-          <a v-if="elligibleForRemove" @click.stop="cancelCoaster" class="button">Delete Post</a>
+          <a v-if="elligibleForPickup" @click.stop="pickUp" class="button is-info">Pick Up</a>
+          <a v-if="elligibleForRemove" @click.stop="cancelCoaster" class="button">Delete</a>
           <a v-if="elligibleForRepost" @click.stop="repost" class="button is-primary">Repost</a>
 
           <span v-if="$store.getters.isAdmin" class="admin-actions">
-            <a v-if="elligibleForPickup" @click.stop="pickUpAs" class="button is-info">Pick Up As User</a>
-            <a v-if="coaster.available" @click.stop="adminRemove" class="button">Delete Post</a>
+            <a v-if="elligibleForPickup" @click.stop="pickUpAs" class="button is-info">Pick Up As</a>
+            <a v-if="coaster.available" @click.stop="cancelCoaster" class="button">Delete</a>
             <a v-if="!coaster.available" @click.stop="adminRepost" class="button is-primary">Repost</a>
           </span>
 
@@ -184,8 +184,8 @@ export default {
     pickUp () {
 
       let pickItUp = () => {
-        this.$store.dispatch('pickUpCoaster', this.coaster)
-        setTimeout(() => {router.push('/picked-up')}, 400)
+        this.$store.dispatch('pickUpCoaster', {coaster: this.coaster})
+        setTimeout(() => {router.push('/picked-up')}, 400) // TODO: hand modal a onSuccess to hanlde routing
       }
 
       let launchLoginModal = () => {
@@ -224,7 +224,7 @@ export default {
 
     pickUpAs () {
       this.$store.dispatch('getPromisedUsers').then(() => {
-        this.$store.commit('SHOW_MODAL', {component: 'UserSearch'})
+        this.$store.commit('SHOW_MODAL', {component: 'UserSearch', props: {coaster: this.coaster}})
       })
     },
 
@@ -257,18 +257,22 @@ export default {
 
     cancelCoaster () {
 
-      let cancel = () => {
+      let cancelCoaster = () => {
         this.$store.dispatch('cancelCoaster', this.detailKey)
-        router.push({name: 'home'})
+        this.$store.commit('CLOSE_MODAL')
+        if (this.$store.state.route.name === 'detail') router.push({name: 'home'})
       }
 
       this.$store.commit('SHOW_MODAL', {
         component:'Confirmation',
-        heading: 'Cancel Posted Shift',
-        message: 'Are you sure you want to cancel this shift?',
-        actions: {
-          onConfirm: cancel
-        }
+        heading: 'Delete Posted Shift',
+        message: 'Are you sure you want to delete this post?',
+        buttons: [
+          {
+            label: 'Delete',
+            action: cancelCoaster
+          }
+        ]
       })
 
     },
@@ -300,6 +304,9 @@ export default {
   }
   .card-footer {
     text-align: right;
+    .coaster-actions {
+      white-space: nowrap;
+    }
     .card-footer-item { display: inline-block; }
   }
   .isCommenting .card-footer-item { justify-content: space-around; }
