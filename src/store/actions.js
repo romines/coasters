@@ -292,10 +292,12 @@ export default {
       return
     }
 
+    const user = coasterData.postedAsUser ? coasterData.postedAsUser : state.authState.user
+
     coasterData.postedBy = {
-      uid: state.authState.user.uid,
-      name: state.authState.user.displayName,
-      photoURL: state.authState.user.photoURL
+      uid: user.uid,
+      name: user.displayName,
+      photoURL: user.photoURL ? user.photoURL : ''
     }
     coasterData.heldBy    = {...coasterData.postedBy}
     const key             = coastersRef.push().key
@@ -307,8 +309,8 @@ export default {
     let updates                 = {};
     updates['/coasters/' + key] = coasterData;
     updates['/users/' + coasterData.postedBy.uid + '/posted/' + key] = coasterData;
+    return baseRef.update(updates)
 
-    return baseRef.update(updates);
   }
 
 
@@ -468,23 +470,3 @@ export default {
 
    }
  }
-
-
-
-// export {
-//
-//    listenToAuthState
-//   , signUpUser
-//   , updateUserPhotoURL
-//   , logInUser
-//   , logInWithFacebook
-//   , logOutUser
-//   , getCoasters
-//   , getPromisedCoasters
-//   , newCoaster
-//   , postComment
-//   , pickUpCoaster
-//   , cancelCoaster
-//   , addFilter  // this is synchronous...
-//
-// }

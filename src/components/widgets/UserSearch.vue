@@ -3,7 +3,7 @@
   	<span class="title is-4">Pick Up Shift As User</span>
 		<input v-model="searchString" class="input" placeholder="Enter part of the user's name">
 		<ul class="results-list">
-			<li v-for="user in searchResults" class="result" @click="proposePickupAs(user)">
+			<li v-for="user in searchResults" class="result" @click="onUserClick(user)">
 				<span class="name">{{user.displayName}}</span>
 			</li>
 		</ul>
@@ -26,17 +26,13 @@ export default {
 			})
 		}
 	},
-	methods: {
-		proposePickupAs (user) {
-      this.$store.commit('SHOW_MODAL', {
-        component:'PickUpAs',
-        props: {
-          coaster: this.$store.state.modal.contents.props.coaster
-          , user
-        }
-      })
-		}
-	}
+  methods: {
+    onUserClick (user) {
+      this.$store.state.modal.contents.props.onUserClick(user)
+      this.searchString = ''
+    }
+  }
+
 }
 </script>
 

@@ -1,7 +1,12 @@
 <template lang="html">
   <div class="new">
-    <h3>{{test}}</h3>
     <div class="form">
+      <div v-if="postAsUser.displayName" class="control posting-as">
+        <span class="text">
+          Posting As: {{postAsUser.displayName}}
+        </span>
+        <span @click="cancelPostAs" class="fa fa-close"></span>
+      </div>
       <p class="control">
         <Datepicker v-model="date" :format="'D, MMM dsu'" :disabled="disabledDates"/>
       </p>
@@ -20,6 +25,11 @@
         <span :class="{ 'is-active': isAM }" class="button" @click="time = 'AM'">AM</span>
         <span :class="{ 'is-active': isPM }" class="button" @click="time = 'PM'">PM</span>
       </p>
+      <span
+        @click="choosePostAsUser"
+        v-if="$store.getters.isAdmin"
+        class="button control post-as-button">
+          Post As &nbsp;<span class="fa fa-user"></span></span>
       <p class="control">
         <textarea v-model="comment" class="textarea" placeholder="Comments or additional information"></textarea>
       </p>
@@ -48,6 +58,7 @@ export default {
       time: 'AM',
       shiftType: 'Serve',
       comment: '',
+      postAsUser: {}
     }
   },
   props: ['test'],
@@ -72,10 +83,11 @@ export default {
   methods: {
     newCoaster () {
       this.$store.dispatch('newCoaster', {
-          date: this.myDate,
-          time: this.time,
-          shiftType: this.shiftType,
-          comment: this.comment,
+          date:         this.myDate,
+          time:         this.time,
+          shiftType:    this.shiftType,
+          comment:      this.comment,
+          postedAsUser: this.postAsUser ? this.postAsUser : null
       })
       router.push({
         name: 'user',
@@ -84,6 +96,25 @@ export default {
         }
       })
       // TODO: only redirect on successful persist
+    },
+
+    choosePostAsUser () {
+
+      this.$store.dispatch('getPromisedUsers').then(() => {
+        this.$store.commit('SHOW_MODAL', {component: 'UserSearch', props: {
+          coaster: this.coaster,
+          onUserClick: (user) => {
+            console.log('onUserClick . . .');
+            this.postAsUser = user
+            this.$store.commit('CLOSE_MODAL')
+          }
+         }
+       })
+      })
+    },
+
+    cancelPostAs () {
+      this.postAsUser = {}
     }
   }
 }
@@ -92,13 +123,25 @@ export default {
 <style lang="scss" rel="stylesheet/scss">
   @import '../../node_modules/bulma/sass/utilities/mixins.sass';
   .new {
+
     border: 1px solid grey;
     padding: 1.4em;
     margin-bottom: 6em;
+
+    .posting-as {
+      color: red;
+      display: flex;
+      justify-content: space-between;
+    }
+
     @include mobile {
       .calendar {
         width: 100%;
       }
+    }
+
+    .post-as-button {
+      .fa { color: rgb(66, 66, 66); }
     }
 
     .submit-button { margin-top: 10px; }

@@ -5,17 +5,11 @@ const _ = require('underscore');
 const coasterFanout = require('./coasterFanout.js');
 const getPickupNotifications = require('./pickupNotifications.js');
 const database = require('./firebase.js');
-const authUsers = require('./users')['users']; //.filter(rmTestUsers);
 
-
-// console.log(authUsers.length);
-
-function rmTestUsers(user) {
-  return !(user.email.includes('@email.com') || user.email.includes('@test.com'))
-}
 
 let root = database.ref("data");
 
+// const authUsers = require('./users')['users']; //.filter(rmTestUsers);
 // mergeUsers();
 
 
@@ -55,6 +49,12 @@ root.child(`/coasters`).on('child_changed', (refData) => {
 // setHistoryData();
 // setHeldBy();
 
+
+// console.log(authUsers.length);
+
+function rmTestUsers(user) {
+  return !(user.email.includes('@email.com') || user.email.includes('@test.com'))
+}
 function mergeUsers() {
   console.log('running mergeUsers . . .');
   const indexedAuthUsers = _.indexBy(authUsers, 'localId');

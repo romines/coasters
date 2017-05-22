@@ -161,9 +161,11 @@ export default {
         })
       }
     },
+
     cancelComment () {
       this.commenting = false
     },
+
     postComment () {
 
       let payload = {}
@@ -181,6 +183,7 @@ export default {
       }
       this.$store.dispatch('flagCoaster', this.coaster )
     },
+
     pickUp () {
 
       let pickItUp = () => {
@@ -223,8 +226,21 @@ export default {
     },
 
     pickUpAs () {
+      const confirmPickupAs = (user) => {
+        this.$store.commit('SHOW_MODAL', {
+          component:'PickUpAs',
+          props: {
+            coaster: this.coaster
+            , user
+          }
+        })
+      }
       this.$store.dispatch('getPromisedUsers').then(() => {
-        this.$store.commit('SHOW_MODAL', {component: 'UserSearch', props: {coaster: this.coaster}})
+        this.$store.commit('SHOW_MODAL', {component: 'UserSearch', props: {
+          coaster: this.coaster,
+          onUserClick: confirmPickupAs
+         }
+       })
       })
     },
 
