@@ -5,8 +5,8 @@
 
         <header class="card-header">
           <p class="card-header-title">
-            <img class="shift-icon" :src="coaster ? loadSvg(coaster.shiftType) : ''" alt="">
             <span class="time"><i class="fa" :class="timeIcon"></i></span>
+            <img class="shift-icon" :src="coaster ? loadSvg(coaster.shiftType) : ''" alt="">
           </p>
 
           <a v-if="isDetailView" @click.stop="closeDetailView" class="card-header-icon">

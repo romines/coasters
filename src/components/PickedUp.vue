@@ -77,18 +77,25 @@ export default {
 
   computed: {
     pickedUp () {
-      return _.chain(this.$store.state.coasters).filter((coaster) => {
-        return coaster.history
-      }).filter((coaster) => {
+
+      const withinDateRange = (coaster) => {
         let coasterMoment = moment(coaster.date)
         let beginningMoment = moment(this.beginning)
         return (coasterMoment.diff(beginningMoment, 'days') >= 0)
+      }
+
+      return _.chain(this.$store.state.coasters).filter((coaster) => {
+        return coaster.history
       })
+      .filter(withinDateRange)
       .sortBy('time')
       .sortBy('date')
       .value()
     },
+
     days () {
+      // coasters grouped by date of shift
+      //
       let obj = this.pickedUp.reduce((days, coaster) => {
         let when = moment(coaster.date).format('dddd, MMM Do')
         days[when] = days[when] ? days[when] : []

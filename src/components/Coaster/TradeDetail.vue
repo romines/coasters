@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="trade-detail">
+	<div class="trade-detail" :class="{ expanded: viewingHistory }">
 
 		<div class="posted-by media">
 			<div class="media-left">
@@ -12,19 +12,30 @@
 			</div>
 
 			<div class="media-content">
-				<p>Originally posted by:</p>
-				<h3 class="title posted-by">{{originalPoster.name}}</h3>
+				<p>Posted:</p>
+				<h3 class="title is-4 posted-by">{{originalPoster.name}}</h3>
 				<p class="when-posted"><small>{{whenPosted}}</small></p>
 			</div>
 		</div>
 
-		<div v-if="!!timeline" class="interim">
-			<div class="elipsis">. . .</div>
-			<div class="timeline">
+		<div v-if="!!timeline">
+			<div v-if="!viewingHistory" @click.stop="viewingHistory = true" class="view-history">
+				<div class="elipsis">...</div>
+				<div class="text">
+					[Trade History]
+				</div>
+			</div>
+			<div v-if="viewingHistory" class="timeline">
+				<div class="history-title-bar">
+					<div class="history-title title is-5">Trade History</div>
+					<div class="fa fa-close" @click.stop="viewingHistory = false" ></div>
+				</div>
 				<div v-for="entry in timeline" class="entry">
-					<span class="name">{{entry.name}}</span>
-					<span class="type">{{entry.eventType}}</span>
-					<span class="time">{{entry.time}}</span>
+					<div class="text">
+						<span class="name">{{entry.name}}</span>
+						<span class="type">{{entry.eventType}}</span>
+					</div>
+					<small class="time">{{entry.time}}</small>
 				</div>
 			</div>
 		</div>
@@ -40,8 +51,7 @@
 				</div>
 
 				<div class="media-content">
-					<p v-if="!reposted">Covering:</p>
-					<p v-if="reposted">Responsible for:</p>
+					<p>Covering:</p>
 					<h3 class="title">{{coaster.heldBy.name}}</h3>
 				</div>
 		</div>
@@ -53,6 +63,17 @@
 import moment from 'moment'
 export default {
 	props: ['coaster', 'whenPosted'],
+	data () {
+		return {
+			viewingHistory: false
+		}
+	},
+	methods: {
+		toggleViewingHistory () {
+			console.log('toggleViewingHistory . . .')
+			this.viewingHistory = !this.viewingHistory
+		}
+	},
 	computed: {
 		reposted () {
 			return this.coaster.history && this.coaster.available
@@ -107,18 +128,43 @@ export default {
 </script>
 
 <style lang="scss">
+.trade-detail {
+
 	.title.posted-by {
 		margin-bottom: 0;
 	}
-	.interim {
-		margin-bottom: 10px;
+	&:not(.expanded) {
+		.view-history {
+			height: 48px;
+			margin-top: -15px;
+		}
+	}
+	.view-history {
 		display: flex;
+		align-items: center;
+		.text { display: inline-block; }
+		.elipsis {
+			font-size: 4em;
+			display: inline-block;
+			transform: rotateZ(90deg);
+			flex-shrink: 0;
+			color: rgb(149, 149, 149)
+		}
 	}
-	.elipsis {
-		font-size: 4em;
-		display: inline-block;
-		transform: rotateZ(90deg);
-		flex-shrink: 0;
-		color: rgb(149, 149, 149)
+	.history-title-bar {
+		display: flex;
+		justify-content: space-between;
+		& > div { display: inline-block; }
+		& > .title { margin-bottom: .6em; }
 	}
+	.entry {
+		border: 1px solid grey;
+		padding: .2em .4em;
+		&:last-child { margin-bottom: .6em; }
+		.type {
+			font-weight: bold;
+		}
+	}
+
+}
 </style>
