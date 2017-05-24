@@ -44,7 +44,7 @@
 
           <span v-if="$store.getters.isAdmin" class="admin-actions">
             <a v-if="elligibleForPickup" @click.stop="pickUpAs" class="button is-info">Pick Up As</a>
-            <a v-if="coaster.available" @click.stop="cancelCoaster" class="button">Delete</a>
+            <a v-if="coaster.available" @click.stop="adminCancel" class="button"><span v-if="elligibleForRemove">(Admin)&nbsp;</span>Delete</a>
             <a v-if="!coaster.available" @click.stop="adminRepost" class="button is-primary">Repost</a>
           </span>
 
@@ -248,8 +248,24 @@ export default {
 
     },
 
-    adminRemove () {
+    adminCancel () {
+      let cancelCoaster = () => {
+        this.$store.dispatch('adminCancel', this.detailKey)
+        this.$store.commit('CLOSE_MODAL')
+        if (this.$store.state.route.name === 'detail') router.push({name: 'home'})
+      }
 
+      this.$store.commit('SHOW_MODAL', {
+        component:'Confirmation',
+        heading: 'Delete Posted Shift',
+        message: 'Are you sure you want to delete this post?',
+        buttons: [
+          {
+            label: 'Delete',
+            action: cancelCoaster
+          }
+        ]
+      })
     },
 
     repost () {

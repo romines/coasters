@@ -323,6 +323,15 @@ export default {
 
   }
 
+  , adminCancel ({ commit, state }, key) {
+
+    let updates = {};
+    updates[`/coasters/${key}/available`] = false
+    updates[`/coasters/${key}/cancelled`] = true
+    return baseRef.update(updates);
+
+  }
+
   , postComment ({ commit, state }, payload) {
 
     const coaster = payload.coaster
