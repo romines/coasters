@@ -22,7 +22,6 @@ root.child(`/coasters`).on('child_changed', (refData) => {
 
     updates = coasterFanout(coaster, updates);
 
-
   }
 
   updates = getPickupNotifications(coaster, updates);

@@ -292,7 +292,7 @@ export default {
       return
     }
 
-    const user = coasterData.postedAsUser ? coasterData.postedAsUser : state.authState.user
+    const user = Object.keys(coasterData.postedAsUser).length ? coasterData.postedAsUser : state.authState.user
 
     coasterData.postedBy = {
       uid: user.uid,
