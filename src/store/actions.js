@@ -318,7 +318,7 @@ export default {
 
     let updates = {};
     updates[`/coasters/${key}/available`] = false
-    updates[`/coasters/${key}/deleted`] = true
+    updates[`/coasters/${key}/cancelled`] = true
     return baseRef.update(updates);
 
   }
@@ -427,7 +427,7 @@ export default {
   , adminRemoveCoaster ({ state }, coaster) {
     let updates = {}
     updates[`/coasters/${coaster.key}/available`] = false
-    updates[`/coasters/${coaster.key}/deleted`] = true
+    updates[`/coasters/${coaster.key}/cancelled`] = true
     return baseRef.update(updates);
   }
 

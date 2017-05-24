@@ -135,8 +135,10 @@ export default {
     }
 
     @include mobile {
-      .calendar {
+      .vdp-datepicker__calendar {
         width: 100%;
+        position: fixed;
+        left: 0;
       }
     }
 

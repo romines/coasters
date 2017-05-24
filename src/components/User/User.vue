@@ -112,7 +112,7 @@ export default {
         coaster.key = key
         return coaster
       })
-      .filter(this.notDeleted)
+      .filter(coaster => coaster.available)
       .filter(this.withinDateRange)
     },
 
@@ -124,7 +124,8 @@ export default {
         return coaster
       })
       .filter(this.withinDateRange)
-      .filter(this.notDeleted)
+      .filter(this.notCancelled)
+      .filter(this.hasHistory)
     }
   },
 
@@ -156,8 +157,12 @@ export default {
       let beginningMoment = moment(this.beginning)
       return (coasterMoment.diff(beginningMoment, 'days') >= 0)
     },
-    notDeleted (coaster) {
-      return !coaster.deleted
+    notCancelled (coaster) {
+      return !(coaster.deleted || coaster.cancelled)
+    },
+    hasHistory (coaster) {
+      if (!coaster.history) return
+      return Object.keys(coaster.history).length
     }
 
   }

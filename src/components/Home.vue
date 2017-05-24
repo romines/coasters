@@ -47,9 +47,8 @@ export default {
   computed: {
     coasters () {
       return _.chain(this.$store.state.coasters)
-      .filter((coaster) => {
-        return coaster.available
-      })
+      .filter(coaster => coaster.available)
+      .filter(coaster => !coaster.cancelled)
         .sortBy('time')
         .sortBy('date')
         .value()
@@ -101,6 +100,10 @@ export default {
         return this.filters.times.some((time) => {
           return time === coaster.time
         })
+      }
+
+      const notCancelled = (coaster) => {
+        return !coaster.cancelled
       }
 
       // _(coasters).chain()
