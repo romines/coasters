@@ -12,54 +12,66 @@
       </div>
 
       <div slot="comments" class="comments">
-
         <div class="top-level-comment">
-          <div class="comment title is-5">{{coaster.comment}}</div>
-          <i @click.stop="flagCoaster()" v-if="$store.getters.isAdmin" class="fa fa-flag flag-button" :class="{ flagged : coaster.flagged }"></i>
-          <i @click.stop="startCommenting()" class="fa fa-comment comment-button"></i>
+          <div class="comment is-4">{{coaster.comment}}</div>
         </div>
 
-        <div v-for="comment in coaster.comments" v-if="!selectingFlags" class="comment-container">
-          <figure class="commenting-user">
-            <img v-if="comment.postedBy.photoURL" :src="comment.postedBy.photoURL" class="image is-48x48">
-            <span v-if="!comment.postedBy.photoURL" class="icon is-large">
-              <i class="fa fa-user"></i>
+
+        <div slot="primaryButtons" v-if="!commenting" class="card-actions">
+
+          <div class="section-title">Actions</div>
+          <span class="coaster-actions default">
+            <a v-if="elligibleForPickup && !$store.getters.isAdmin" @click.stop="pickUp" class="button is-info">Pick Up</a>
+            <a v-if="elligibleForRemove" @click.stop="cancelCoaster" class="button">Cancel</a>
+            <a v-if="elligibleForRepost" @click.stop="repost" class="button is-primary">Repost</a>
+            <span v-if="!hasComments" class="button">Comment</span>
+
+            <span v-if="$store.getters.isAdmin" class="admin-actions">
+              <a v-if="elligibleForPickup" @click.stop="pickUpAs" class="button">Pick Up</a>
+              <a v-if="coaster.available" @click.stop="adminCancel" class="button"><span v-if="elligibleForRemove">(Admin)&nbsp;</span>Delete</a>
+              <a v-if="!coaster.available" @click.stop="adminRepost" class="button is-primary">Repost</a>
+              <span @click.stop="flagCoaster()" v-if="$store.getters.isAdmin" class="button is-warning"><span v-if="coaster.flagged" class="un-flag">Un-</span>Flag</span>
             </span>
-          </figure>
-          <div class="contents">
-            <div class="text">{{comment.text}}</div>
-            <div class="date"><small>{{comment.postedBy.name}}</small></div>
-            <div class="date"><small>{{dateCommentPosted(comment.when)}}</small></div>
+
+          </span>
+
+        </div>
+
+        <div v-if="hasComments" class="comments">
+          <div class="section-title">Comments</div>
+
+          <!--  Existing Comments -->
+          <div v-for="comment in coaster.comments" v-if="!selectingFlags" class="comment-container">
+            <figure class="commenting-user">
+              <img v-if="comment.postedBy.photoURL" :src="comment.postedBy.photoURL" class="image is-48x48">
+              <span v-if="!comment.postedBy.photoURL" class="icon is-large">
+                <i class="fa fa-user"></i>
+              </span>
+            </figure>
+            <div class="contents">
+              <div class="text">{{comment.text}}</div>
+              <div class="date"><small>{{comment.postedBy.name}}</small></div>
+              <div class="date"><small>{{dateCommentPosted(comment.when)}}</small></div>
+            </div>
+          </div>
+
+          <span @click.stop="startCommenting()" v-if="hasComments && !commenting" class="button comment-button">Reply</span>
+
+          <!--  New Comment-->
+          <div slot="newComment" v-show="commenting" class="newComment">
+            <textarea v-model="comment" ref="newCommentBox" class="textarea"></textarea>
+            <span class="coaster-actions card-footer-item">
+              <a @click.stop="cancelComment" class="button">Cancel</a>
+              <a @click.stop="postComment" class="button is-primary">Post</a>
+            </span>
           </div>
         </div>
       </div>
 
 
-      <footer slot="primaryButtons" class="card-footer">
-
-        <span v-if="!commenting" class="coaster-actions default card-footer-item">
-          <a v-if="elligibleForPickup" @click.stop="pickUp" class="button is-info">Pick Up</a>
-          <a v-if="elligibleForRemove" @click.stop="cancelCoaster" class="button">Delete</a>
-          <a v-if="elligibleForRepost" @click.stop="repost" class="button is-primary">Repost</a>
-
-          <span v-if="$store.getters.isAdmin" class="admin-actions">
-            <a v-if="elligibleForPickup" @click.stop="pickUpAs" class="button is-info">Pick Up As</a>
-            <a v-if="coaster.available" @click.stop="adminCancel" class="button"><span v-if="elligibleForRemove">(Admin)&nbsp;</span>Delete</a>
-            <a v-if="!coaster.available" @click.stop="adminRepost" class="button is-primary">Repost</a>
-          </span>
-
-        </span>
-
-      </footer>
 
 
-      <div slot="newComment" v-show="commenting" class="newComment">
-        <textarea v-model="comment" ref="newCommentBox" class="textarea"></textarea>
-        <span class="coaster-actions card-footer-item">
-          <a @click.stop="cancelComment" class="button">Cancel</a>
-          <a @click.stop="postComment" class="button is-primary">Post</a>
-        </span>
-      </div>
+
 
 
 
@@ -112,16 +124,10 @@ export default {
     detailKey () {
       return this.$store.getters.detailKey
     },
-    // comments () {
-    //   if (!this.coaster) return []
-    //   let comments = []
-    //   if (this.coaster.coasterComments) {
-    //     for (var [key, comment] of Object.entries(this.coaster.coasterComments)) {
-    //       comments.push(comment)
-    //     }
-    //   }
-    //   return comments
-    // },
+    hasComments () {
+      if (!this.coaster.comments) return
+      return Object.keys(this.coaster.comments).length
+    },
     longDateString () {
       return moment(this.coaster.date).format('dddd, MMM Do')
     },
@@ -323,6 +329,11 @@ export default {
 <style lang="scss">
 .detail {
 
+  .section-title {
+    font-size: 1.4em;
+    margin: .3em 0;
+  }
+
   .top-level-comment {
     padding-bottom: 1.2em;
     display: flex;
@@ -357,12 +368,13 @@ export default {
   }
   .comment-container {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     padding: .25em 0;
-    border-top: 1px solid #dbdbdb;
+    // border-top: 1px solid #dbdbdb;
     .commenting-user {
       display: inline-flex;
       flex-shrink: 0;
+      margin-top: .3em;
       margin-right: .8em;
       img {
         object-fit: cover;

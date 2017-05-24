@@ -12,7 +12,7 @@
           <coaster :options="{}" v-for="coaster in day.shifts" :coaster="coaster" :key="coaster.key">
 
             <div slot="comments">
-              <div class="top-level-comment">{{ coaster.comment }}</div>
+              <div class="top-level-comment">{{ clippedComment(coaster.comment) }}</div>
             </div>
 
           </coaster>
@@ -120,7 +120,14 @@ export default {
     },
   },
   methods: {
-
+    clippedComment (comment) {
+      const maxLength = 86
+      if (comment.length > maxLength) {
+        return comment.substr(0, maxLength) + '...'
+      } else {
+        return comment
+      }
+    }
   },
   mounted () {},
 }

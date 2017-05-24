@@ -36,14 +36,14 @@
       <ul>
         <!-- <template v-if="myPostedCoasters.length"> -->
           <coaster
-          :options="{}"
+          :options="{ hideFor: true }"
           v-for="coaster in myPostedCoasters"
           :coaster="coaster"
           :key="coaster.key">
 
           <div slot="notice" class="notices">
             <div v-if="isReposted(coaster)" class="warn">
-              REPOSTED
+              REPOST
             </div>
             <div v-if="!!pickedUpBy(coaster)" class="success">
               PICKED UP BY: {{pickedUpBy(coaster)}}
@@ -200,7 +200,14 @@ function withinDateRange (coaster, beginning) {
     max-width: 50%;
   }
   .notices {
-    .warn { color: red; }
+    & > div {
+      display: inline-block;
+      padding: .2em .3em;
+    }
+    .warn {
+      color: red;
+      border: 1px solid red;
+    }
     .success { color: green; }
   }
   .posted-shifts {
