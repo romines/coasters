@@ -30,16 +30,26 @@ export default {
   },
   components: { Confirmation },
   created () {
-    console.log(this.contents.props.coaster);
+    console.log(this.$store.state.modal.contents.props);
   },
 	computed: {
 		contents () {
-      let pickItUp = () => {
+      const confirmPickupAs = (user) => {
+        this.$store.commit('SHOW_MODAL', {
+          component:'PickUpAs',
+          props: {...this.contents.props, user}
+        })
+      }
+      const pickItUp = () => {
         this.$store.dispatch('pickUpCoaster', {...this.contents.props})
         this.$store.commit('CLOSE_MODAL')
       }
-      let searchAgain = ()  => {
-        this.$store.commit('SHOW_MODAL', {component: 'UserSearch', props: {coaster: this.contents.props.coaster}})
+      const searchAgain = ()  => {
+        this.$store.commit('SHOW_MODAL', {component: 'UserSearch', props: {
+          coaster: {...this.contents.props.coaster},
+          onUserClick: confirmPickupAs
+          }
+        })
       }
       return {
         ...this.$store.state.modal.contents,
