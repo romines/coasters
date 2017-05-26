@@ -11,28 +11,30 @@ function getPickupNotifications(coaster, updates) {
 
 	if (!coaster.history) return updates;
 
-	const historyKeys  = Object.keys(coaster.history);
-	const lastKey      = historyKeys[historyKeys.length -1];
-	const latestPickup = coaster.history[historyKeys[historyKeys.length -1]];
-	latestPickup.key   = lastKey;
-	const userKey      = getUserToNofify(latestPickup);
-	const notieKey     = root.child(`/users/${userKey}/notifications`).push().key;
+	const historyKeys = Object.keys(coaster.history);
+	const lastKey     = historyKeys[historyKeys.length -1];
+	const latestEntry = coaster.history[lastKey];
 
-	if (!latestPickup.notieSent) {
-		const dateString  = moment(coaster.date).format('ddd. MMM, Do');
-		const markup      = `<a href="/#/coasters/${coaster.key}">${dateString} ${coaster.time} ${coaster.shiftType} shift</a>`;
-		const coasterLink = encode(markup);
-		const message     = `Your ${coasterLink} has been picked up by ${latestPickup.pickedUpBy.name}`
-		updates[`users/${userKey}/notifications/${notieKey}`] = { message, status: 'unread'};
-		updates[`coasters/${coaster.key}/history/${latestPickup.key}/notieSent`] = true;
+	if (isTrade(latestEntry)) {
+		const userKey     = getUserToNofify(latestEntry);
+		const notieKey    = root.child(`/users/${userKey}/notifications`).push().key;
+
+		if (!latestEntry.notieSent) {
+			const dateString  = moment(coaster.date).format('ddd. MMM, Do');
+			const markup      = `<a href="/#/coasters/${coaster.key}">${dateString} ${coaster.time} ${coaster.shiftType} shift</a>`;
+			const coasterLink = encode(markup);
+			const message     = `Your ${coasterLink} has been picked up by ${latestEntry.pickedUpBy.name}`
+			updates[`users/${userKey}/notifications/${notieKey}`] = { message, status: 'unread'};
+			updates[`coasters/${coaster.key}/history/${lastKey}/notieSent`] = true;
+		}
 	}
 
 	return updates;
 
 }
 
-function getPickingUpUserName(latestPickup) {
-	return latestPickup.pickedUpBy.name;
+function getPickingUpUserName(latestEntry) {
+	return latestEntry.pickedUpBy.name;
 }
 
 function getUserToNofify (transaction) {
@@ -42,3 +44,11 @@ function getUserToNofify (transaction) {
 		return transaction.coveringFor.uid;
 	}
 }
+
+function isTrade (historyItem) {
+	if (historyItem.type && historyItem.type !== 'TRADE') {
+		return false;
+	} else {
+		return true;
+	}
+};
