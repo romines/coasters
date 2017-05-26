@@ -4,10 +4,12 @@
 
 
       <div v-if="coaster.history" slot="main">
-        <ul>
-          <li>{{longDateString}}</li>
-          <li><strong>{{coaster.time + ' ' + coaster.shiftType}}</strong></li>
-        </ul>
+
+        <div class="header">
+          <div class="shift-date">{{longDateString}}</div>
+          <div class="shift-description">{{coaster.time + ' ' + coaster.shiftType}}</div>
+        </div>
+
         <trade-detail :coaster="coaster" :whenPosted="whenPosted"></trade-detail>
       </div>
 
@@ -22,13 +24,13 @@
           <div class="section-title">Actions</div>
           <span class="coaster-actions default">
             <a v-if="elligibleForPickup && !$store.getters.isAdmin" @click.stop="pickUp" class="button is-info">Pick Up</a>
-            <a v-if="elligibleForRemove" @click.stop="cancelCoaster" class="button">Cancel</a>
             <a v-if="elligibleForRepost" @click.stop="repost" class="button is-primary">Repost</a>
+            <a v-if="elligibleForCancel" @click.stop="cancelCoaster" class="button is-warning">Cancel</a>
             <span v-if="!hasComments" @click.stop="startCommenting()" class="button">Comment</span>
 
             <span v-if="$store.getters.isAdmin" class="admin-actions">
               <a v-if="elligibleForPickup" @click.stop="pickUpAs" class="button">Pick Up</a>
-              <a v-if="coaster.available" @click.stop="adminCancel" class="button"><span v-if="elligibleForRemove">(Admin)&nbsp;</span>Delete</a>
+              <a @click.stop="deleteCoaster" class="button">Delete</a>
               <a v-if="!coaster.available" @click.stop="adminRepost" class="button is-primary">Repost</a>
               <span @click.stop="flagCoaster()" v-if="$store.getters.isAdmin" class="button is-warning"><span v-if="coaster.flagged" class="un-flag">Un-</span>Flag</span>
             </span>
@@ -112,14 +114,14 @@ export default {
       return this.$store.state.detailCoaster
     },
     myOwnCoaster () {
-      if (!this.$store.state.authState.user) return false
-      return this.coaster.heldBy.uid == this.$store.state.authState.user.uid
-      return false
+      if (this.$store.state.authState.user) {
+        return this.coaster.heldBy.uid == this.$store.state.authState.user.uid
+      }
     },
     elligibleForPickup () {
       return this.coaster.available && !this.myOwnCoaster
     },
-    elligibleForRemove () {
+    elligibleForCancel () {
       return this.coaster.available && this.myOwnCoaster
     },
     elligibleForRepost () {
@@ -142,6 +144,9 @@ export default {
         return moment(this.coaster.history[firstKey].posted).fromNow()
       }
     },
+    actionsAvailable () {
+      return this.elligibleForPickup || this.elligibleForRepost || $store.getters.isAdmin
+    }
 
   },
 
@@ -301,19 +306,20 @@ export default {
     cancelCoaster () {
 
       let cancelCoaster = () => {
-        this.$store.dispatch('cancelCoaster', this.detailKey)
+        this.$store.dispatch('cancelCoaster', this.coaster)
         this.$store.commit('CLOSE_MODAL')
         if (this.$store.state.route.name === 'detail') router.push({name: 'home'})
       }
 
       this.$store.commit('SHOW_MODAL', {
         component:'Confirmation',
-        heading: 'Delete Posted Shift',
-        message: 'Are you sure you want to delete this post?',
+        heading: 'Take Down Shift',
+        message: 'Are you sure you want to remove this post?',
         buttons: [
           {
-            label: 'Delete',
-            action: cancelCoaster
+            label: 'Take Down',
+            action: cancelCoaster,
+            classList: 'is-primary'
           }
         ]
       })
@@ -333,7 +339,10 @@ export default {
 
 <style lang="scss">
 .detail {
-
+  .header {
+    font-size: 1.6em;
+    margin-bottom: .6em;
+  }
   .section-title {
     font-size: 1.4em;
     margin: .3em 0;

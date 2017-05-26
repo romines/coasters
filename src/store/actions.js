@@ -314,11 +314,12 @@ export default {
   }
 
 
-  , cancelCoaster ({ commit, state }, key) {
-
+  , cancelCoaster ({ commit, state }, coaster) {
     let updates = {};
+    if (!coaster.history) {
+      updates[`/coasters/${key}/active`] = false
+    }
     updates[`/coasters/${key}/available`] = false
-    updates[`/coasters/${key}/cancelled`] = true
     return baseRef.update(updates);
 
   }

@@ -42,7 +42,7 @@
           :key="coaster.key">
 
           <div slot="notice" class="notices">
-            <div v-if="isReposted(coaster)" class="warn">
+            <div v-if="isReposted(coaster)" class="info">
               REPOST
             </div>
             <div v-if="!!pickedUpBy(coaster)" class="success">
@@ -67,11 +67,12 @@
             :key="coaster.key">
             <div slot="notice" class="notices">
               <div v-if="isReposted(coaster)" class="warn">
-                ON THE HOOK FOR
+                ON THE HOOK
               </div>
-              <div v-if="!!pickedUpBy(coaster)" class="success">
-                PICKED UP BY: {{pickedUpBy(coaster)}}
+              <div v-if="isReposted(coaster)" class="success">
+                AVAILABLE
               </div>
+
             </div>
           </coaster>
 
@@ -112,7 +113,7 @@ export default {
         coaster.key = key
         return coaster
       })
-      // .filter(coaster => coaster.available)  // TODO: filter shifts I cancel
+      .filter(this.notCancelledRepost)
       .filter(this.withinDateRange)
     },
 
@@ -124,7 +125,7 @@ export default {
         return coaster
       })
       .filter(this.withinDateRange)
-      .filter(this.notCancelled)
+      .filter(this.isActive)
       .filter(this.hasHistory)
     }
   },
@@ -157,7 +158,10 @@ export default {
       let beginningMoment = moment(this.beginning)
       return (coasterMoment.diff(beginningMoment, 'days') >= 0)
     },
-    notCancelled (coaster) {
+    notCancelledRepost (coaster) {
+      return true
+    },
+    isActive (coaster) {
       return !(coaster.deleted || coaster.cancelled)
     },
     hasHistory (coaster) {

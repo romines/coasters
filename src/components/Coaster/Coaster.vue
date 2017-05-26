@@ -17,8 +17,10 @@
       </slot>
 
       <slot name="notice">
-        <div v-if="onTheHookFor" class="warn">
-          OTH
+        <div class="notices">
+          <div v-for="statusMessage in statusMessages" :class="statusMessage.messageClass">
+            {{statusMessage.text}}
+          </div>
         </div>
         <!-- <div v-if="!!pickedUpBy(coaster)" class="success">
           PICKED UP BY: {{pickedUpBy(coaster)}}
@@ -32,8 +34,8 @@
           <div class="posted-by media">
             <div class="media-left">
               <figure class="user">
-                <img v-if="coaster.postedBy.photoURL" :src="coaster.postedBy.photoURL" alt="">
-                <span v-if="!coaster.postedBy.photoURL" class="icon is-large">
+                <img v-if="coaster.heldBy.photoURL" :src="coaster.heldBy.photoURL" alt="">
+                <span v-if="!coaster.heldBy.photoURL" class="icon is-large">
                   <i class="fa fa-user"></i>
                 </span>
               </figure>
@@ -43,7 +45,7 @@
               <ul>
                 <li>{{longDateString}}</li>
                 <li><strong>{{coaster.time + ' ' + coaster.shiftType}}</strong></li>
-                <li v-show="!options.hideFor">for <strong>{{coaster.postedBy.name}}</strong></li>
+                <li v-show="!options.hideFor">for <strong>{{coaster.heldBy.name}}</strong></li>
                 <li><small>{{datePosted}}</small></li>
               </ul>
               <span class="desktop-comments">{{ coaster.comment }}</span>
@@ -98,9 +100,36 @@ export default {
       }
       return trades[trades.length -1].pickedUpBy
     },
+    statusMessages () {
+      let list = [
+        {
+          text: 'RE-POSTED',
+          messageClass: 'info',
+          active: this.isRepost
+        },
+        {
+          text: 'AVAILABLE',
+          messageClass: 'success available',
+          active: this.coaster.history && this.coaster.available
+        },
+        {
+          text: 'ON THE HOOK',
+          messageClass: 'warn',
+          active: this.onTheHookFor
+        }
+      ]
+
+      return list.filter(status => status.active)
+
+    },
     onTheHookFor () {
-      if (!(this.coaster.history && this.$store.state.authState.user)) return
-      return this.coaster.available && (this.$store.state.authState.user === this.coaster.heldBy.uid)
+      if (!this.coaster.history) return
+      if (this.$store.state.authState.user) {
+        return this.coaster.available && (this.$store.state.authState.user.uid === this.coaster.heldBy.uid)
+      }
+    },
+    isRepost () {
+      return this.coaster.history && this.coaster.available
     },
     datePosted () {
       // if (!this.coaster) return
@@ -193,6 +222,7 @@ export default {
     & > div {
       display: inline-block;
       padding: .2em .3em;
+      margin: .2em 0 .2em .3em;
     }
     .warn {
       color: red;
@@ -201,6 +231,13 @@ export default {
     .success {
       color: green;
       border: 1px solid green;
+    }
+    .info {
+      color: #3273dc;
+      border: 1px solid #3273dc;
+    }
+    .available {
+      display: none;
     }
   }
   .media-left {

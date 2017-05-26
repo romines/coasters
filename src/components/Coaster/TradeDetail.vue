@@ -14,16 +14,16 @@
 			<div class="media-content">
 				<p>Posted:</p>
 				<h3 class="title is-4 posted-by">{{originalPoster.name}}</h3>
-				<p class="when-posted"><small>{{whenPosted}}</small></p>
+				<!-- <p class="when-posted"><small>{{whenPosted}}</small></p> -->
 			</div>
 		</div>
 
 		<div v-if="!!timeline">
 			<div v-if="!viewingHistory" @click.stop="viewingHistory = true" class="view-history">
 				<div class="elipsis">...</div>
-				<div class="text">
+				<!-- <div class="text">
 					[Trade History]
-				</div>
+				</div> -->
 			</div>
 			<div v-if="viewingHistory" class="timeline">
 				<div class="history-title-bar">
@@ -51,7 +51,8 @@
 				</div>
 
 				<div class="media-content">
-					<p>Covering:</p>
+					<p v-if="reposted">Responsible For:</p>
+					<p v-if="!reposted">Covering:</p>
 					<h3 class="title">{{coaster.heldBy.name}}</h3>
 				</div>
 		</div>
