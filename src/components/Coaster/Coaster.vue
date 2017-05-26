@@ -16,7 +16,14 @@
 
       </slot>
 
-      <slot name="notice"></slot>
+      <slot name="notice">
+        <div v-if="onTheHookFor" class="warn">
+          OTH
+        </div>
+        <!-- <div v-if="!!pickedUpBy(coaster)" class="success">
+          PICKED UP BY: {{pickedUpBy(coaster)}}
+        </div> -->
+      </slot>
 
       <div class="card-content">
 
@@ -90,6 +97,10 @@ export default {
           trades.push(history[item])
       }
       return trades[trades.length -1].pickedUpBy
+    },
+    onTheHookFor () {
+      if (!(this.coaster.history && this.$store.state.authState.user)) return
+      return this.coaster.available && (this.$store.state.authState.user === this.coaster.heldBy.uid)
     },
     datePosted () {
       // if (!this.coaster) return
@@ -176,6 +187,20 @@ export default {
           font-size: 2.8em;
         }
       }
+    }
+  }
+  .notices {
+    & > div {
+      display: inline-block;
+      padding: .2em .3em;
+    }
+    .warn {
+      color: red;
+      border: 1px solid red;
+    }
+    .success {
+      color: green;
+      border: 1px solid green;
     }
   }
   .media-left {

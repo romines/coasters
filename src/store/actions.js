@@ -415,6 +415,8 @@ export default {
   }
 
   , repostCoaster ({ commit, state }, coaster) {
+    const newHistoryItemRef = coastersRef.child(coaster.key).child('history').push()
+    const newHistoryItemKey = newHistoryItemRef.key
     const now = moment().format()
     const user = state.authState.user
     const postedBy = {
@@ -422,11 +424,18 @@ export default {
       uid: user.uid,
       photoURL: user.photoURL ? user.photoURL : null
     }
+    let coasterHistory = {...coaster.history}
+    coasterHistory[newHistoryItemKey] = {
+      type: 'REPOST',
+      postedBy,
+      posted: now
+    }
 
     let coasterData       = {...coaster}
     coasterData.postedBy  = postedBy
     coasterData.posted    = now
     coasterData.available = true
+    coasterData.history   = {...coasterHistory}
 
     let updates = {}
     updates['/coasters/' + coaster.key] = coasterData

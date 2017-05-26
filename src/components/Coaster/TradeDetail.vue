@@ -86,41 +86,38 @@ export default {
 
 		timeline () {
 
-			if (!(Object.keys(this.coaster.history).length > 1 || this.reposted)) return
-			let entries = []
-			// coaster is currently available. push last repost onto timeline entries array
-			if (this.reposted) {
-				entries[0] = {
-					name: this.coaster.postedBy.name,
-					time: moment(this.coaster.posted).format('MMM Do HH:mm'),
-					eventType: 'reposted'
+			const getActor = (historyItem) => {
+				switch (historyItem.type) {
+					case 'REPOST':
+						return 'postedBy'
+					case 'CANCEL':
+						return 'cancelledBy'
+					default:
+						return 'pickedUpBy'
 				}
 			}
-			let pickUpKeys = Object.keys(this.coaster.history).sort()
-			// loop through shift trades backwards and push pickup and post events onto entries
-			for (var i = pickUpKeys.length-1; i > 0; i--) {
-				let key = pickUpKeys[i]
-				let pickUp = this.coaster.history[key]
-				entries.push({
-					name: pickUp.pickedUpBy.name,
-					time: moment(pickUp.pickedUp).format('MMM Do HH:mm'),
-					eventType: 'picked up'
-				})
-				entries.push({
-					name: pickUp.coveringFor.name,
-					time: pickUp.posted,
-					time: moment(pickUp.posted).format('MMM Do HH:mm'),
-					eventType: 'reposted'
-				})
+
+			const getEventType = (historyItem) => {
+				switch (historyItem.type) {
+					case 'REPOST':
+						return 'reposted'
+					case 'CANCEL':
+						return 'cancelled'
+					default:
+						return 'picked up'
+				}
 			}
-			// finally, push first pickup onto array
-			let firstPickUp = this.coaster.history[pickUpKeys[0]]
-			entries.push({
-				name: firstPickUp.pickedUpBy.name,
-				time: moment(firstPickUp.pickedUp).format('MMM Do HH:mm'),
-				eventType: 'picked up'
+
+			if (!(Object.keys(this.coaster.history).length > 1 || this.reposted)) return
+
+			return Object.keys(this.coaster.history).map((key) => {
+				let historyItem = this.coaster.history[key]
+				return {
+					name: historyItem[getActor(historyItem)].name,
+					time: moment(historyItem.posted).format('MMM Do HH:mm'),
+					eventType: getEventType(historyItem)
+				}
 			})
-			return entries.reverse()
 
 		}
 	}

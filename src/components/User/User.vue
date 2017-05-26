@@ -67,7 +67,7 @@
             :key="coaster.key">
             <div slot="notice" class="notices">
               <div v-if="isReposted(coaster)" class="warn">
-                REPOSTED
+                ON THE HOOK FOR
               </div>
               <div v-if="!!pickedUpBy(coaster)" class="success">
                 PICKED UP BY: {{pickedUpBy(coaster)}}
@@ -199,17 +199,7 @@ function withinDateRange (coaster, beginning) {
   .media-left {
     max-width: 50%;
   }
-  .notices {
-    & > div {
-      display: inline-block;
-      padding: .2em .3em;
-    }
-    .warn {
-      color: red;
-      border: 1px solid red;
-    }
-    .success { color: green; }
-  }
+
   .posted-shifts {
     padding-top: 1em;
     margin-top: 1em;
