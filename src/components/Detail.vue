@@ -24,7 +24,7 @@
             <a v-if="elligibleForPickup && !$store.getters.isAdmin" @click.stop="pickUp" class="button is-info">Pick Up</a>
             <a v-if="elligibleForRemove" @click.stop="cancelCoaster" class="button">Cancel</a>
             <a v-if="elligibleForRepost" @click.stop="repost" class="button is-primary">Repost</a>
-            <span v-if="!hasComments" class="button">Comment</span>
+            <span v-if="!hasComments" @click.stop="startCommenting()" class="button">Comment</span>
 
             <span v-if="$store.getters.isAdmin" class="admin-actions">
               <a v-if="elligibleForPickup" @click.stop="pickUpAs" class="button">Pick Up</a>
@@ -57,8 +57,11 @@
 
           <span @click.stop="startCommenting()" v-if="hasComments && !commenting" class="button comment-button">Reply</span>
 
-          <!--  New Comment-->
-          <div slot="newComment" v-show="commenting" class="newComment">
+
+        </div>
+        <!--  New Comment-->
+        <div slot="newComment" class="newComment">
+          <div v-if="commenting" class="new-comment-container">
             <textarea v-model="comment" ref="newCommentBox" class="textarea"></textarea>
             <span class="coaster-actions card-footer-item">
               <a @click.stop="cancelComment" class="button">Cancel</a>
@@ -66,6 +69,7 @@
             </span>
           </div>
         </div>
+
       </div>
 
 
@@ -143,6 +147,7 @@ export default {
 
   methods: {
     startCommenting () {
+      console.log('Trying to startCommenting . . .');
       let launchLoginModal = () => {
         this.$store.commit('SHOW_MODAL', {component: 'Login'})
       }

@@ -382,6 +382,7 @@ export default {
       photoURL: user.photoURL ? user.photoURL : null
     }
     let newShiftTrade = {
+      type: 'TRADE',
       pickedUp: now,
       pickedUpBy,
       coveringFor: {
@@ -399,7 +400,8 @@ export default {
       ...coaster,
       history: {...coasterHistory},
       heldBy: {...pickedUpBy},
-      available: false
+      available: false,
+      reposted: false
     }
 
     let updates = {}
@@ -419,8 +421,8 @@ export default {
       name: user.displayName,
       uid: user.uid,
       photoURL: user.photoURL ? user.photoURL : null
-
     }
+
     let coasterData       = {...coaster}
     coasterData.postedBy  = postedBy
     coasterData.posted    = now

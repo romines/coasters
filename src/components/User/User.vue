@@ -112,7 +112,7 @@ export default {
         coaster.key = key
         return coaster
       })
-      .filter(coaster => coaster.available)
+      // .filter(coaster => coaster.available)  // TODO: filter shifts I cancel
       .filter(this.withinDateRange)
     },
 
