@@ -315,11 +315,53 @@ export default {
 
 
   , cancelCoaster ({ commit, state }, coaster) {
-    let updates = {};
-    if (!coaster.history) {
-      updates[`/coasters/${key}/active`] = false
+    if (!coaster.available) return
+
+    const newHistoryItemRef = coastersRef.child(coaster.key).child('history').push()
+    const newHistoryItemKey = newHistoryItemRef.key
+    const now = moment().format()
+    const user = state.authState.user
+    const cancelledBy = {
+      name: user.displayName,
+      uid: user.uid,
+      photoURL: user.photoURL ? user.photoURL : null
     }
-    updates[`/coasters/${key}/available`] = false
+    let coasterData = {...coaster}
+    let coasterHistory = {...coaster.history}
+    coasterHistory[newHistoryItemKey] = {
+      type: 'CANCEL',
+      cancelledBy,
+      posted: now
+    }
+
+    coasterData.available = false
+    coasterData.history   = {...coasterHistory}
+
+    if (coaster.history) {
+      // get coaster posted data from history item prior to repost
+      const historyKeys = Object.keys(coaster.history).sort()
+      const getPreviousPostedData = (index) => {
+        if (index >= 0) {
+          // console.log(coaster.history[index]);
+          if (coaster.history[historyKeys[index]].type === 'REPOST') {
+            return coaster.history[historyKeys[index-1]]
+          } else {
+            return getPreviousPostedData(index - 1);
+          }
+        } else {
+          console.log('No REPOST found');
+          return null;
+        }
+      }
+      if (getPreviousPostedData(historyKeys.length-1)) {
+        const previousPost = getPreviousPostedData(historyKeys.length-1)
+        coasterData.posted = previousPost.posted
+        coasterData.postedBy = previousPost.coveringFor
+      }
+    }
+    let updates = {}
+    updates['/coasters/' + coaster.key] = coasterData
+    updates[`/users/${user.uid}/posted/${coaster.key}`] = null
     return baseRef.update(updates);
 
   }
