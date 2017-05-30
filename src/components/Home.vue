@@ -22,7 +22,7 @@
       </div>
     </div>
     <div v-if="!days.length" class="no-coasters">
-      <div class="title is-4">Looks like no coasters match the filters you have set</div>
+      <div class="title is-4">Looks like no coasters match this date range/filter combination</div>
     </div>
 
   </div>

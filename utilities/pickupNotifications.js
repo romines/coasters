@@ -1,7 +1,7 @@
 'use strict';
 const moment = require('moment');
 const encode = require('firebase-encode').encode;
-const database = require('./firebase.js');
+const database = require('./firebase.js').database();
 
 let root = database.ref("data");
 
