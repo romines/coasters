@@ -113,6 +113,7 @@ export default {
         coaster.key = key
         return coaster
       })
+      .filter(coaster => !coaster.inactive)
       .filter(this.notCancelledRepost)
       .filter(this.withinDateRange)
     },
@@ -124,8 +125,8 @@ export default {
         coaster.key = key
         return coaster
       })
+      .filter(coaster => !coaster.inactive)
       .filter(this.withinDateRange)
-      .filter(this.isActive)
       .filter(this.hasHistory)
     }
   },
@@ -160,9 +161,6 @@ export default {
     },
     notCancelledRepost (coaster) {
       return true
-    },
-    isActive (coaster) {
-      return !(coaster.deleted || coaster.cancelled)
     },
     hasHistory (coaster) {
       if (!coaster.history) return

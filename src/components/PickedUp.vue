@@ -88,6 +88,7 @@ export default {
         return coaster.history
       })
       .filter(withinDateRange)
+      .filter(coaster => !coaster.inactive)
       .sortBy('time')
       .sortBy('date')
       .value()

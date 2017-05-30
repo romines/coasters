@@ -366,11 +366,10 @@ export default {
 
   }
 
-  , adminCancel ({ commit, state }, key) {
+  , adminRemove ({ commit, state }, key) {
 
     let updates = {};
-    updates[`/coasters/${key}/available`] = false
-    updates[`/coasters/${key}/cancelled`] = true
+    updates[`/coasters/${key}/inactive`] = true
     return baseRef.update(updates);
 
   }
@@ -485,13 +484,6 @@ export default {
     updates[`/users/${user.uid}/posted/${coaster.key}`] = coasterData
     return baseRef.update(updates);
 
-  }
-
-  , adminRemoveCoaster ({ state }, coaster) {
-    let updates = {}
-    updates[`/coasters/${coaster.key}/available`] = false
-    updates[`/coasters/${coaster.key}/cancelled`] = true
-    return baseRef.update(updates);
   }
 
   , flagCoaster ({ state }, coaster) {

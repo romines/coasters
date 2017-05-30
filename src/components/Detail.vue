@@ -30,8 +30,8 @@
 
             <span v-if="$store.getters.isAdmin" class="admin-actions">
               <a v-if="elligibleForPickup" @click.stop="pickUpAs" class="button">Pick Up</a>
-              <a @click.stop="deleteCoaster" class="button">Delete</a>
-              <a v-if="!coaster.available" @click.stop="adminRepost" class="button is-primary">Repost</a>
+              <a @click.stop="adminRemove" class="button">Delete</a>
+              <a v-if="!coaster.available" @click.stop="repost" class="button is-primary">Repost</a>
               <span @click.stop="flagCoaster()" v-if="$store.getters.isAdmin" class="button is-warning"><span v-if="coaster.flagged" class="un-flag">Un-</span>Flag</span>
             </span>
 
@@ -261,12 +261,12 @@ export default {
     },
 
     adminRepost () {
-
+      // same as regular repost, for now
     },
 
-    adminCancel () {
+    adminRemove () {
       let cancelCoaster = () => {
-        this.$store.dispatch('adminCancel', this.detailKey)
+        this.$store.dispatch('adminRemove', this.detailKey)
         this.$store.commit('CLOSE_MODAL')
         if (this.$store.state.route.name === 'detail') router.push({name: 'home'})
       }
@@ -274,7 +274,7 @@ export default {
       this.$store.commit('SHOW_MODAL', {
         component:'Confirmation',
         heading: 'Delete Posted Shift',
-        message: 'Are you sure you want to delete this post?',
+        message: 'Are you sure you want to delete this post? This removes all records of this shift including any trades',
         buttons: [
           {
             label: 'Delete',

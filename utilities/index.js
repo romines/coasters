@@ -10,6 +10,7 @@ const database = require('./firebase.js');
 let root = database.ref("data");
 
 // const authUsers = require('./users')['users']; //.filter(rmTestUsers);
+// console.log(authUsers);
 // mergeUsers();
 
 
@@ -51,37 +52,41 @@ root.child(`/coasters`).on('child_changed', (refData) => {
 
 // console.log(authUsers.length);
 
-function rmTestUsers(user) {
-  return !(user.email.includes('@email.com') || user.email.includes('@test.com'))
-}
 function mergeUsers() {
   console.log('running mergeUsers . . .');
   const indexedAuthUsers = _.indexBy(authUsers, 'localId');
-  // console.log(indexedAuthUsers);
+  let updates_two = {};
+
   root.child('users').once('value', (snap) => {
     let dbUsers = snap.val();
     console.log(`num users from db: ${Object.keys(dbUsers).length}`);
     console.log(`num users from auth: ${authUsers.length}`);
+    let updates = {};
 
-    // console.log({count});
-    let updates = Object.keys(indexedAuthUsers).reduce((updates, uid) => {
-      let userData = dbUsers[uid] ? dbUsers[uid] : {};
-      let authUserData = indexedAuthUsers[uid];
-      userData.uid = uid;
-      userData.email = authUserData.email;
-      userData.emailVerified = authUserData.emailVerified;
-      userData.displayName = authUserData.displayName;
-      if (!userData.photoURL) {
-        if (authUserData.photoURL) {
-          userData.photoURL = authUserData.photoURL;
+    const authUserKeys = Object.keys(indexedAuthUsers);
+    authUserKeys.forEach((key) => {
+      const authUser = indexedAuthUsers[key];
+      if (!dbUsers[key])  {
+        updates[`${key}`] = {
+          uid: key,
+          email: authUser.email,
+          emailVerified: authUser.emailVerified,
+          displayName: authUser.displayName,
+          photoURL: authUser.photoURL ? authUser.photoURL : ''
         }
+      } else {
+        // console.log(authUser.photoURL);
+        if (authUser.photoUrl) updates[`${key}/photoURL`] = authUser.photoUrl
       }
-      updates[`${uid}`] = userData;
-      return updates;
-    }, {});
-    console.log(updates);
-    return root.child('users').set(updates);
+
+    })
+
+    // console.log(updates);
+    // return root.child('users').update(updates);
   })
+}
+function rmTestUsers(user) {
+  return !(user.email.includes('@email.com') || user.email.includes('@test.com'))
 }
 
 
