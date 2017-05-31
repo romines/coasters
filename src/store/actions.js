@@ -358,6 +358,14 @@ export default {
         coasterData.posted = previousPost.posted
         coasterData.postedBy = previousPost.coveringFor
       }
+    } else {
+      // we sometimes rely on coaster.history.length to determine if there
+      // has been trades. also, we reference the first history item to get
+      // who originally posted the coaster. creating a history item that
+      // is a cancellation throws these things off. if we just make it
+      // inactive, none of these messed up properties will be accessed
+      //
+      coasterData.inactive = true
     }
     let updates = {}
     updates['/coasters/' + coaster.key] = coasterData

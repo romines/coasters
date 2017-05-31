@@ -127,7 +127,10 @@ export default {
 
 <style lang="scss">
 .trade-detail {
-
+	.media-left figure.user img {
+		width: 84px;
+		height: 84px;
+	}
 	.title.posted-by {
 		margin-bottom: 0;
 	}

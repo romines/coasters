@@ -8,9 +8,9 @@ let root = database.ref("data");
 
 const authUsers = require('./users')['users']; //.filter(rmTestUsers);
 // console.log(authUsers);
-// mergeUsers();
+mergeUsers();
 
-rmTestUsers();
+// rmTestUsers();
 
 // console.log(authUsers.length);
 
@@ -23,26 +23,27 @@ function mergeUsers() {
     console.log(`num users from db: ${Object.keys(dbUsers).length}`);
     console.log(`num users from auth: ${authUsers.length}`);
     let updates = {};
+    Object.keys(dbUsers).forEach((dbUserKey) => {
+      if (!indexedAuthUsers[dbUserKey]) {
+        // console.log(dbUsers[dbUserKey]);
+        updates[dbUserKey] = null;
+      }
+    })
 
     const authUserKeys = Object.keys(indexedAuthUsers);
     authUserKeys.forEach((key) => {
       const authUser = indexedAuthUsers[key];
-      if (!dbUsers[key])  {
-        updates[`${key}`] = {
-          uid: key,
-          email: authUser.email,
-          emailVerified: authUser.emailVerified,
-          displayName: authUser.displayName,
-          photoURL: authUser.photoURL ? authUser.photoURL : ''
-        }
-      } else {
-        // console.log(authUser.photoURL);
-        if (authUser.photoUrl) updates[`${key}/photoURL`] = authUser.photoUrl
+      updates[`${key}`] = {
+        uid: key,
+        email: authUser.email,
+        emailVerified: authUser.emailVerified,
+        displayName: authUser.displayName,
+        photoURL: authUser.photoUrl ? authUser.photoUrl : ''
       }
 
     })
 
-    // console.log(updates);
+    console.log(updates);
     // return root.child('users').update(updates);
   })
 }
@@ -52,22 +53,40 @@ function rmTestUsers() {
 		if (!user.email) {
 			console.log(user);
 		} else {
-			return !(user.email.includes('@email.com') || user.email.includes('@test.com'))
+			return (user.email.includes('@email.com') || user.email.includes('@test.com'))
 		}
 	}
 
 	console.log(`num users from auth: ${authUsers.length}`);
 	console.log('num test users:' + authUsers.filter(isTestUser).length);
-	const adams = authUsers.filter(user => user.email === 'adam.romines@gmail.com');
-	const adamUid = adams[0].localId;
-	admin.auth().getUser(adamUid)
-  .then(function(userRecord) {
-    // See the UserRecord reference doc for the contents of userRecord.
-    console.log("Successfully fetched user data:", userRecord.toJSON());
+  let testUsers = authUsers.filter(isTestUser);
+  let updates = {};
+
+  testUsers.forEach((user) => {
+    admin.auth().deleteUser(user.localId)
+      .then(function() {
+        console.log(`Successfully deleted user ${user.email}`);
+        updates[user.localId] = null;
+      })
+      .catch(function(error) {
+        console.log("Error deleting user:", error);
+      });
   })
-  .catch(function(error) {
-    console.log("Error fetching user data:", error);
-  });
+  root.child('users').update(updates)
+    .then(() => console.log('Users ref updated'))
+    .catch((e) => console.log(e));
+
+
+	// const adams = authUsers.filter(user => user.email === 'adam.romines@gmail.com');
+	// const adamUid = adams[0].localId;
+	// admin.auth().getUser(adamUid)
+  // .then(function(userRecord) {
+  //   // See the UserRecord reference doc for the contents of userRecord.
+  //   console.log("Successfully fetched user data:", userRecord.toJSON());
+  // })
+  // .catch(function(error) {
+  //   console.log("Error fetching user data:", error);
+  // });
 
 }
 

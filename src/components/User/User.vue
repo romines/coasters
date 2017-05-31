@@ -107,14 +107,14 @@ export default {
 
     myPostedCoasters () {
 
-      if (!this.$store.state.userData.posted) return
+      if (!this.$store.state.userData.posted) return []
       return Object.keys(this.$store.state.userData.posted).map((key) => {
         let coaster = this.$store.state.userData.posted[key]
         coaster.key = key
         return coaster
       })
       .filter(coaster => !coaster.inactive)
-      .filter(this.notCancelledRepost)
+      // .filter(this.notCancelledRepost)
       .filter(this.withinDateRange)
     },
 
@@ -159,9 +159,7 @@ export default {
       let beginningMoment = moment(this.beginning)
       return (coasterMoment.diff(beginningMoment, 'days') >= 0)
     },
-    notCancelledRepost (coaster) {
-      return true
-    },
+
     hasHistory (coaster) {
       if (!coaster.history) return
       return Object.keys(coaster.history).length
@@ -193,7 +191,7 @@ function withinDateRange (coaster, beginning) {
     color: white;
     text-decoration: underline;
   }
-  .media img {
+  .media img, .coaster .media-left figure.user img {
     width: 74px;
     height: 74px;
     object-fit: cover;

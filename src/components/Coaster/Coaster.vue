@@ -273,8 +273,8 @@ export default {
     }
   }
   .media-content {
-    font-size: 1.2em;
-    padding-left: 1.2em;
+    font-size: 1.1em;
+    padding-left: .8em;
   }
   .desktop-comments {
     display: none;
