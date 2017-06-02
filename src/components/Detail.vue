@@ -22,7 +22,9 @@
         <div slot="primaryButtons" v-if="!commenting" class="card-actions">
 
           <div class="section-title">Actions</div>
+
           <span class="coaster-actions default">
+
             <a v-if="elligibleForPickup && !$store.getters.isAdmin" @click.stop="pickUp" class="button is-info">Pick Up</a>
             <a v-if="elligibleForRepost" @click.stop="repost" class="button is-primary">Repost</a>
             <a v-if="elligibleForCancel" @click.stop="cancelCoaster" class="button is-warning">Cancel</a>
@@ -30,9 +32,9 @@
 
             <span v-if="$store.getters.isAdmin" class="admin-actions">
               <a v-if="elligibleForPickup" @click.stop="pickUpAs" class="button">Pick Up</a>
-              <a @click.stop="adminRemove" class="button">Delete</a>
-              <a v-if="!coaster.available" @click.stop="repost" class="button is-primary">Repost</a>
+              <a v-if="!coaster.available" @click.stop="repost" class="button is-primary">Repost</a><br>
               <span @click.stop="flagCoaster()" v-if="$store.getters.isAdmin" class="button is-warning"><span v-if="coaster.flagged" class="un-flag">Un-</span>Flag</span>
+              <a @click.stop="adminRemove" class="button">Delete</a>
             </span>
 
           </span>
@@ -362,13 +364,15 @@ export default {
     }
 
   }
-  .card-footer {
-    text-align: right;
-    .coaster-actions {
-      white-space: nowrap;
+  .coaster-actions {
+    color: red !important;
+    white-space: nowrap;
+    .button {
+      margin-top: .4em;
     }
-    .card-footer-item { display: inline-block; }
   }
+  .card-footer-item { display: inline-block; }
+
   .isCommenting .card-footer-item { justify-content: space-around; }
   // .top-level-comment { padding-bottom: 1em; }
   .comment-button {
