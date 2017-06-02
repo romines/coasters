@@ -251,6 +251,9 @@ export default {
           }
         })
       }
+
+      this.$store.commit('SHOW_MODAL', {component: 'Loading'})
+
       this.$store.dispatch('getPromisedUsers').then(() => {
         this.$store.commit('SHOW_MODAL', {component: 'UserSearch', props: {
           coaster: this.coaster,

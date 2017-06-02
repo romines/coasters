@@ -182,6 +182,19 @@ export default {
     .nav-toggle {
       height: 11vh;
       width: 11vh;
+      & > span {
+        margin-left: 0 !important;
+        transform: translateX(-50%);
+        height: 2px;
+        width: 23px;
+
+        &:nth-child(1) {
+          margin-top: -8px;
+        }
+        &:nth-child(2) {
+          margin-top: -2px;
+        }
+      }
     }
     .nav-item {
       text-align: left;

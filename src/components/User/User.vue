@@ -65,6 +65,28 @@
             v-for="coaster in myPickedUpCoasters"
             :coaster="coaster"
             :key="coaster.key">
+            <div slot="main">
+              <div class="posted-by media">
+                <div class="media-left">
+                  <figure class="user">
+                    <img v-if="coaster.postedBy.photoURL" :src="coaster.postedBy.photoURL" alt="">
+                    <span v-if="!coaster.postedBy.photoURL" class="icon is-large">
+                      <i class="fa fa-user"></i>
+                    </span>
+                  </figure>
+                </div>
+
+                <div class="media-content">
+                  <ul>
+                    <li>{{getLongDateString(coaster.date)}}</li>
+                    <li><strong>{{coaster.time + ' ' + coaster.shiftType}}</strong></li>
+                    <li>for <strong>{{coaster.postedBy.name}}</strong></li>
+                    <!-- <li><small>[when picked up?]</small></li> -->
+                  </ul>
+                  <span class="desktop-comments">{{ coaster.comment }}</span>
+                </div>
+              </div>
+            </div>
             <div slot="notice" class="notices">
               <div v-if="isReposted(coaster)" class="warn">
                 ON THE HOOK
@@ -163,6 +185,10 @@ export default {
     hasHistory (coaster) {
       if (!coaster.history) return
       return Object.keys(coaster.history).length
+    },
+
+    getLongDateString (date) {
+      return moment(date).format('dddd, MMM Do')
     }
 
   }

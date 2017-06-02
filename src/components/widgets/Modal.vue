@@ -18,6 +18,7 @@ import Confirmation from './Confirmation.vue'
 import ImageUpload from './ImageUpload.vue'
 import PickUpAs from '../Coaster/PickUpAs.vue'
 import UserSearch from './UserSearch.vue'
+import Loading from './Loading.vue'
 
 export default {
   data () {
@@ -30,7 +31,8 @@ export default {
     Confirmation,
     ImageUpload,
     UserSearch,
-    PickUpAs
+    PickUpAs,
+    Loading
   },
   computed: {
     show () {

@@ -99,8 +99,10 @@ export default {
     },
 
     choosePostAsUser () {
+      this.$store.commit('SHOW_MODAL', {component: 'Loading'})
 
       this.$store.dispatch('getPromisedUsers').then(() => {
+        // this.$store.commit('CLOSE_MODAL')
         this.$store.commit('SHOW_MODAL', {component: 'UserSearch', props: {
           coaster: this.coaster,
           onUserClick: (user) => {
