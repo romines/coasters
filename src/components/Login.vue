@@ -40,10 +40,12 @@
         </div>
         <div v-show="!wantsToSignUp" class="clearfix btn-group">
           <button @click="logIn" class="button is-primary">Login</button>
+          <span class="or">&nbsp;&mdash;&nbsp;OR&nbsp;&mdash;&nbsp;</span>
           <button type="button" v-on:click="wantsToSignUp = true" class="button">Sign up</button>
         </div>
-        <div v-show="wantsToSignUp">
+        <div v-show="wantsToSignUp" class="clearfix btn-group">
           <button @click="signUp" :disabled="notReadyForSubmit" class="button is-primary">Sign up</button>
+          <span class="or">&nbsp;&mdash;&nbsp;OR&nbsp;&mdash;&nbsp;</span>
           <button type="button" v-on:click="wantsToSignUp = false" class="button">Login</button>
         </div>
         <div class="forgot">
@@ -121,8 +123,14 @@
       margin-bottom: .5em;
     }
 
-    .button {
-      margin-top: .5em;
+    .btn-group {
+      display: flex;
+      align-items: center;
+    }
+
+    .or {
+      line-height: 55px;
+      & > * { vertical-align: middle; }
     }
 
     .password-mismatch {

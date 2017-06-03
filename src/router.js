@@ -28,10 +28,7 @@ const routes = [
       },
       {
         path: '/picked-up',
-        component: PickedUp,
-        meta: {
-          sort: 'historical'
-        }
+        component: PickedUp
       },
       {
         path: '/login',

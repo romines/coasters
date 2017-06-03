@@ -62,7 +62,7 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
     return bucket.file(filePath).download({
       destination: tempLocalFile
     }).then(() => {
-      return spawn('convert', [tempLocalFile, '-thumbnail', `${THUMB_MAX_WIDTH}x${THUMB_MAX_HEIGHT}>`, tempLocalThumbFile]).then(() => {
+      return spawn('convert', [tempLocalFile, '-resize', `${THUMB_MAX_WIDTH}x${THUMB_MAX_HEIGHT}`, '-auto-orient', tempLocalThumbFile]).then(() => {
         return bucket.upload(tempLocalThumbFile, {
           destination: thumbFilePath
         }).then(() => {
@@ -89,6 +89,15 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
                     if (coaster.postedBy.uid === uid) {
                       let coasterKey = coaster.key;
                       updates[`/coasters/${coasterKey}/postedBy/photoURL`] = url;
+                    }
+                    // TODO: it is not feasible to update coasters user has participated with in
+                    //       their present form. turn /users/coasters/ into flat list of mirrored
+                    //       coasters. if user's bio data changes, loop /{user}/coasters, filter
+                    //       history items for committedBy.uid === user.uid, update bio info
+                    if (coaster.history) {
+                      Object.key(coaster.history).forEach((historyKey) => {
+                        console.log(coaster.history[historyKey])
+                      })
                     }
                     return updates;
                   }, userUpdates);

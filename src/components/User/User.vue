@@ -217,7 +217,7 @@ function withinDateRange (coaster, beginning) {
     color: white;
     text-decoration: underline;
   }
-  .media img, .coaster .media-left figure.user img {
+  .media img, .coaster .media-left figure.user img, .coaster .media-left figure.user .icon {
     width: 74px;
     height: 74px;
     object-fit: cover;

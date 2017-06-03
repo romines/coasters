@@ -17,7 +17,7 @@
         </div>
       </div>
 
-      <a v-if="!user.photoURL" v-show="!updating">
+      <a v-show="!updating">
         <slot name="text" >{{user.photoURL ? 'Update your' : 'Add a'}} photo</slot>
       </a>
     </div>

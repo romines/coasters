@@ -127,7 +127,7 @@ export default {
 
 <style lang="scss">
 .trade-detail {
-	.media-left figure.user img {
+	.media-left figure.user img, .media-left figure.user .icon {
 		width: 84px;
 		height: 84px;
 	}
