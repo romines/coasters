@@ -8,8 +8,8 @@ let root = database.ref("data");
 
 const authUsers = require('./users')['users']; //.filter(rmTestUsers);
 // console.log(authUsers);
-mergeUsers();
-
+// mergeUsers();
+authUsers.forEach(user => console.log(user));
 // rmTestUsers();
 
 // console.log(authUsers.length);

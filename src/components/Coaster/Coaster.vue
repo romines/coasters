@@ -92,6 +92,7 @@ export default {
 
   computed: {
     pickingUpUser () {
+      // filter history for PICK_UPs, take (user from) last one
       if (!this.coaster.history) return
       let history = this.coaster.history
       let trades = [];
@@ -107,11 +108,11 @@ export default {
           messageClass: 'info',
           active: this.isRepost
         },
-        {
-          text: 'AVAILABLE',
-          messageClass: 'success available',
-          active: this.coaster.history && this.coaster.available
-        },
+        // {
+        //   text: 'AVAILABLE',
+        //   messageClass: 'success available',
+        //   active: this.coaster.history && this.coaster.available
+        // },
         {
           text: 'ON THE HOOK',
           messageClass: 'warn',
@@ -123,12 +124,13 @@ export default {
 
     },
     onTheHookFor () {
-      if (!this.coaster.history) return
+      // if (Object.keys(this.coaster.history).length < 2) return
       if (this.$store.state.authState.user) {
         return this.coaster.available && (this.$store.state.authState.user.uid === this.coaster.heldBy.uid)
       }
     },
     isRepost () {
+      // DELTA: Object.keys(this.coaster.history).filter(key => this.coaster.history[key].type === 'POST').length > 1
       return this.coaster.history && this.coaster.available
     },
     datePosted () {
@@ -236,9 +238,7 @@ export default {
       color: #3273dc;
       border: 1px solid #3273dc;
     }
-    .available {
-      display: none;
-    }
+
   }
   .media-left {
     text-align: center;

@@ -337,8 +337,10 @@ export default {
     coasterData.available = false
     coasterData.history   = {...coasterHistory}
 
-    if (coaster.history) {
-      // get coaster posted data from history item prior to repost
+    if (coaster.history) { // if length of POSTs is > 1
+      // reset .posted (date) to last uncancelled POST,
+      // postedBy to poster from last uncancelled POST
+      //
       const historyKeys = Object.keys(coaster.history).sort()
       const getPreviousPostedData = (index) => {
         if (index >= 0) {
