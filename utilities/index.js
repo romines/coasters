@@ -6,7 +6,6 @@ const database = require('./firebase.js').database();
 
 let root = database.ref("data");
 
-
 root.child(`/coasters`).on('child_changed', (refData) => {
   console.log('there was a change . . .');
   let updates   = {};

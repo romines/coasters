@@ -9,7 +9,6 @@ let root = database.ref("data");
 const authUsers = require('./users')['users']; //.filter(rmTestUsers);
 // console.log(authUsers);
 // mergeUsers();
-authUsers.forEach(user => console.log(user));
 // rmTestUsers();
 
 // console.log(authUsers.length);
@@ -47,6 +46,13 @@ function mergeUsers() {
     // return root.child('users').update(updates);
   })
 }
+
+function rmAllUsers() {
+  authUsers.forEach(user => console.log(user));
+  
+}
+
+
 function rmTestUsers() {
 
 	function isTestUser(user) {
