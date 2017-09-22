@@ -1,6 +1,7 @@
 .DS_Store
 node_modules/
 dist/
+.vscode
 npm-debug.log
 src/fbConfig.js
 project.cson
@@ -8,5 +9,6 @@ functions/node_modules/
 utilities/node_modules/
 **/fBServiceAccountKey_*.json
 **/firebase_account_key_*.json
+functions/firebase_account_key-development.json
 **/users.json
 **/*.bak

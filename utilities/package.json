@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "cross-env NODE_ENV=production node index.js",
+    "start": "echo \"running utils . . . \" && cross-env NODE_ENV=development node index.js",
     "startDev": "cross-env NODE_ENV=development node index.js"
   },
   "author": "",
