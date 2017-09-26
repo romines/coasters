@@ -41,7 +41,7 @@
           </span>
 
           <span class="nav-item user" >
-            <a @click="toUserHome" class="title">
+            <a @click="toUserHome" class="">
               <span class="icon"><i class="fa fa-user"></i></span>
 
               <span v-show="!authState.user" @click.stop="launchLoginModal" class="text-only title">Login</span>
@@ -244,11 +244,13 @@ export default {
     }
     .user {
       font-size: 28px;
+      & > a {padding-top: .14em;}
       .icon{
         float: right;
-        padding: .2em;
       }
-      // margin-right: -1em;
+      .fa-power-off {
+        margin-left: .6em;
+      }
     }
   }
   @include desktop {

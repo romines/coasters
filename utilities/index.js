@@ -7,7 +7,7 @@ const database = require('./firebase.js').database();
 let root = database.ref("data");
 
 root.child(`/coasters`).on('child_changed', (refData) => {
-  console.log('there was a change . . .');
+  console.log('there was a change to a coaster . . .');
   let updates   = {};
   const coaster = refData.val();
   if (!coaster.key) {console.log(coaster);}
@@ -20,5 +20,12 @@ root.child(`/coasters`).on('child_changed', (refData) => {
   updates = getPickupNotifications(coaster, updates);
 
   root.update(updates);
+
+})
+
+root.child('users').on('child_changed', (refData) => {
+  console.log('there was a change to a user . . .');
+  
+  const user = refData.val();
 
 })

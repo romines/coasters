@@ -81,43 +81,70 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
 
               let userData                          = snap.val();
 
-              if (userData !== null) {
+              let getUpdates = new Promise((resolve, reject) => {
 
-                if (userData.posted) {
-                  userUpdates = Object.keys(userData.posted).reduce((updates, key) => {
-                    let coaster = userData.posted[key];
-                    if (coaster.postedBy.uid === uid) {
+                if (userData !== null) {
+                  
+                  if (userData.posted) {
+                    
+                    userUpdates = Object.keys(userData.posted).reduce((updates, key) => {
+                      let coaster = userData.posted[key];
+                      if (coaster.postedBy.uid === uid) {
+                        let coasterKey = coaster.key;
+                        updates[`/coasters/${coasterKey}/postedBy/photoURL`] = url;
+                      } 
+                      return updates;
+                    }, userUpdates);
+                  }
+  
+                  if (userData.holding) {
+                    userUpdates = Object.keys(userData.holding).reduce((updates, key) => {
+                      let coaster = userData.holding[key];
                       let coasterKey = coaster.key;
-                      updates[`/coasters/${coasterKey}/postedBy/photoURL`] = url;
-                    }
-                    // TODO: it is not feasible to update coasters user has participated with in
-                    //       their present form. turn /users/coasters/ into flat list of mirrored
-                    //       coasters. if user's bio data changes, loop /{user}/coasters, filter
-                    //       history items for committedBy.uid === user.uid, update bio info
-                    if (coaster.history) {
-                      Object.key(coaster.history).forEach((historyKey) => {
-                        console.log(coaster.history[historyKey])
-                      })
-                    }
-                    return updates;
-                  }, userUpdates);
+                      updates[`/coasters/${coasterKey}/holding/photoURL`] = url;
+                      return updates;
+                    }, userUpdates);
+                  }
+  
+                  if (userData.coastersCommentedOn) {
+                    
+                    let commentUpdates = {};
+  
+                    var getCoaster = (coasterKey) => {
+                      return new Promise((resolve, reject) => {
+                        root.child(`coasters/${coasterKey}`).once('value', (snap) => {
+                          let coaster = snap.val();
+                          let commentKeys = Object.keys(coaster.comments).filter((commentKey) => {
+                            return coaster.comments[commentKey].postedBy.uid === uid;
+                          });
+                          commentKeys.forEach((commentKey) => {
+                            commentUpdates[`/coasters/${coasterKey}/comments/${commentKey}/postedBy/photoURL`] = url;
+                          });
+                          console.log('fetched a coaster commented on . . . resolving inner promise');
+                          resolve();
+                        })
+                      });
+                    };
+                    var commentPromises = Object.keys(userData.coastersCommentedOn).map(getCoaster);
+                    Promise.all(commentPromises).then(() => {
+                      let combined = Object.assign(userUpdates, commentUpdates);
+                      
+                      resolve(combined);
+                    });
+                  } else {
+                    resolve(userUpdates);
+                  }
+  
+                } else {
+                  reject(`HOWDY. No data was found at /users/${uid}/`);
                 }
 
-                if (userData.holding) {
-                  userUpdates = Object.keys(userData.holding).reduce((updates, key) => {
-                    let coaster = userData.holding[key];
-                    let coasterKey = coaster.key;
-                    updates[`/coasters/${coasterKey}/holding/photoURL`] = url;
-                    return updates;
-                  }, userUpdates);
-                }
+              });
 
-              } else {
-                console.log(`HOWDY. No data was found at /users/${uid}/`);
-              }
+              getUpdates.then((updates) => {
+                root.update(updates);
+              }, e => console.log);
 
-              console.log({userUpdates});
-              root.update(userUpdates);
             })
 
           })

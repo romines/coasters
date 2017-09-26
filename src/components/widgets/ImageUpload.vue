@@ -60,11 +60,11 @@ export default {
       // Create the file metadata
       let metadata = {
         contentType: 'image/jpeg'
-      };
+      }
 
       let extension = file.name.split('.').pop()
 
-      let uploadTask = storageRef.child('images/' + this.user.uid + '.' + extension).put(file, metadata);
+      let uploadTask = storageRef.child('images/' + this.user.uid + '.' + extension).put(file, metadata)
 
       uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
         function(snapshot) {
@@ -73,10 +73,10 @@ export default {
 
           switch (snapshot.state) {
             case firebase.storage.TaskState.PAUSED:
-              console.log('Upload is paused');
+              console.log('Upload is paused')
               break;
             case firebase.storage.TaskState.RUNNING:
-              console.log('Upload is running');
+              console.log('Upload is running')
               break;
           }
         }, function(error) {
@@ -94,10 +94,11 @@ export default {
             break;
         }
       }, () => {
-        this.uploading = false;
+        this.uploading = false
         this.$store.dispatch('updateUserPhotoURL', uploadTask.snapshot.downloadURL)
         this.$store.commit('CLOSE_MODAL')
-      });
+        this.updating = false
+      })
     }
   }
 }

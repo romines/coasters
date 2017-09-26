@@ -76,13 +76,6 @@
 
       </div>
 
-
-
-
-
-
-
-
     </coaster>
   </div>
 </template>
@@ -206,7 +199,7 @@ export default {
 
       let pickItUp = () => {
         this.$store.dispatch('pickUpCoaster', {coaster: this.coaster})
-        setTimeout(() => {router.push('/picked-up')}, 400) // TODO: hand modal a onSuccess to hanlde routing
+        setTimeout(() => {router.push('/picked-up')}, 400) // TODO: hand modal an onSuccess to handle routing
       }
 
       let launchLoginModal = () => {
@@ -359,11 +352,8 @@ export default {
     .comment {
       width: 90%;
     }
-    & > * {
-      // display: inline-block;
-    }
-
   }
+
   .coaster-actions {
     color: red !important;
     white-space: nowrap;
