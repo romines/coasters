@@ -96,7 +96,7 @@ export default {
       return {
         home: this.$store.state.route.path === '/',
         history: this.$store.state.route.path === '/picked-up',
-        post: this.$store.state.route.path === '/new',
+        post: this.$store.state.route.path === '/post',
       }
     }
   },
@@ -124,11 +124,11 @@ export default {
 					heading: 'Please Login/Sign Up',
 					message: 'You must login before posting coasters',
 					onSuccess () {
-						router.push({ path: '/new' })
+						router.push({ path: '/post' })
 					}
         })
 			} else {
-				router.push({ path: '/new' })
+				router.push({ path: '/post' })
 			}
       this.burgerActive = false
     },
