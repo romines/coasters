@@ -292,7 +292,7 @@ export default {
       return
     }
 
-    const user = Object.keys(coasterData.postAsUser).length ? coasterData.postAsUser : state.authState.user
+    const user = (coasterData.postAsUser && Object.keys(coasterData.postAsUser).length) ? coasterData.postAsUser : state.authState.user
 
     coasterData.postedBy = {
       uid: user.uid,
@@ -359,7 +359,7 @@ export default {
       const newHistoryItemRef = coastersRef.child(coaster.key).child('history').push()
       const newHistoryItemKey = newHistoryItemRef.key
       const now = moment().format()
-      const cancelledBy = {
+      const committedBy = {
         name: user.displayName,
         uid: user.uid,
         photoURL: user.photoURL ? user.photoURL : null
@@ -367,7 +367,7 @@ export default {
       let coasterHistory = {...coaster.history}
       coasterHistory[newHistoryItemKey] = {
         type: 'CANCEL',
-        cancelledBy,
+        committedBy,
         posted: now
       }
       coasterData.available = false
@@ -375,6 +375,7 @@ export default {
     }
 
     updates['/coasters/' + coaster.key] = coasterData
+    debugger
     return baseRef.update(updates);
 
   }
@@ -474,7 +475,7 @@ export default {
     const newHistoryItemKey = newHistoryItemRef.key
     const now = moment().format()
     const user = state.authState.user
-    const postedBy = {
+    const committedBy = {
       name: user.displayName,
       uid: user.uid,
       photoURL: user.photoURL ? user.photoURL : null
@@ -482,12 +483,12 @@ export default {
     let coasterHistory = {...coaster.history}
     coasterHistory[newHistoryItemKey] = {
       type: 'REPOST',
-      postedBy,
+      committedBy,
       posted: now
     }
 
     let coasterData       = {...coaster}
-    coasterData.postedBy  = postedBy
+    coasterData.postedBy  = committedBy
     coasterData.posted    = now
     coasterData.available = true
     coasterData.history   = {...coasterHistory}

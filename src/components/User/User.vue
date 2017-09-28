@@ -36,10 +36,10 @@
       <ul>
         <!-- <template v-if="myPostedCoasters.length"> -->
           <coaster
-          :options="{ hideFor: true }"
-          v-for="coaster in myPostedCoasters"
-          :coaster="coaster"
-          :key="coaster.key">
+            :options="{ hideFor: true }"
+            v-for="coaster in myPostedCoasters"
+            :coaster="coaster"
+            :key="coaster.key">
 
           <div slot="notice" class="notices">
             <div v-if="isRepostedByMe(coaster)" class="info">
@@ -91,8 +91,8 @@
               <div v-if="isReposted(coaster)" class="warn">
                 ON YOU
               </div>
-              <div v-if="isReposted(coaster)" class="success">
-                AVAILABLE
+              <div v-if="isReposted(coaster)" class="info">
+                REPOSTED
               </div>
 
             </div>
@@ -175,7 +175,28 @@ export default {
       return this.isReposted(coaster) && coaster.heldBy.uid === this.user.uid
     },
     notCancelledRepost (coaster) {
-      return true
+      if (!coaster.history) return true;
+      const historyKeys = Object.keys(coaster.history).sort()
+      const getMyRepostIndex = (index) => {
+        if (index >= 0) {
+          let historyItem = coaster.history[historyKeys[index]]
+          if (historyItem.type === 'REPOST' && historyItem.committedBy.uid === this.user.uid) {
+            return index
+          } else {
+            return getMyRepostIndex(index - 1);
+          }
+        } else {
+          console.log('Not found');
+          return -1;
+        }
+      }
+      // Work backwards through history to find
+      const myRepostIndex = getMyRepostIndex(historyKeys.length-1)
+      if (myRepostIndex > -1 && coaster.history[historyKeys[myRepostIndex + 1]]) {
+        return coaster.history[historyKeys[myRepostIndex + 1]].type !== 'CANCEL';
+      } else {
+        return true;
+      }
     },
     pickedUpBy (coaster) {
       if (coaster.heldBy.uid === this.user.uid) return false

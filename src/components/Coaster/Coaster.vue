@@ -104,7 +104,7 @@ export default {
     statusMessages () {
       let list = [
         {
-          text: 'RE-POSTED',
+          text: (this.$store.state.route.name === 'pickedUp') ? 'REPOSTED' : 'REPOST',
           messageClass: 'info',
           active: this.isRepost
         },
@@ -126,7 +126,7 @@ export default {
     onTheHookFor () {
       // if (Object.keys(this.coaster.history).length < 2) return
       if (this.$store.state.authState.user) {
-        return this.coaster.available && (this.$store.state.authState.user.uid === this.coaster.heldBy.uid)
+        return this.isRepost && (this.$store.state.authState.user.uid === this.coaster.heldBy.uid)
       }
     },
     isRepost () {

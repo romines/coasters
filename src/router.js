@@ -27,6 +27,7 @@ const routes = [
         component: Home
       },
       {
+        name: 'pickedUp',
         path: '/picked-up',
         component: PickedUp
       },

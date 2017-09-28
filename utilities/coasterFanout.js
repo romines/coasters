@@ -22,13 +22,15 @@ function getCoasterFanout (coaster, updates) {
         let coveringFor = coaster.history[key].coveringFor;
         updates[`/users/${coveringFor.uid}/posted/${coaster.key}`] = coaster
       }
+      if (historyItem.type === 'REPOST') {
+        let committedBy = coaster.history[key].committedBy;
+        updates[`/users/${committedBy.uid}/posted/${coaster.key}`] = coaster
+      }
       return updates
 
     }, updates)
-
-  } else {
-    updates[`/users/${coaster.postedBy.uid}/posted/${coaster.key}`] = coaster
   }
+  updates[`/users/${coaster.postedBy.uid}/posted/${coaster.key}`] = coaster
   return updates;
 }
 

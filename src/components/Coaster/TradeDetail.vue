@@ -93,14 +93,7 @@ export default {
 		timeline() {
 
 			const getActor = (historyItem) => {
-				switch (historyItem.type) {
-					case 'REPOST':
-						return 'postedBy'
-					case 'CANCEL':
-						return 'cancelledBy'
-					default:
-						return 'pickedUpBy'
-				}
+				return (historyItem.type === 'TRADE') ? 'pickedUpBy' : 'committedBy'
 			}
 
 			const getEventType = (historyItem) => {
