@@ -64,28 +64,33 @@
 import moment from 'moment'
 export default {
 	props: ['coaster', 'whenPosted'],
-	data () {
+	data() {
 		return {
 			viewingHistory: false
 		}
-	},
+  },
+  beforeMount () {
+    this.coaster;
+    this.coaster.history;
+    if (!this.originalPoster) debugger
+  },
 	methods: {
-		toggleViewingHistory () {
+		toggleViewingHistory() {
 			console.log('toggleViewingHistory . . .')
 			this.viewingHistory = !this.viewingHistory
 		}
 	},
 	computed: {
-		reposted () {
+		reposted() {
 			return this.coaster.history && this.coaster.available
 		},
-		originalPoster () {
-			const historyKeys  = Object.keys(this.coaster.history)
-			const firstKey     = historyKeys[0]
+		originalPoster() {
+			const historyKeys = Object.keys(this.coaster.history)
+			const firstKey = historyKeys[0]
 			return this.coaster.history[firstKey].coveringFor
 		},
 
-		timeline () {
+		timeline() {
 
 			const getActor = (historyItem) => {
 				switch (historyItem.type) {
@@ -127,7 +132,8 @@ export default {
 
 <style lang="scss">
 .trade-detail {
-	.media-left figure.user img, .media-left figure.user .icon {
+	.media-left figure.user img,
+	.media-left figure.user .icon {
 		width: 84px;
 		height: 84px;
 	}
@@ -143,7 +149,9 @@ export default {
 	.view-history {
 		display: flex;
 		align-items: center;
-		.text { display: inline-block; }
+		.text {
+			display: inline-block;
+		}
 		.elipsis {
 			font-size: 4em;
 			display: inline-block;
@@ -155,17 +163,22 @@ export default {
 	.history-title-bar {
 		display: flex;
 		justify-content: space-between;
-		& > div { display: inline-block; }
-		& > .title { margin-bottom: .6em; }
+		&>div {
+			display: inline-block;
+		}
+		&>.title {
+			margin-bottom: .6em;
+		}
 	}
 	.entry {
 		border: 1px solid grey;
 		padding: .2em .4em;
-		&:last-child { margin-bottom: .6em; }
+		&:last-child {
+			margin-bottom: .6em;
+		}
 		.type {
 			font-weight: bold;
 		}
 	}
-
 }
 </style>

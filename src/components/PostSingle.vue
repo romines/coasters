@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="new">
+  <div class="post-single">
     <div class="form">
       <div v-if="postAsUser.displayName" class="control posting-as">
         <span class="text">
@@ -88,13 +88,16 @@ export default {
           shiftType:    this.shiftType,
           comment:      this.comment,
           postedAsUser: this.postAsUser ? this.postAsUser : null
-      })
-      router.push({
-        name: 'user',
-        params: {
-          key: this.$store.state.authState.user.uid
-        }
-      })
+      }).then(
+        () => {
+          router.push({
+            name: 'user',
+            params: {
+              key: this.$store.state.authState.user.uid
+            }
+          })
+        }, () => { alert('Something appears to have gone wrong. Please refresh and try again')}
+      )
       // TODO: only redirect on successful persist
     },
 
@@ -124,7 +127,7 @@ export default {
 
 <style lang="scss" rel="stylesheet/scss">
   @import '../../node_modules/bulma/sass/utilities/mixins.sass';
-  .new {
+  .post-single {
 
     border: 1px solid grey;
     padding: 1.4em;

@@ -1,26 +1,44 @@
 <template>
   <div class="post">
-    <h1 class="title header">Post widget</h1>
+    <h1 class="title header">Post New</h1>
     <div class="post-nav">
-      <span class="option selected">Single</span>
-      <span class="option">Multi-shift</span>
+      <span 
+        class="option" 
+        @click="entryMode = 'SINGLE'" 
+        :class="entryMode === 'SINGLE' ? 'selected' : ''">Single</span>
+      <span 
+        class="option" 
+        @click="entryMode = 'MULTI'" 
+        :class="entryMode === 'MULTI' ? 'selected' : ''">Multi-shift</span>
     </div>
+    <component :is='component'></component>
   </div>
 </template>
 
 <script>
+import PostSingle from './PostSingle.vue'
+import MultiPost from './MultiPost.vue'
 export default {
-
+  data () {
+    return {
+      entryMode: 'MULTI'
+    }
+  },
+  computed: {
+    component () {
+      return this.entryMode === 'SINGLE' ? PostSingle : MultiPost
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
 .post {
   .post-nav {
-    // display: flex;
-    // justify-content: space-around;
     position: relative;
-    z-index: 0;      
+    top: -12px;
+    z-index: 0;
+    text-align: center;
     &:after {
       border-bottom: 2px solid #23d482;
       position: absolute;
@@ -38,7 +56,9 @@ export default {
       z-index: 1;
       border: 2px solid #23d482;;
       border-color: #23d482;
-      padding: .6em 2.4em;
+      padding: .6em 0;
+      width: 47.3%;
+      margin-left: .18em;
       border-top-left-radius: 6px; 
       border-top-right-radius: 6px; 
       border-bottom: none;
@@ -47,7 +67,10 @@ export default {
       &.selected {
         z-index: 2;
         border-bottom: 2px solid white;
-      }    
+      }  
+      &:not(.selected) {
+        background-color: #d8d8d8;
+      }  
     }
   }
 }

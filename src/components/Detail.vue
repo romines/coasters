@@ -306,7 +306,9 @@ export default {
       let cancelCoaster = () => {
         this.$store.dispatch('cancelCoaster', this.coaster)
         this.$store.commit('CLOSE_MODAL')
-        if (this.$store.state.route.name === 'detail') router.push({name: 'home'})
+        setTimeout(() => {
+          if (this.$store.state.route.name === 'detail') router.push({name: 'home'})
+        }, 500);
       }
 
       this.$store.commit('SHOW_MODAL', {

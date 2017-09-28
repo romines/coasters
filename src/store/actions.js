@@ -65,8 +65,8 @@ export default {
 
     commit('SAVE_TEMP_USER', user)
     firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
-    .then(function (repsonse) {
-      userDataToDb(repsonse);
+    .then(function (response) {
+      userDataToDb(response);
       commit('SHOW_MODAL', {
         component:'ImageUpload',
         heading: 'One More Thing...',
@@ -292,7 +292,7 @@ export default {
       return
     }
 
-    const user = Object.keys(coasterData.postedAsUser).length ? coasterData.postedAsUser : state.authState.user
+    const user = Object.keys(coasterData.postAsUser).length ? coasterData.postAsUser : state.authState.user
 
     coasterData.postedBy = {
       uid: user.uid,
@@ -333,7 +333,7 @@ export default {
       cancelledBy,
       posted: now
     }
-
+    debugger
     coasterData.available = false
     coasterData.history   = {...coasterHistory}
 
@@ -361,11 +361,8 @@ export default {
         coasterData.postedBy = previousPost.coveringFor
       }
     } else {
-      // we sometimes rely on coaster.history.length to determine if there
-      // has been trades. also, we reference the first history item to get
-      // who originally posted the coaster. creating a history item that
-      // is a cancellation throws these things off. if we just make it
-      // inactive, none of these messed up properties will be accessed
+      //
+      // This coaster has no history, just blow it away
       //
       coasterData.inactive = true
     }
@@ -531,7 +528,7 @@ export default {
        return 'That password is incorrect'
        break;
      default:
-       return 'An error has occured'
+       return 'An error has occurred'
 
    }
  }

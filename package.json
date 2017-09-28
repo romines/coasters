@@ -4,10 +4,10 @@
   "author": "Adam Romines <adam.romines@gmail.com>",
   "private": true,
   "scripts": {
-    "dev": "myIP=$(ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'); NODE_ENV=development webpack-dev-server --inline --hot --host 0.0.0.0 --public $myIP:8080",
+    "dev": "myIP=$(ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'); NODE_ENV=development webpack-dev-server --inline --hot --host 0.0.0.0 --public $myIP:8080 --colors --open",
     "staging": "myIP=$(ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'); NODE_ENV=staging webpack-dev-server --inline --hot --host 0.0.0.0 --public $myIP:8080",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
-    "buildDev": "webpack --progress --hide-modules"
+    "buildDev": "webpack --progress"
   },
   "dependencies": {
     "babel-runtime": "^6.23.0",
@@ -31,6 +31,11 @@
     "babel-runtime": "^6.23.0",
     "cross-env": "^3.0.0",
     "css-loader": "^0.25.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-node": "^5.1.1",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1",
     "file-loader": "^0.9.0",
     "html-webpack-plugin": "^2.28.0",
     "node-sass": "^4.5.3",
@@ -41,6 +46,7 @@
     "vue-loader": "^11.3.4",
     "vue-template-compiler": "^2.2.6",
     "webpack": "^2.5.1",
+    "webpack-bundle-analyzer": "^2.9.0",
     "webpack-dev-server": "^2.4.5"
   }
 }

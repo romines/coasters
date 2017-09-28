@@ -7,7 +7,6 @@ import PickedUp from './components/PickedUp.vue'
 import Post from './components/Post.vue'
 import Detail from './components/Detail.vue'
 import User from './components/User/User.vue'
-import New from './components/New.vue'
 
 
 /**

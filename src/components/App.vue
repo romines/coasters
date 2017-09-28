@@ -10,7 +10,6 @@
       <router-view></router-view>
     </section>
 
-    <div class="safari-hack"></div>
     <bottom-nav></bottom-nav>
 
   </main>

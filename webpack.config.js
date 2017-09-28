@@ -1,5 +1,6 @@
 var path = require('path')
 var webpack = require('webpack')
+var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 // var HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
@@ -46,7 +47,7 @@ module.exports = {
   },
   plugins: [
     new webpack.NamedModulesPlugin(),
-    // prints more readable module names in the browser console on HMR updates
+    // new BundleAnalyzerPlugin()
   ],
   devServer: {
     historyApiFallback: true,
