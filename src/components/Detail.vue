@@ -303,12 +303,27 @@ export default {
 
     cancelCoaster () {
 
-      let cancelCoaster = () => {
-        this.$store.dispatch('cancelCoaster', this.coaster)
+      let cancelComplete = () => {
         this.$store.commit('CLOSE_MODAL')
-        setTimeout(() => {
-          if (this.$store.state.route.name === 'detail') router.push({name: 'home'})
-        }, 500);
+        if (this.$store.state.route.name === 'detail') router.push({ name: 'home' })
+      }
+
+      let cancelCoaster = () => {
+        this.$store.dispatch('cancelCoaster', this.coaster).then(() => {
+          this.$store.commit('SHOW_MODAL', {
+            component: 'Confirmation',
+            heading: 'Post removed successfully',
+            // message: 'Are you sure you want to remove this post?',
+            buttons: [
+              {
+                label: 'OK',
+                action: cancelComplete,
+                classList: 'is-primary'
+              }
+            ],
+            hideCancel: true
+          })
+        })
       }
 
       this.$store.commit('SHOW_MODAL', {

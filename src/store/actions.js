@@ -316,30 +316,24 @@ export default {
 
   , cancelCoaster ({ commit, state }, coaster) {
     if (!coaster.available) return
-
-    const newHistoryItemRef = coastersRef.child(coaster.key).child('history').push()
-    const newHistoryItemKey = newHistoryItemRef.key
-    const now = moment().format()
-    const user = state.authState.user
-    const cancelledBy = {
-      name: user.displayName,
-      uid: user.uid,
-      photoURL: user.photoURL ? user.photoURL : null
-    }
+    let updates = {}   
     let coasterData = {...coaster}
-    let coasterHistory = {...coaster.history}
-    coasterHistory[newHistoryItemKey] = {
-      type: 'CANCEL',
-      cancelledBy,
-      posted: now
-    }
-    debugger
-    coasterData.available = false
-    coasterData.history   = {...coasterHistory}
+    const user = state.authState.user
+    
+    if (!coaster.history) {
+      //
+      // This coaster has no history, just blow it away
+      //
+      console.log('This coaster has no history, just blow it away . . .');
+      
+      coasterData.inactive = true
+      updates[`/users/${user.uid}/posted/${coaster.key}`] = null
 
-    if (coaster.history) { // if length of POSTs is > 1
-      // reset .posted (date) to last uncancelled POST,
-      // postedBy to poster from last uncancelled POST
+    } else {
+      // 
+      // This is a cancelled REPOST. Identify the relevant previous post
+      // (the last history item before the REPOST). Reset the .posted (date)
+      // to last uncancelled POST, reset postedBy to previous poster
       //
       const historyKeys = Object.keys(coaster.history).sort()
       const getPreviousPostedData = (index) => {
@@ -355,20 +349,32 @@ export default {
           return null;
         }
       }
+      // Work backwards through history to find
       if (getPreviousPostedData(historyKeys.length-1)) {
         const previousPost = getPreviousPostedData(historyKeys.length-1)
         coasterData.posted = previousPost.posted
         coasterData.postedBy = previousPost.coveringFor
       }
-    } else {
-      //
-      // This coaster has no history, just blow it away
-      //
-      coasterData.inactive = true
+
+      const newHistoryItemRef = coastersRef.child(coaster.key).child('history').push()
+      const newHistoryItemKey = newHistoryItemRef.key
+      const now = moment().format()
+      const cancelledBy = {
+        name: user.displayName,
+        uid: user.uid,
+        photoURL: user.photoURL ? user.photoURL : null
+      }
+      let coasterHistory = {...coaster.history}
+      coasterHistory[newHistoryItemKey] = {
+        type: 'CANCEL',
+        cancelledBy,
+        posted: now
+      }
+      coasterData.available = false
+      coasterData.history   = {...coasterHistory}
     }
-    let updates = {}
+
     updates['/coasters/' + coaster.key] = coasterData
-    updates[`/users/${user.uid}/posted/${coaster.key}`] = null
     return baseRef.update(updates);
 
   }

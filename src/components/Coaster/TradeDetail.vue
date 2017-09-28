@@ -12,7 +12,7 @@
 			</div>
 
 			<div class="media-content">
-				<p>Posted:</p>
+				<p>Originally Posted:</p>
 				<h3 class="title is-4 posted-by">{{originalPoster.name}}</h3>
 				<!-- <p class="when-posted"><small>{{whenPosted}}</small></p> -->
 			</div>

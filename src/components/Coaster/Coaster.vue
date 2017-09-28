@@ -114,7 +114,7 @@ export default {
         //   active: this.coaster.history && this.coaster.available
         // },
         {
-          text: 'ON THE HOOK',
+          text: 'ON YOU',
           messageClass: 'warn',
           active: this.onTheHookFor
         }

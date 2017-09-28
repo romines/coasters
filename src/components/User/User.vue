@@ -42,7 +42,7 @@
           :key="coaster.key">
 
           <div slot="notice" class="notices">
-            <div v-if="isReposted(coaster)" class="info">
+            <div v-if="isRepostedByMe(coaster)" class="info">
               REPOST
             </div>
             <div v-if="!!pickedUpBy(coaster)" class="success">
@@ -89,7 +89,7 @@
             </div>
             <div slot="notice" class="notices">
               <div v-if="isReposted(coaster)" class="warn">
-                ON THE HOOK
+                ON YOU
               </div>
               <div v-if="isReposted(coaster)" class="success">
                 AVAILABLE
@@ -136,7 +136,7 @@ export default {
         return coaster
       })
       .filter(coaster => !coaster.inactive)
-      // .filter(this.notCancelledRepost)
+      .filter(this.notCancelledRepost)
       .filter(this.withinDateRange)
     },
 
@@ -169,6 +169,13 @@ export default {
     isReposted (coaster) {
       if (!coaster.history) return
       return coaster.heldBy.uid === coaster.postedBy.uid
+    },
+    isRepostedByMe (coaster) {
+      if (!coaster.history) return
+      return this.isReposted(coaster) && coaster.heldBy.uid === this.user.uid
+    },
+    notCancelledRepost (coaster) {
+      return true
     },
     pickedUpBy (coaster) {
       if (coaster.heldBy.uid === this.user.uid) return false
