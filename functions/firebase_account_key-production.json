@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "srb-coasters",
+  "private_key_id": "ece9fde5e158278c6ce7c0fddfaa3490b2cd3bbb",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDQQPVS+WZewqh9\ntbxHkqx1IKng/MstIVwW4hYMu8ok6m8/IcMlZU2V5PKpK1Nckc0cTyPzl5ImxbD4\nKK1UuFJ4pj5lsP0z3J3L1f/1B7STWFe+3QYBVd8e+Bfr3ipo5eI6G0iHNqgLXKNM\nVFxbTRbwDs74h5a23lvdQ+bXePQmvU5rvTbrqoHnpmoMKeOgwAjZ5PeB/eY9spWZ\nYbEEt9JJEnPcpouH2A7Ert85YrMWvCXdDMa24p76vIuJ76UCSca2EFHes4M485+H\n0aA557bSHccNXrzmy/Z4GWHJ8hEM6iMsnB0HKfPJR9AcBHWYC8kAbLD0ItvCaOMu\nz/jXry8xAgMBAAECggEADm4b2aOiqGkGVgyaVt7G0KhiYQ6/MNm9iO/iTYBTJ9bv\nPbGEFUKlW0A1oMt536GSM/aXZAUCCWn8Itvls8fAXjANxYvbpaTxMas6zMKbjHSs\nAtOLm5rUxq9z7+HxcBqSwAo9LrJWt0/UWGEFk8V+FAUAqieyBaqXdLfkZlSRHWBz\nT443ter7Od7flCKdv8ssIKwow8HoX8Zj9DiDY2LtvhTdjy+h9OVT+EDxIZtKtC+F\n+RTQjjiBZUTa5KFaKBV6EAEvrGHSQOTcFo7ER7Rwwitm1USsprOywAMxLTO5SH2b\nfQJEQKpmF9qnjVaX5Yv5/pv7ztxBnbTRIJQ9RuaTyQKBgQD8QdPTfsTS7pnaGxQr\nt7059eaNYNetgHQTWY6j3/0/aGQy8yOFB2W7cTb25p4lKjjfw2+okB5U6+lI3aEd\nq3yTaYIEorhM6DtgfsSM4yumwP3y+lVQjNYddrVJHaKR7M88AmmAcUxnMTUI592F\nE25FZPToXTFoUzH+e4oxjEASGQKBgQDTV/0P1/8UKjjzzqhfwP11BL6uO83pcHgs\nV/fiqhy79ZxBX9RSg1Vy12UVzp47IFQbuOcNHEjsSTM92pxoJ2en84yF3zYtr18v\nEKtyCLx5Oc9gPrnbN525ZWa1BHTYUVGF8up86D8+i2OvzU+taxs2BKX6uo26KEdp\nxrjS/cmY2QKBgHum1OvePyLaXMZB8dBAP9xygjIZH3/n8H4vrzD7Mgtr43nqHyYt\naxvHslay0yCKothk1438HzIndfIG2dxOXEFyPY6CKO9iAwEZAsXA8XvLLHB3b2yN\nrMNCljih8zeuqiLTV93jK72FrGaSKc76qFoR0883J2npJh+FdUc2ZY25AoGAVTV5\ng0TLxB6N3capXgnaZq6mDmtwRrkgyoghGlMJyMJq4HS5jxcCgY3UZKlsZFxRbOfs\nx/1qbVHKBhs4yklw4mcwdd0b4+l8D+bBqPVav+mN8bj4iCjxP4lhkoQcdAa9PqtE\n3V1p+laKt5uojzvKucm//cnvUGni+QO1CuRlvmkCgYBbEeXBB7XBgdTv4Aofj8Fc\n9ejMmG6w8cOjnv3SsOrAAC+AkS7p3Vk5q3OSiIO8S8vtz8FbqgOWqHlABltJk57j\nUJgOTjfOyGsgADQSv90xXLY+0qAwGCsH0PGIjUbxuncYyPSsua8Ld0vumBNe4LcK\n3SmAa6cN3PFIrU8aftuB9Q==\n-----END PRIVATE KEY-----\n",
+  "client_email": "cloud-functions@srb-coasters.iam.gserviceaccount.com",
+  "client_id": "111492648000510664866",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/cloud-functions%40srb-coasters.iam.gserviceaccount.com"
+}
