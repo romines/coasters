@@ -14,16 +14,13 @@
 			<div class="media-content">
 				<p>Originally Posted:</p>
 				<h3 class="title is-4 posted-by">{{originalPoster.name}}</h3>
-				<!-- <p class="when-posted"><small>{{whenPosted}}</small></p> -->
+				<span class="mini-top-level-comment">{{coaster.comment}}</span>
 			</div>
 		</div>
 
 		<div v-if="!!timeline">
 			<div v-if="!viewingHistory" @click.stop="viewingHistory = true" class="view-history">
 				<div class="elipsis">...</div>
-				<!-- <div class="text">
-					[Trade History]
-				</div> -->
 			</div>
 			<div v-if="viewingHistory" class="timeline">
 				<div class="history-title-bar">
@@ -125,11 +122,20 @@ export default {
 
 <style lang="scss">
 .trade-detail {
+	.posted-by {
+		align-items: center;
+	}
 	.media-left figure.user img,
 	.media-left figure.user .icon {
 		width: 84px;
 		height: 84px;
 	}
+  .mini-top-level-comment {
+    margin-top: .5em;
+    font-size: .78em;
+    line-height: 1.46em;
+    display: inline-block;
+  }
 	.title.posted-by {
 		margin-bottom: 0;
 	}

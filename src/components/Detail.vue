@@ -14,14 +14,12 @@
       </div>
 
       <div slot="comments" class="comments">
-        <div class="top-level-comment">
+        <div class="top-level-comment" v-if="!coaster.history">
           <div class="comment is-4">{{coaster.comment}}</div>
         </div>
-
-
         <div slot="primaryButtons" v-if="!commenting" class="card-actions">
 
-          <div class="section-title">Actions</div>
+          <!-- <div class="section-title">Actions</div> -->
 
           <span class="coaster-actions default">
 
@@ -198,8 +196,21 @@ export default {
     pickUp () {
 
       let pickItUp = () => {
-        this.$store.dispatch('pickUpCoaster', {coaster: this.coaster})
-        setTimeout(() => {router.push('/picked-up')}, 400) // TODO: hand modal an onSuccess to handle routing
+        this.$store.dispatch('pickUpCoaster', {coaster: this.coaster}).then(() => {
+          this.$store.commit('SHOW_MODAL', {
+            component: 'Confirmation',
+            heading: 'Shift picked up successfully',
+            // message: 'Are you sure you want to remove this post?',
+            buttons: [
+              {
+                label: 'OK',
+                action: () => { this.$store.commit('CLOSE_MODAL') },
+                classList: 'is-primary'
+              }
+            ],
+            hideCancel: true
+          })          
+        })
       }
 
       let launchLoginModal = () => {
