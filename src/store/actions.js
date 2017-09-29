@@ -375,7 +375,6 @@ export default {
     }
 
     updates['/coasters/' + coaster.key] = coasterData
-    debugger
     return baseRef.update(updates);
 
   }

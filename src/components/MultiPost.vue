@@ -33,7 +33,13 @@
     </div>
 
     <textarea v-model="comment" class="textarea" placeholder="Comments or additional information"></textarea>
-    
+    <!-- <span
+      @click="choosePostAsUser"
+      v-if="$store.getters.isAdmin"
+      class="button control post-as-button">
+      Post As &nbsp;
+      <span class="fa fa-user"></span>
+    </span>     -->
     <button @click="submitPending" class="button submit-button">Submit</button>
 
   </div>
@@ -85,6 +91,9 @@ export default {
           })
         }, () => { alert('Something appears to have gone wrong. Please refresh and try again') }
       )
+    },
+    choosePostAsUser() {
+
     }
   },
   computed: {
@@ -149,6 +158,9 @@ export default {
       position: fixed;
       left: 0;
     }
+  }
+  .submit-button {
+    margin-top: .4em;
   }
 }
 </style>

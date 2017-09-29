@@ -29,7 +29,9 @@
         @click="choosePostAsUser"
         v-if="$store.getters.isAdmin"
         class="button control post-as-button">
-          Post As &nbsp;<span class="fa fa-user"></span></span>
+        Post As &nbsp;
+        <span class="fa fa-user"></span>
+      </span>
       <p class="control">
         <textarea v-model="comment" class="textarea" placeholder="Comments or additional information"></textarea>
       </p>

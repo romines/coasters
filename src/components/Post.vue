@@ -21,7 +21,7 @@ import MultiPost from './MultiPost.vue'
 export default {
   data () {
     return {
-      entryMode: 'MULTI'
+      entryMode: 'SINGLE'
     }
   },
   computed: {

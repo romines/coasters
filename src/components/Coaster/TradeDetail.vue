@@ -65,12 +65,7 @@ export default {
 		return {
 			viewingHistory: false
 		}
-  },
-  beforeMount () {
-    this.coaster;
-    this.coaster.history;
-    if (!this.originalPoster) debugger
-  },
+	},
 	methods: {
 		toggleViewingHistory() {
 			console.log('toggleViewingHistory . . .')
