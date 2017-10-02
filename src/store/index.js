@@ -25,6 +25,7 @@ const store = new Vuex.Store({
   state: {
     authState: {
       user:               null,
+      status:             '',
       error:              '',
       tempUserData:       {},
       passwordResetError: '',
@@ -75,6 +76,9 @@ const store = new Vuex.Store({
     },
     LOG_OUT_USER (state) {
       state.authState.user = null
+    },
+    SET_USER_LOGGED_IN_STATUS (state, newStatus) {
+      state.authState.status = newStatus
     },
     AUTH_ERROR (state, error) {
       console.log(error);

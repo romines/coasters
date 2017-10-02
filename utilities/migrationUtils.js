@@ -12,7 +12,7 @@ const authUsers = require('./users')['users']; //.filter(rmTestUsers);
 // rmTestUsers();
 
 // console.log(authUsers.length);
-
+module.exports = {authUsers}
 function mergeUsers() {
   console.log('running mergeUsers . . .');
   const indexedAuthUsers = _.indexBy(authUsers, 'localId');

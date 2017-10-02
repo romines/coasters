@@ -21,6 +21,7 @@
 
 // everyone should probably have
 //
+import { firebase } from '../libs'
 import moment from 'moment'
 
 // all components should probably have
@@ -32,7 +33,6 @@ import Modal from './widgets/Modal.vue'
 // why doesn't this work???
 // import { Navigation, BottomNav, Modal } from './widgets'
 
-import { firebase } from '../libs'
 import mixins from '../mixins'
 
 

@@ -96,7 +96,11 @@
 
       },
       signUp () {
-        this.$store.dispatch('signUpUser', {email: this.email, password: this.password, displayName: this.displayName})
+        this.$store.dispatch('signUpUser', {
+          email: this.email, 
+          password: this.password, 
+          displayName: this.displayName
+        })
       },
       logOut () {
         this.$store.dispatch('logOutUser')

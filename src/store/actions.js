@@ -4,6 +4,7 @@ import { firebase
   , cloud
   , decode
  } from '../libs'
+console.log({firebase});
 
 const db = firebase.database()
 const auth = firebase.auth()
@@ -14,7 +15,7 @@ const trimUser = ({uid, displayName, photoURL, email}) => {
   return {uid, displayName, photoURL, email}
 }
 
-export default {
+const module = {
 
   addFilter({ commit }, filter) {
     commit('ADD_FILTER', filter)
@@ -22,29 +23,44 @@ export default {
 
   , listenToAuthState ({ commit, state, dispatch }) {
 
+console.log('listenToAuthState');
 
-    firebase.auth().onAuthStateChanged(user => {
+    firebase.auth().onAuthStateChanged(firebaseUser => {
 
-      if (user) {
-        dispatch('getUserData', user.uid)
-        dispatch('watchPhotoURL', user.uid)
-        dispatch('watchUserNotifications', user.uid)
-        dispatch('setAdminStatus', user)
-        if (!user.displayName) {
-          user.updateProfile({
-            displayName: state.authState.tempUserData.displayName
-          }).then(() => {
+      if (firebaseUser) {
+        dispatch('watchPhotoURL', firebaseUser.uid)
+        dispatch('watchUserNotifications', firebaseUser.uid)
+        dispatch('setAdminStatus', firebaseUser)
+        dispatch('getUserData', firebaseUser.uid)
+          .then((userFromDatabase) => {
+            let promised = []
+            if (!firebaseUser.displayName) {
+              promised.push(firebaseUser.updateProfile({displayName: userFromDatabase.displayName}))
+            } 
 
-            commit('LOG_IN_USER', trimUser(user))
-          }, (error) => console.log(error))
-        } else {
+            let updates = ['displayName', 'photoURL'].reduce((updates, prop) => {
+              if (firebaseUser[prop] && !userFromDatabase[prop]) {
+                updates[`/users/${firebaseUser.uid}/${prop}`] = firebaseUser[prop]
+              }
+              return updates
+            }, {})
+            if (Object.keys(updates).length) promised.push(baseRef.update(updates))
 
-          commit('LOG_IN_USER', trimUser(user))
-        }
-        if (user.photoURL) commit('CLOSE_MODAL')
+            return Promise.all(promised)
+        
+        })
+        .then(() => {
+          commit('LOG_IN_USER', trimUser(firebaseUser))
+          if (firebaseUser.photoURL) commit('CLOSE_MODAL')
+        }, (e) => {
+          console.log(e)
+          commit('AUTH_ERROR', e.message)
+        
+        })
 
       } else {
-        commit('LOG_OUT_USER', user)
+        // this was a log out event
+        commit('LOG_OUT_USER')
         commit('GET_USER_DATA', {posted: [], holding: []})
         commit('GET_NOTIFICATIONS', [])
         commit('SET_ADMIN', false)
@@ -52,32 +68,32 @@ export default {
     })
   }
 
-  , signUpUser ({ dispatch, commit, state }, user) {
+  , signUpUser({ dispatch, commit, state }, newUserData) {
 
-    const userDataToDb = (response) => {
+    const userDataToDb = (user) => {
       let updates = {}
-      let authenticatedUser = trimUser(response)
-      let mergedUser = {...authenticatedUser, displayName: user.displayName}
+      let authenticatedUser = trimUser(user)
+      let mergedUser = { ...authenticatedUser, displayName: user.displayName }
       updates[`/users/${mergedUser.uid}`] = mergedUser
-      console.log(updates)
-      baseRef.update(updates)
+      return baseRef.update(updates)
     }
 
-    commit('SAVE_TEMP_USER', user)
-    firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
-    .then(function (response) {
-      userDataToDb(response);
-      commit('SHOW_MODAL', {
-        component:'ImageUpload',
-        heading: 'One More Thing...',
-        message: 'Adding a photo makes people more likely to pick up your shifts',
-        onSuccess: state.modal.contents.onSuccess
-      })
-    })
-    .catch(function(error) {
-      console.log(error);
-      commit('AUTH_ERROR', error.message)
-    });
+    firebase.auth().createUserWithEmailAndPassword(newUserData.email, newUserData.password)
+      .then((user) => {
+        userDataToDb(user)
+        commit('SHOW_MODAL', {
+          component: 'ImageUpload',
+          heading: 'One More Thing...',
+          message: 'Adding a photo makes people more likely to pick up your shifts',
+          onSuccess: state.modal.contents.onSuccess
+        })
+
+        
+      }) // , (e) => {console.log(e)})
+      .catch(function (error) {
+        console.log(error);
+        commit('AUTH_ERROR', error.message)
+      });
   }
 
   , watchUserNotifications ({commit}, uid) {
@@ -188,7 +204,7 @@ export default {
   }
 
   , getPromisedCoasters ({ commit, state }, options) {
-
+    
     const defaults = {
       beginning: moment().format('YYYY-MM-DD'),
       ending: null
@@ -225,28 +241,45 @@ export default {
 
   , getUserData ({ commit, state }, uid) {
     let userRef = usersRef.child(uid)
-    userRef.on('value', (snap) => {
+    return userRef.on('value', (snap) => {
       let userData = snap.val()
       if (userData) commit('GET_USER_DATA', userData)
     })
   }
 
-  , getPromisedUserData ({ commit, state }, uid) {
-    console.log('Direct navigation to User Home . . . fetching userData');
-    return new Promise((resolve, reject) => {
-      let userRef = usersRef.child(uid)
-      userRef.on('value', (snap) => {
-        let userData = snap.val()
-        if (!userData) {
-          console.log('hit ref and no data . . .');
-          return resolve()
-        }
-        commit('GET_USER_DATA', userData)
-        resolve()
+  , getUserPostedAndHoldingShifts ({commit, state}, uid) {
+    let currentUser = firebase.auth().currentUser
+    if (!currentUser) {
+      return new Promise ((resolve, reject) => {
+        return reject('No current firebase user')
+      })
+    } else {
+      return new Promise ((resolve, reject) => {
+        let userRef = usersRef.child(uid)
+        userRef.on('value', (snap) => {
+          let userData = snap.val()
+          if (!userData) {
+            console.log('hit ref and no data . . .');
+            return resolve({})
+          }
+          commit('GET_USER_DATA', userData)
+          resolve(userData)
+        })
       })
 
-    })
+    }
   }
+
+//   , getPromisedUserData ({ commit, state }, uid) {
+// console.log('getPromisedUserData');
+
+//     return new Promise((resolve, reject) => {
+//       if (!firebase.auth().currentUser) return resolve(null)
+//       let firebaseUser = firebase.auth().currentUser
+
+
+//     })
+//   }
 
   , getPromisedUsers ({ commit, state }) {
     console.log('getting all users . . . ');
@@ -538,3 +571,5 @@ export default {
 
    }
  }
+
+ export default module;

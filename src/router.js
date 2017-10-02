@@ -41,7 +41,9 @@ const routes = [
         component: User
         ,
         beforeEnter: (to, from, next) => {
-          store.dispatch('getPromisedUserData', to.params.key).then(() => next())
+          store.dispatch('getUserPostedAndHoldingShifts', to.params.key).then((userData) => {
+            next()
+          })
         }
       },
       {
@@ -67,9 +69,12 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
 
-  let promised = [store.dispatch('getPromisedCoasters')] // this can be added to
-
-  Promise.all(promised).then(() => next())
+  let promised = [
+    store.dispatch('getPromisedCoasters')
+  ] // this can be added to
+  Promise.all(promised).then(() => {
+    next()
+  })
 
   // TODO: handle failure, show loading component
 
