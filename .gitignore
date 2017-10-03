@@ -10,5 +10,6 @@ utilities/node_modules/
 **/fBServiceAccountKey_*.json
 **/firebase_account_key_*.json
 functions/firebase_account_key-development.json
+functions/firebase_account_key-production.json
 **/users.json
 **/*.bak
