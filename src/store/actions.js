@@ -4,7 +4,6 @@ import { firebase
   , cloud
   , decode
  } from '../libs'
-console.log({firebase});
 
 const db = firebase.database()
 const auth = firebase.auth()
@@ -23,7 +22,7 @@ const module = {
 
   , listenToAuthState ({ commit, state, dispatch }) {
 
-console.log('listenToAuthState');
+  console.log('listenToAuthState');
 
     firebase.auth().onAuthStateChanged(firebaseUser => {
 

@@ -4,8 +4,8 @@
   "author": "Adam Romines <adam.romines@gmail.com>",
   "private": true,
   "scripts": {
-    "dev": "myIP=$(ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'); NODE_ENV=development webpack-dev-server --inline --hot --host 0.0.0.0 --public $myIP:8080 --colors --open",
-    "staging": "myIP=$(ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'); NODE_ENV=staging webpack-dev-server --inline --hot --host 0.0.0.0 --public $myIP:8080",
+    "dev": "myIP=$(ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'); NODE_ENV=development webpack-dev-server --inline --hot --host '0.0.0.0' --port '8080' --public --colors --open",
+    "staging": "myIP=$(ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'); NODE_ENV=staging webpack-dev-server --inline --hot --host '0.0.0.0' --port '8080' --public",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
     "buildDev": "webpack --progress"
   },
