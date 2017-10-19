@@ -12,7 +12,7 @@
   "dependencies": {
     "babel-runtime": "^6.23.0",
     "bulma": "^0.2.3",
-    "firebase": "^3.7.2",
+    "firebase": "^4.5.2",
     "firebase-encode": "0.0.5",
     "lodash": "^4.17.4",
     "moment": "^2.15.2",

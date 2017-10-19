@@ -8,7 +8,7 @@ import { sync } from 'vuex-router-sync'
 sync(store, router)
 
 Vue.use(VueRouter)
-
+Vue.config.productionTip = false
 
 new Vue({
   router,

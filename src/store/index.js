@@ -35,9 +35,9 @@ const store = new Vuex.Store({
     coasters: [],
     detailCoaster: {},
     userData: {
-      posted:        [],
-      holding:       [],
-      notifications: []
+      posted:        {},
+      holding:       {},
+      notifications: {}
     },
     usersList: [],
     notifications: [],

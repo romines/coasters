@@ -14,7 +14,7 @@ const trimUser = ({uid, displayName, photoURL, email}) => {
   return {uid, displayName, photoURL, email}
 }
 
-const module = {
+export default {
 
   addFilter({ commit }, filter) {
     commit('ADD_FILTER', filter)
@@ -324,7 +324,7 @@ const module = {
       return
     }
 
-    const user = (coasterData.postAsUser && Object.keys(coasterData.postAsUser).length) ? coasterData.postAsUser : state.authState.user
+    const user = (coasterData.postedAsUser && Object.keys(coasterData.postedAsUser).length) ? coasterData.postedAsUser : state.authState.user
 
     coasterData.postedBy = {
       uid: user.uid,
@@ -570,5 +570,3 @@ const module = {
 
    }
  }
-
- export default module;

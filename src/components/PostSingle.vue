@@ -1,6 +1,10 @@
 <template lang="html">
   <div class="post-single">
     <div class="form">
+      <div v-if="!!shouldBeRepostOf" class="repost-warning warning">
+        This shift matches one you picked up. Please repost 
+        <router-link :to="'/coasters/' + shouldBeRepostOf">that shift</router-link> instead.
+      </div>
       <div v-if="postAsUser.displayName" class="control posting-as">
         <span class="text">
           Posting As: {{postAsUser.displayName}}
@@ -37,7 +41,7 @@
       </p>
     </div>
 
-    <button @click="newCoaster" class="button submit-button">Submit</button>
+    <button @click="newCoaster" class="button submit-button" :disabled="!!shouldBeRepostOf">Submit</button>
 
   </div>
 </template>
@@ -66,6 +70,15 @@ export default {
   props: ['test'],
 
   computed: {
+    coastersHeld () {
+      return this.$store.state.userData.holding
+    },
+    shouldBeRepostOf () {
+      let dupes = Object.keys(this.coastersHeld).filter((key) => {
+        return this.coastersHeld[key].shiftType === this.shiftType && this.coastersHeld[key].date === moment(this.date).format('YYYY-MM-DD') && this.coastersHeld[key].time === this.time && !this.coastersHeld[key].inactive
+      })
+      return dupes && dupes[0]
+    },
     myDate () {
       return moment(this.date).format('YYYY-MM-DD')
     },
@@ -130,11 +143,19 @@ export default {
 <style lang="scss" rel="stylesheet/scss">
   @import '../../node_modules/bulma/sass/utilities/mixins.sass';
   .post-single {
+  .warning { color: red; }
 
     border: 1px solid grey;
     padding: 1.4em;
     margin-bottom: 6em;
-
+    
+    .repost-warning {
+      margin-bottom: .6em; 
+      a {
+        color: red;
+        text-decoration: underline;
+      }
+    }
     .posting-as {
       color: red;
       display: flex;

@@ -63,10 +63,10 @@ export default {
       border-top-right-radius: 6px; 
       border-bottom: none;
       position: relative;
-      bottom: 0;
+      bottom: -2px;
       &.selected {
         z-index: 2;
-        border-bottom: 2px solid white;
+        border-bottom: 4px solid white;
       }  
       &:not(.selected) {
         background-color: #d8d8d8;

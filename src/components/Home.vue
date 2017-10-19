@@ -3,7 +3,7 @@
     <h1 class="title header">Available Shifts</h1>
     <filters/>
     <div v-if="days.length" class="list">
-      <div v-for="(day, index) in days" class="day" :class="{'darker':  index%2==0}">
+      <div v-for="(day, index) in days" class="day">
 
         <div class="day-title title is-5">{{day.date}}</div>
 
@@ -127,13 +127,17 @@ export default {
 
 <style lang="scss">
 .home {
-  .day {
+  .list {
     padding-top: .6em;
-    &.darker { background-color: rgba(179, 182, 210, 0.29); }
+  }
+  .day {
+    // padding-top: .6em;
+    border-bottom: rgba(179, 182, 210, 0.29);
   }
 
   .day-title {
-    margin: .4em 0;
+    margin: .4em 0 .8em 0;
+    font-weight: bold;
   }
   .no-coasters { margin-top: 1em; }
 }

@@ -1,11 +1,24 @@
 <template>
-  <div class="multi-post">
+
+  <form @submit.prevent="submitPending" class="multi-post">
+    
+    <div v-if="duplicateShifts.length" class="dupe-warnings warning">
+      One or more of the shifts below matches a shift you've picked up. Please repost instead.
+      <router-link class="dupe-link" v-for="shift in duplicateShifts" :to="'/coasters/' + shift" :key="shift">[duplicate shift]</router-link>
+      
+    </div>
+    <div v-if="postAsUser.displayName" class="control posting-as">
+      <span class="text">
+        Posting As: {{postAsUser.displayName}}
+      </span>
+      <span @click="cancelPostAs" class="fa fa-close"></span>
+    </div>
     <div class="title-bar item-row" @click="newPendingShift">
       <span class="text">Add Shift</span>
       <i class="fa fa-plus"></i>
     </div>
 
-    <div class="shift item-row" v-for="shift in shiftsPending" :key="shift.key">
+    <div class="shift item-row" v-for="shift in shiftsPending" :key="shift.key" :class="!!shouldBeRepostOf(shift) ? 'warning' : ''">
       <span class="date">
         <Datepicker 
           v-model="shift.date" 
@@ -32,6 +45,14 @@
       </span>
     </div>
 
+    <span
+      @click="choosePostAsUser"
+      v-if="$store.getters.isAdmin"
+      class="button control post-as-button">
+      Post As &nbsp;
+      <span class="fa fa-user"></span>
+    </span>
+
     <textarea v-model="comment" class="textarea" placeholder="Comments or additional information"></textarea>
     <!-- <span
       @click="choosePostAsUser"
@@ -40,9 +61,9 @@
       Post As &nbsp;
       <span class="fa fa-user"></span>
     </span>     -->
-    <button @click="submitPending" class="button submit-button">Submit</button>
+    <input type="submit" class="button submit-button" value="Submit" :disabled="!!duplicateShifts.length">
 
-  </div>
+  </form>
 </template>
 
 <script>
@@ -54,7 +75,8 @@ export default {
   data() {
     return {
       shiftsPending: [],
-      comment: ''
+      comment: '',
+      postAsUser: {}
     }
   },
   components: {
@@ -68,7 +90,7 @@ export default {
         shiftType: 'Serve',
         comment: '',
         key: new Date().getTime() + '',
-        postAsUser: {}
+        postedAsUser: this.postAsUser ? this.postAsUser : null
       }
       this.shiftsPending.push(newShift)
     },
@@ -92,13 +114,37 @@ export default {
         }, () => { alert('Something appears to have gone wrong. Please refresh and try again') }
       )
     },
-    choosePostAsUser() {
+    choosePostAsUser () {
+      this.$store.commit('SHOW_MODAL', {component: 'Loading'})
 
-    }
+      this.$store.dispatch('getPromisedUsers').then(() => {
+        this.$store.commit('SHOW_MODAL', {component: 'UserSearch', props: {
+          onUserClick: (user) => {
+            this.postAsUser = user
+            this.shiftsPending.map(shift => shift.postedAsUser = user)
+            this.$store.commit('CLOSE_MODAL')
+          }
+         }
+       })
+      })
+    },
+    cancelPostAs () {
+      this.postAsUser = {}
+    },
+    shouldBeRepostOf (shift) {
+      let coastersHeld = this.$store.state.userData.holding
+      let dupes = Object.keys(coastersHeld).filter((key) => {
+        return coastersHeld[key].shiftType === shift.shiftType && coastersHeld[key].date === moment(shift.date).format('YYYY-MM-DD') && coastersHeld[key].time === shift.time && !coastersHeld[key].inactive
+      })
+      return dupes && dupes[0]
+    },
   },
   computed: {
     disabledDates() {
       return { to: moment().subtract(1, 'days').toDate() }
+    },
+    duplicateShifts () {
+      return this.shiftsPending.map(this.shouldBeRepostOf).filter(shift => !!shift)
     }
   }
 }
@@ -108,6 +154,21 @@ export default {
 @import '../../node_modules/bulma/sass/utilities/mixins.sass';
 
 .multi-post {
+  .dupe-warnings {
+    margin-bottom: .6em;
+    color: red;
+    a {
+      color: red;
+      text-decoration: underline;
+      display: block;
+    }
+  }
+  .posting-as {
+    color: red;
+    display: flex;
+    justify-content: space-between;
+  }
+
   .item-row {
     display: flex;
     justify-content: space-between;
@@ -115,6 +176,7 @@ export default {
     border: 1px solid lightgray;
     padding: .6em .75em;
     margin-bottom: .43em;
+    &.warning { border: 1px solid red; }
     &.title-bar {
       i {
         font-size: 18px;
@@ -140,7 +202,7 @@ export default {
           -webkit-appearance: none;
           -moz-appearance: none;
           text-indent: 1px;
-          text-overflow: '';
+          // text-overflow: '';
           color: #4a4a4a;
           font-size: 1rem;
           font-weight: 400;

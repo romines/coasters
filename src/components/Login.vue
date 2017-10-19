@@ -9,6 +9,7 @@
       <slot name="message">
 
       </slot>
+
     </div>
 
     <div v-show="wantsToSignUp" class="sign-up-header">
@@ -16,48 +17,47 @@
       <p>Create Coasters account and login</p>
     </div>
 
-    <div class="login-form">
+    <form class="login-form" @submit.prevent="submit">
 
-      <div v-show="!authState.user" class="no-user">
-
-        <p v-show="wantsToSignUp" class="control has-icon">
-          <input v-model="displayName" class="input" placeholder="Enter your full name">
-          <i class="fa fa-user"></i>
-        </p>
+      <p v-show="wantsToSignUp" class="control has-icon">
+        <input v-model="displayName" class="name input" name="name" placeholder="Enter your full name">
+        <i class="fa fa-user"></i>
+      </p>
+      <p class="control has-icon">
+        <input v-model="email" class="input" type="email" name="email" placeholder="Email">
+        <i class="fa fa-envelope"></i>
+      </p>
+      <p class="control has-icon">
+        <input v-model="password" class="input" type="password" name="password" placeholder="Password">
+        <i class="fa fa-lock"></i>
+      </p>
+      <div v-show="wantsToSignUp">
         <p class="control has-icon">
-          <input v-model="email" class="input" type="email" placeholder="Email">
-          <i class="fa fa-envelope"></i>
-        </p>
-        <p class="control has-icon">
-          <input v-model="password" class="input" type="password" placeholder="Password">
+          <input v-model="confirmPassword" @focus="confirmFocused = true" @blur="confirmFocused = false" class="input" type="password" name="confirm-password" placeholder="Confirm Password">
           <i class="fa fa-lock"></i>
         </p>
-        <div v-show="wantsToSignUp">
-          <p class="control has-icon">
-            <input v-model="confirmPassword" @focus="confirmFocused = true" @blur="confirmFocused = false" class="input" type="password" placeholder="Confirm Password">
-            <i class="fa fa-lock"></i>
-          </p>
-        </div>
-        <div v-show="!wantsToSignUp" class="clearfix btn-group">
-          <button @click="logIn" class="button is-primary">Login</button>
-          <span class="or">&nbsp;&mdash;&nbsp;OR&nbsp;&mdash;&nbsp;</span>
-          <button type="button" v-on:click="wantsToSignUp = true" class="button">Sign up</button>
-        </div>
-        <div v-show="wantsToSignUp" class="clearfix btn-group">
-          <button @click="signUp" :disabled="notReadyForSubmit" class="button is-primary">Sign up</button>
-          <span class="or">&nbsp;&mdash;&nbsp;OR&nbsp;&mdash;&nbsp;</span>
-          <button type="button" v-on:click="wantsToSignUp = false" class="button">Login</button>
-        </div>
-        <div class="forgot">
-          <span @click="onForgotPasswordClick" class="target">Forgot Password</span>
-        </div>
       </div>
 
-      <button v-show="authState.user" @click="logOut" class="button">Log out</button>
+      <div v-show="!wantsToSignUp" class="clearfix btn-group">
+        <input type="submit" value="Login" class="button is-primary">
+        <span class="or">&nbsp;&mdash;&nbsp;OR&nbsp;&mdash;&nbsp;</span>
+        <button type="button" v-on:click="wantsToSignUp = true" class="button">Sign up</button>
+      </div>
+
+      <div v-show="wantsToSignUp" class="clearfix btn-group">
+        <input @click="signUp" type="submit" value="Sign up" :disabled="notReadyForSubmit" class="button is-primary">
+        <span class="or">&nbsp;&mdash;&nbsp;OR&nbsp;&mdash;&nbsp;</span>
+        <button type="button" v-on:click="wantsToSignUp = false" class="button">Login</button>
+      </div>
+
+      <div class="forgot">
+        <span @click="onForgotPasswordClick" class="target">Forgot Password</span>
+      </div>
 
       <div v-if="authError" class="auth-error">{{authError}}</div>
       <div v-if="passwordMismatch && !confirmFocused" class="auth-error password-mismatch">Your passwords do not match</div>
-    </div>
+
+    </form>
 
     <div class="social-providers">
       <span @click="startFacebookLogin"><i class="fa fa-facebook-square" aria-hidden="true"></i></span>
@@ -89,6 +89,13 @@
       }
     },
     methods: {
+      submit () {
+        if (this.wantsToSignUp) {
+          this.signUp()
+        } else {
+          this.logIn()
+        }
+      },
       logIn () {
         let user = {email: this.email, password: this.password}
 
