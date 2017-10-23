@@ -4,7 +4,7 @@ const coasterFanout = require('./coasterFanout.js');
 const getPickupNotifications = require('./pickupNotifications.js');
 const database = require('./firebase.js').database();
 // const utilities = require('./migrationUtils.js');
-
+// utilities.rmAllUsers();
 
 let root = database.ref("data");
 
