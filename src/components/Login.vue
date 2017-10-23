@@ -45,7 +45,7 @@
       </div>
 
       <div v-show="wantsToSignUp" class="clearfix btn-group">
-        <input @click="signUp" type="submit" value="Sign up" :disabled="notReadyForSubmit" class="button is-primary">
+        <input type="submit" value="Sign up" :disabled="notReadyForSubmit" class="button is-primary">
         <span class="or">&nbsp;&mdash;&nbsp;OR&nbsp;&mdash;&nbsp;</span>
         <button type="button" v-on:click="wantsToSignUp = false" class="button">Login</button>
       </div>

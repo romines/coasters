@@ -1,6 +1,6 @@
 var path = require('path')
 var webpack = require('webpack')
-var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+// var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 // var HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
@@ -47,6 +47,7 @@ module.exports = {
   },
   plugins: [
     new webpack.NamedModulesPlugin(),
+    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     // new BundleAnalyzerPlugin()
   ],
   devServer: {

@@ -6,7 +6,6 @@ const database = require('./firebase.js').database();
 const utilities = require('./migrationUtils.js');
 
 
-
 let root = database.ref("data");
 
 root.child(`/coasters`).on('child_changed', (refData) => {
@@ -27,7 +26,6 @@ root.child(`/coasters`).on('child_changed', (refData) => {
 })
 
 root.child('users').on('child_changed', (refData) => {
-  console.log('there was a change to a user . . .');
   
   const user = refData.val();
 

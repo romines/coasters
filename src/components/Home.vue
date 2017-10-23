@@ -30,7 +30,6 @@
 
 <script>
 
-import _ from 'lodash'
 import moment from 'moment'
 import Filters from './Filters.vue'
 import Coaster from './Coaster/Coaster.vue'
@@ -46,12 +45,27 @@ export default {
 
   computed: {
     coasters () {
-      return _.chain(this.$store.state.coasters)
+      return this.$store.state.coasters
       .filter(coaster => coaster.available)
       .filter(coaster => !coaster.inactive)
-        .sortBy('time')
-        .sortBy('date')
-        .value()
+      .sort((a, b) => {
+        if (a.time < b.time) {
+          return -1
+        }
+        if (a.time > b.time) {
+          return 1
+        }
+        return 0
+      })
+      .sort((a, b) => {
+        if (a.date + '' < b.date + '') {
+          return -1
+        }
+        if (a.date + '' > b.date + '') {
+          return 1
+        }
+        return 0
+      })
     },
     filteredCoasters () {
 

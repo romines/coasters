@@ -32,7 +32,7 @@ export default {
     authState () {
       return this.$store.state.authState
     },
-    userKey () {
+    userId () {
       if (!this.authState.user) return
       return this.authState.user.uid
     },
@@ -61,11 +61,11 @@ export default {
           component:'Login',
 					heading: 'Please Login',
 					message: 'You must login before viewing this page',
-					onSuccess (key) {
+					onSuccess (uid) {
 						router.push({
 							name: 'user',
 							params: {
-								key: key
+								uid: uid
 							}
 						})
 					}
@@ -74,7 +74,7 @@ export default {
         router.push({
           name: 'user',
           params: {
-            key: this.userKey
+            uid: this.userId
           }
         })
       }

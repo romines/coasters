@@ -108,7 +108,7 @@ export default {
           router.push({
             name: 'user',
             params: {
-              key: this.$store.state.authState.user.uid
+              uid: this.$store.state.authState.user.uid
             }
           })
         }, () => { alert('Something appears to have gone wrong. Please refresh and try again') }
@@ -132,7 +132,7 @@ export default {
       this.postAsUser = {}
     },
     shouldBeRepostOf (shift) {
-      let coastersHeld = this.$store.state.userData.holding
+      let coastersHeld = this.$store.state.userData.holding ? this.$store.state.userData.holding : {}
       let dupes = Object.keys(coastersHeld).filter((key) => {
         return coastersHeld[key].shiftType === shift.shiftType && coastersHeld[key].date === moment(shift.date).format('YYYY-MM-DD') && coastersHeld[key].time === shift.time && !coastersHeld[key].inactive
       })

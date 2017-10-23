@@ -71,7 +71,7 @@ export default {
 
   computed: {
     coastersHeld () {
-      return this.$store.state.userData.holding
+      return this.$store.state.userData.holding ? this.$store.state.userData.holding : {} 
     },
     shouldBeRepostOf () {
       let dupes = Object.keys(this.coastersHeld).filter((key) => {
@@ -108,7 +108,7 @@ export default {
           router.push({
             name: 'user',
             params: {
-              key: this.$store.state.authState.user.uid
+              uid: this.$store.state.authState.user.uid
             }
           })
         }, () => { alert('Something appears to have gone wrong. Please refresh and try again')}

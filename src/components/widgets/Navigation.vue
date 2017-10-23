@@ -84,9 +84,8 @@ export default {
       return this.authState.user.email
     },
     displayName () {
-      if (!this.authState.user) return
-
-      return this.authState.user.displayName //? this.authState.user.displayName : this.authState.user.email
+      if (!this.$store.state.userData) return
+      return this.$store.state.userData.displayName
     },
     userKey () {
       if (!this.authState.user) return
@@ -133,12 +132,29 @@ export default {
       this.burgerActive = false
     },
     toUserHome () {
-      router.push({
-        name: 'user',
-        params: {
-          key: this.userKey
-        }
-      })
+      if (!this.$store.state.authState.user) {
+				this.$store.commit('SHOW_MODAL', {
+          component:'Login',
+					heading: 'Please Login/Sign Up',
+					message: 'You must login before viewing this page',
+					onSuccess () {
+						router.push({ 
+              name: 'user', 
+              params: {
+                uid: this.$store.state.authState.user.uid
+                } 
+              }
+            )
+					}
+        })
+			} else {
+        router.push({
+          name: 'user',
+          params: {
+            uid: this.userKey
+          }
+        })
+			}
       this.burgerActive = false
     }
   }

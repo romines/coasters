@@ -12,7 +12,8 @@ const authUsers = require('./users')['users']; //.filter(rmTestUsers);
 // rmTestUsers();
 
 // console.log(authUsers.length);
-module.exports = {authUsers}
+module.exports = {mergeUsers, rmAllUsers}
+
 function mergeUsers() {
   console.log('running mergeUsers . . .');
   const indexedAuthUsers = _.indexBy(authUsers, 'localId');
@@ -21,35 +22,49 @@ function mergeUsers() {
     let dbUsers = snap.val();
     console.log(`num users from db: ${Object.keys(dbUsers).length}`);
     console.log(`num users from auth: ${authUsers.length}`);
-    let updates = {};
-    Object.keys(dbUsers).forEach((dbUserKey) => {
-      if (!indexedAuthUsers[dbUserKey]) {
-        // console.log(dbUsers[dbUserKey]);
-        updates[dbUserKey] = null;
-      }
-    })
 
-    const authUserKeys = Object.keys(indexedAuthUsers);
-    authUserKeys.forEach((key) => {
-      const authUser = indexedAuthUsers[key];
-      updates[`${key}`] = {
-        uid: key,
-        email: authUser.email,
-        emailVerified: authUser.emailVerified,
-        displayName: authUser.displayName,
-        photoURL: authUser.photoUrl ? authUser.photoUrl : ''
-      }
 
-    })
+    // let updates = {};
+    // Object.keys(dbUsers).forEach((dbUserKey) => {
+    //   if (!indexedAuthUsers[dbUserKey]) {
+    //     // console.log(dbUsers[dbUserKey]);
+    //     updates[dbUserKey] = null;
+    //   }
+    // })
 
-    console.log(updates);
+    // const authUserKeys = Object.keys(indexedAuthUsers);
+    // authUserKeys.forEach((key) => {
+    //   const authUser = indexedAuthUsers[key];
+    //   updates[`${key}`] = {
+    //     uid: key,
+    //     email: authUser.email,
+    //     emailVerified: authUser.emailVerified,
+    //     displayName: authUser.displayName,
+    //     photoURL: authUser.photoUrl ? authUser.photoUrl : ''
+    //   }
+
+    // })
+
+    // console.log(updates);
     // return root.child('users').update(updates);
   })
 }
 
 function rmAllUsers() {
-  authUsers.forEach(user => console.log(user));
-  
+  let updates = {};
+  authUsers.forEach((user) => {
+    admin.auth().deleteUser(user.localId)
+      .then(function() {
+        console.log(`Successfully deleted user ${user.email}`);
+        updates[user.localId] = null;
+      })
+      .catch(function(error) {
+        console.log("Error deleting user:", error);
+      });
+  })
+  root.child('users').update(updates)
+    .then(() => console.log('Users ref updated'))
+    .catch((e) => console.log(e));
 }
 
 

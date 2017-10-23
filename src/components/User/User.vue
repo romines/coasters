@@ -120,7 +120,7 @@ export default {
   },
   computed: {
     user () {
-      return this.$store.state.authState.user
+      return this.$store.state.userData
     },
 
     notifications () {
@@ -186,7 +186,6 @@ export default {
             return getMyRepostIndex(index - 1);
           }
         } else {
-          console.log('Not found');
           return -1;
         }
       }

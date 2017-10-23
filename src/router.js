@@ -36,17 +36,18 @@ const routes = [
         component: Login
       },
       {
-        path: '/user/:key',
         name: 'user',
+        path: '/user/:uid',
         component: User
         ,
         beforeEnter: (to, from, next) => {
-          store.dispatch('getUserPostedAndHoldingShifts', to.params.key).then((userData) => {
+          store.dispatch('getUserPostedAndHoldingShifts', to.params.uid).then((userData) => {
             next()
           })
         }
       },
       {
+        name: 'post',
         path: '/post',
         component: Post
       },
@@ -68,7 +69,6 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-
   let promised = [
     store.dispatch('getPromisedCoasters')
   ] // this can be added to

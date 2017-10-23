@@ -55,7 +55,6 @@
 import store from '../store'
 import { firebase } from '../libs'
 import moment from 'moment'
-import _ from 'lodash'
 import mixins from '../mixins'
 import Coaster from './Coaster/Coaster.vue'
 import DateRange from './widgets/DateRange.vue'
@@ -84,14 +83,27 @@ export default {
         return (coasterMoment.diff(beginningMoment, 'days') >= 0)
       }
 
-      return _.chain(this.$store.state.coasters).filter((coaster) => {
-        return coaster.history
-      })
+      return this.$store.state.coasters.filter(coaster => coaster.history)
       .filter(withinDateRange)
       .filter(coaster => !coaster.inactive)
-      .sortBy('time')
-      .sortBy('date')
-      .value()
+      .sort((a, b) => {
+        if (a.time < b.time) {
+          return -1
+        }
+        if (a.time > b.time) {
+          return 1
+        }
+        return 0
+      })
+      .sort((a, b) => {
+        if (a.date + '' < b.date + '') {
+          return -1
+        }
+        if (a.date + '' > b.date + '') {
+          return 1
+        }
+        return 0
+      })
     },
 
     days () {

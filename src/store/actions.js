@@ -10,8 +10,8 @@ const auth = firebase.auth()
 const baseRef = db.ref('data')
 const coastersRef = db.ref('data/coasters')
 const usersRef = db.ref('data/users')
-const trimUser = ({uid, displayName, photoURL, email}) => {
-  return {uid, displayName, photoURL, email}
+const trimUser = ({uid, photoURL, email}) => {
+  return {uid, photoURL, email}
 }
 
 export default {
@@ -22,9 +22,9 @@ export default {
 
   , listenToAuthState ({ commit, state, dispatch }) {
 
-  console.log('listenToAuthState');
-
+    
     firebase.auth().onAuthStateChanged(firebaseUser => {
+      console.log('listenToAuthState');
 
       if (firebaseUser) {
         dispatch('watchPhotoURL', firebaseUser.uid)
@@ -35,15 +35,13 @@ export default {
             let promised = []
             if (!firebaseUser.displayName) {
               promised.push(firebaseUser.updateProfile({displayName: userFromDatabase.displayName}))
-            } 
-
-            let updates = ['displayName', 'photoURL'].reduce((updates, prop) => {
-              if (firebaseUser[prop] && !userFromDatabase[prop]) {
-                updates[`/users/${firebaseUser.uid}/${prop}`] = firebaseUser[prop]
-              }
-              return updates
-            }, {})
-            if (Object.keys(updates).length) promised.push(baseRef.update(updates))
+            }
+            
+            if (!userFromDatabase.photoURL && firebaseUser.photoURL) {
+              let updates = {}
+              updates[`/users/${firebaseUser.uid}/photoURL`] = firebaseUser.photoURL
+              promised.push(baseRef.update(updates))
+            }
 
             return Promise.all(promised)
         
@@ -60,7 +58,7 @@ export default {
       } else {
         // this was a log out event
         commit('LOG_OUT_USER')
-        commit('GET_USER_DATA', {posted: [], holding: []})
+        commit('GET_USER_DATA', {posted: {}, holding: {}})
         commit('GET_NOTIFICATIONS', [])
         commit('SET_ADMIN', false)
       }
@@ -72,7 +70,7 @@ export default {
     const userDataToDb = (user) => {
       let updates = {}
       let authenticatedUser = trimUser(user)
-      let mergedUser = { ...authenticatedUser, displayName: user.displayName }
+      let mergedUser = { ...authenticatedUser, displayName: newUserData.displayName }
       updates[`/users/${mergedUser.uid}`] = mergedUser
       return baseRef.update(updates)
     }
@@ -126,6 +124,7 @@ export default {
 
   , updateUserPhotoURL ({ commit }, photoURL) {
     let currentUser = firebase.auth().currentUser;
+    if (!currentUser) return console.log('no fb user to update photo for')
     currentUser.updateProfile({
       photoURL
     })
@@ -247,6 +246,7 @@ export default {
   }
 
   , getUserPostedAndHoldingShifts ({commit, state}, uid) {
+    if (!uid) debugger
     let currentUser = firebase.auth().currentUser
     if (!currentUser) {
       return new Promise ((resolve, reject) => {
@@ -324,7 +324,7 @@ export default {
       return
     }
 
-    const user = (coasterData.postedAsUser && Object.keys(coasterData.postedAsUser).length) ? coasterData.postedAsUser : state.authState.user
+    const user = (coasterData.postedAsUser && Object.keys(coasterData.postedAsUser).length) ? coasterData.postedAsUser : state.userData
 
     coasterData.postedBy = {
       uid: user.uid,
@@ -350,7 +350,7 @@ export default {
     if (!coaster.available) return
     let updates = {}   
     let coasterData = {...coaster}
-    const user = state.authState.user
+    const user = state.userData
     
     if (!coaster.history) {
       //
@@ -423,7 +423,7 @@ export default {
 
     const coaster = payload.coaster
     const now = moment().format()
-    const user = state.authState.user
+    const user = state.userData
     let newComment = {
       when: now,
       postedBy: {
@@ -458,7 +458,7 @@ export default {
   , pickUpCoaster ({ commit, state }, options) {
 
     const now = moment().format()
-    const user = options.user ? options.user : state.authState.user
+    const user = options.user ? options.user : state.userData
     const coaster = options.coaster
     const newHistoryItemRef = coastersRef.child(coaster.key).child('history').push()
     const newHistoryItemKey = newHistoryItemRef.key
@@ -505,7 +505,7 @@ export default {
     const newHistoryItemRef = coastersRef.child(coaster.key).child('history').push()
     const newHistoryItemKey = newHistoryItemRef.key
     const now = moment().format()
-    const user = state.authState.user
+    const user = state.userData
     const committedBy = {
       name: user.displayName,
       uid: user.uid,

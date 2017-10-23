@@ -27,7 +27,6 @@ const store = new Vuex.Store({
       user:               null,
       status:             '',
       error:              '',
-      tempUserData:       {},
       passwordResetError: '',
       isAdmin:            false
     },
@@ -88,14 +87,8 @@ const store = new Vuex.Store({
       console.log(error);
       state.authState.passwordResetError = error
     },
-    UPDATE_USERNAME (state, username) {
-      state.authState.user.displayName = username
-    },
     UPDATE_PHOTO_URL (state, photoURL) {
-      state.authState.user = {...state.authState.user, photoURL: photoURL}
-    },
-    SAVE_TEMP_USER (state, user) {
-      state.authState.tempUserData = user
+      state.authState.user.photoURL = photoURL
     },
     SET_ADMIN (state, isAdmin) {
       state.authState.isAdmin = isAdmin
