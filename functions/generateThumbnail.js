@@ -41,19 +41,19 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
   // Exit if this is triggered on a file that is not an image.
   if (!event.data.contentType.startsWith('image/')) {
   console.log('This is not an image.');
-    return;
+    return null;
   }
 
   // Exit if the image is already a thumbnail.
   if (fileName.startsWith(THUMB_PREFIX)) {
     console.log('Already a Thumbnail.');
-    return;
+    return null;
   }
 
   // Exit if this is a move or deletion event.
   if (event.data.resourceState === 'not_exists') {
     console.log('This is a deletion event.');
-    return;
+    return null;
   }
 
   return mkdirp(tempLocalDir).then(() => {
@@ -84,19 +84,19 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
               let getUpdates = new Promise((resolve, reject) => {
 
                 if (userData !== null) {
-                  
+
                   if (userData.posted) {
-                    
+
                     userUpdates = Object.keys(userData.posted).reduce((updates, key) => {
                       let coaster = userData.posted[key];
                       if (coaster.postedBy.uid === uid) {
                         let coasterKey = coaster.key;
                         updates[`/coasters/${coasterKey}/postedBy/photoURL`] = url;
-                      } 
+                      }
                       return updates;
                     }, userUpdates);
                   }
-  
+
                   if (userData.holding) {
                     userUpdates = Object.keys(userData.holding).reduce((updates, key) => {
                       let coaster = userData.holding[key];
@@ -105,11 +105,11 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
                       return updates;
                     }, userUpdates);
                   }
-  
+
                   if (userData.coastersCommentedOn) {
-                    
+
                     let commentUpdates = {};
-  
+
                     var getCoaster = (coasterKey) => {
                       return new Promise((resolve, reject) => {
                         root.child(`coasters/${coasterKey}`).once('value', (snap) => {
@@ -128,13 +128,13 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
                     var commentPromises = Object.keys(userData.coastersCommentedOn).map(getCoaster);
                     Promise.all(commentPromises).then(() => {
                       let combined = Object.assign(userUpdates, commentUpdates);
-                      
+
                       resolve(combined);
                     });
                   } else {
                     resolve(userUpdates);
                   }
-  
+
                 } else {
                   reject(`HOWDY. No data was found at /users/${uid}/`);
                 }
@@ -142,7 +142,7 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
               });
 
               getUpdates.then((updates) => {
-                root.update(updates);
+                return root.update(updates);
               }, e => console.log);
 
             })
