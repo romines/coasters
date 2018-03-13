@@ -15,7 +15,7 @@
     "firebase": "^4.5.2",
     "firebase-encode": "0.0.5",
     "lodash": "^4.17.4",
-    "moment": "^2.15.2",
+    "moment": "^2.21.0",
     "vue": "^2.2.6",
     "vue-router": "^2.4.0",
     "vuejs-datepicker": "^0.7.11",
