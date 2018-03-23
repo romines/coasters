@@ -1,0 +1,14 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:vue/recommended"
+  ],
+  "rules": {
+    "vue/require-v-for-key": "off",
+    "vue/html-indent": "off",
+    "vue/require-default-prop": "off",
+    "vue/max-attributes-per-line": "off",
+    "no-console": "off",
+    "vue/attributes-order": [2, { "order": ["DEFINITION", "LIST_RENDERING", "GLOBAL", "CONDITIONALS", "OTHER_ATTR", "RENDER_MODIFIERS", "UNIQUE", "BINDING", "EVENTS", "CONTENT"] }]
+  }
+}

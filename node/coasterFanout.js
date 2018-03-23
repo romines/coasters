@@ -1,16 +1,9 @@
 'use strict';
+const isTrade = require('./utilities').isTrade;
 
 function getCoasterFanout (coaster, updates) {
 
   console.log(`fanning out updates for: ${coaster.key}`);
-
-  const isTrade = (historyItem) => {
-    if (historyItem.type && historyItem.type !== 'TRADE') {
-      return false;
-    } else {
-      return true;
-    }
-  };
 
   if (coaster.heldBy) updates[`/users/${coaster.heldBy.uid}/holding/${coaster.key}`] = coaster
 

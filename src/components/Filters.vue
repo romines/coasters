@@ -4,25 +4,26 @@
     <div class="shift-types">
       <span
         v-for="shiftType in shiftTypes"
-        @click="toggleFilter('shiftTypes', shiftType)"
-        v-bind:class="{ 'is-active': isActiveFilter('shiftTypes', shiftType) }"
-        class="shiftType button">
-        <img v-bind:src="loadSvg(shiftType)" alt="">
+        class="shiftType button"
+        :class="{ 'is-active': isActiveFilter('shiftTypes', shiftType) }"
+        @click="toggleFilter('shiftTypes', shiftType)">
+        <img :src="loadSvg(shiftType)">
       </span>&nbsp;
       <span
         v-for="time in times"
-        @click="toggleFilter('times', time)"
-        v-bind:class="{ 'is-active': isActiveFilter('times', time) }"
-        class="time button">
-        {{time}}
+        class="time button"
+        :class="{ 'is-active': isActiveFilter('times', time) }"
+        @click="toggleFilter('times', time)">
+        {{ time }}
       </span>
     </div>
 
     <div class="days-of-the-week">
       <span v-for="(day, index) in daysOfTheWeek"
-        @click="toggleFilter('days', index)"
-        v-bind:class="{ 'is-active': isActiveFilter('days', index) }"
-        class="dayOfWeek button">{{day}}
+        class="dayOfWeek button"
+        :class="{ 'is-active': isActiveFilter('days', index) }"
+        @click="toggleFilter('days', index)">
+        {{ day }}
       </span>
 
     </div>
@@ -33,20 +34,24 @@
 
       <div class="tags-and-clear">
         <div class="filter-tags">
-          <span v-for="shiftType in coasterFilters.shiftTypes" class="tag is-info is-small">
-            {{shiftType}}
-            <button @click="toggleFilter('shiftTypes', shiftType)"class="delete is-small"></button>
+
+          <span v-for="shiftType in myFilters.shiftTypes" class="tag is-info is-small">
+            {{ shiftType }}
+            <button class="delete is-small" @click="toggleFilter('shiftTypes', shiftType)" />
           </span>
-          <span v-for="time in coasterFilters.times" class="tag is-info is-small">
-            {{time}}
-            <button @click="toggleFilter('times', time)"class="delete is-small"></button>
+
+          <span v-for="time in myFilters.times" class="tag is-info is-small">
+            {{ time }}
+            <button class="delete is-small" @click="toggleFilter('times', time)" />
           </span>
-          <span v-for="day in coasterFilters.days" class="tag is-info is-small">
-            {{getDayString(day)}}
-            <button @click="toggleFilter('times', time)"class="delete is-small"></button>
+
+          <span v-for="day in myFilters.days" class="tag is-info is-small">
+            {{ getDayString(day) }}
+            <button class="delete is-small" @click="toggleFilter('days', day)" />
           </span>
+
         </div>
-        <span @click="clearFilters" class="button clear is-small">Clear All</i></span>
+        <span class="clear button is-small" @click="clearFilters">Clear All</span>
 
       </div>
 
@@ -60,14 +65,20 @@
 <script>
 import mixins from '../mixins'
 import { mapState } from 'vuex'
-import moment from 'moment'
+
 export default {
+  mixins: [mixins],
+  props: {
+    myFilters: {
+      type: Object
+    }
+  },
   data () {
     return {}
   },
   computed: {
     hasFilters () {
-      return !!this.$store.state.coasterFilters.shiftTypes.length || !!this.$store.state.coasterFilters.times.length || !!this.$store.state.coasterFilters.days.length
+      return !!this.myFilters.shiftTypes.length || !!this.myFilters.times.length || !!this.myFilters.days.length
     },
     ...mapState([
       'daysOfTheWeek',
@@ -76,33 +87,30 @@ export default {
       'coasterFilters'
     ])
   },
+	created () {
+	},
 	methods: {
     isActiveFilter (type, value) {
-      if (this.$store.state.coasterFilters[type].indexOf(value) !== -1) {
-        return true
-      }
+      return this.myFilters[type].indexOf(value) > -1
     },
 
 		toggleFilter (type, value) {
 
-      let indexInFilters = this.$store.state.coasterFilters[type].indexOf(value)
+      const index = this.myFilters[type].indexOf(value)
 
-      let payload = {
+      const payload = {
         filterType: type,
-        filter: value
+        filter: value,
+        index,
       }
 
-      if (indexInFilters !== -1) {  // if already applied, remove
-        payload.index = indexInFilters;
-        this.$store.commit('REMOVE_FILTER', payload)
-
-      } else {
-        this.$store.commit('ADD_FILTER', payload)
-      }
+      this.$emit('toggleFilter', payload)
 
 		},
 
-    clearFilters () { this.$store.commit('CLEAR_FILTERS') },
+    clearFilters () {
+      this.$emit('clearFilters')
+    },
 
     getDayString (day) {
       const dayStrings = ['Sun','Mon','Tue','Wed','Thr','Fri','Sat']
@@ -110,9 +118,6 @@ export default {
     }
 
 	},
-	mixins: [mixins],
-	created () {
-	}
 }
 </script>
 

@@ -2,12 +2,12 @@
   <div class="covered container">
     <h1 class="title header">Covered Shifts</h1>
 
-    <date-range v-on:selected="onDateSelected"/>
+    <date-range @selected="onDateSelected"/>
 
     <div class="list">
       <div v-for="day in days">
 
-        <div class="day-title title is-5">{{day.date}}</div>
+        <div class="day-title title is-5">{{ day.date }}</div>
 
         <ul>
           <!--
@@ -15,25 +15,29 @@
              * Coaster
              *
               -->
-          <coaster :options="{}" v-for="coaster in day.shifts" :coaster="coaster" :key="coaster.key">
+          <coaster
+            v-for="coaster in day.shifts"
+            :options="{}"
+            :coaster="coaster"
+            :key="coaster.key">
 
             <div slot="cardHeader">
 
               <header class="card-header">
                 <p class="card-header-title">
                   <span class="icons">
-                    <span class="time"><i class="fa" :class="timeIcon(coaster)"></i></span>
-                    <img class="shift-icon" v-bind:src="loadSvg(coaster.shiftType)" alt="">
+                    <span class="time"><i class="fa" :class="timeIcon(coaster)" /></span>
+                    <img class="shift-icon" :src="loadSvg(coaster.shiftType)" >
                   </span>
-                  <span class="shift-type-code">{{shiftTypeCode(coaster)}}</span>
-                  <span class="date">{{shortDate(coaster.date)}}</span>
+                  <span class="shift-type-code">{{ shiftTypeCode(coaster) }}</span>
+                  <span class="date">{{ shortDate(coaster.date) }}</span>
                 </p>
               </header>
 
             </div>  <!--  End 'cardHeader' slot -->
 
 
-            <trade-detail slot="main" :coaster='coaster'></trade-detail>
+            <trade-detail slot="main" :coaster="coaster"/>
             <!--  End 'main' slot -->
 
 
@@ -52,21 +56,21 @@
 </template>
 
 <script>
-import store from '../store'
-import { firebase } from '../libs'
+// import store from '../store'
+// import { firebase } from '../libs'
 import moment from 'moment'
 import mixins from '../mixins'
 import Coaster from './Coaster/Coaster.vue'
 import DateRange from './widgets/DateRange.vue'
 import TradeDetail from './Coaster/TradeDetail.vue'
 
-const db = firebase.database()
-const coastersRef = db.ref('data/coasters')
+// const db = firebase.database()
+// const coastersRef = db.ref('data/coasters')
 
 
 export default {
-  mixins: [mixins],
   components: { Coaster, DateRange, TradeDetail },
+  mixins: [mixins],
 
   data () {
     return {

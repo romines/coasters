@@ -1,15 +1,22 @@
 <template lang="html">
   <div class="home container">
     <h1 class="title header">Available Shifts</h1>
-    <filters/>
-    <div v-if="days.length" class="list">
-      <div v-for="(day, index) in days" class="day">
 
-        <div class="day-title title is-5">{{day.date}}</div>
+    <filters :my-filters="myFilters"
+      @toggleFilter="toggleFilter" @clearFilters="clearFilters"/>
+
+    <div v-if="days.length" class="list">
+      <div v-for="day in days" class="day">
+
+        <div class="day-title title is-5">{{ day.date }}</div>
 
         <ul>
 
-          <coaster :options="{}" v-for="coaster in day.shifts" :coaster="coaster" :key="coaster.key">
+          <coaster
+            v-for="coaster in day.shifts"
+            :options="{}"
+            :coaster="coaster"
+            :key="coaster.key">
 
             <div slot="comments">
               <div class="top-level-comment">{{ clippedComment(coaster.comment) }}</div>
@@ -33,39 +40,43 @@
 import moment from 'moment'
 import Filters from './Filters.vue'
 import Coaster from './Coaster/Coaster.vue'
-import router from '../router'
 
 export default {
+  components: { Filters, Coaster },
   data () {
     return {
-      beginning: moment()
+      beginning: moment(),
+      myFilters: {
+        days: [],
+        times: [],
+        shiftTypes: []
+      }
     }
   },
-  components: { Filters, Coaster },
 
   computed: {
     coasters () {
       return this.$store.state.coasters
-      .filter(coaster => coaster.available)
-      .filter(coaster => !coaster.inactive)
-      .sort((a, b) => {
-        if (a.time < b.time) {
-          return -1
-        }
-        if (a.time > b.time) {
-          return 1
-        }
-        return 0
-      })
-      .sort((a, b) => {
-        if (a.date + '' < b.date + '') {
-          return -1
-        }
-        if (a.date + '' > b.date + '') {
-          return 1
-        }
-        return 0
-      })
+        .filter(coaster => coaster.available)
+        .filter(coaster => !coaster.inactive)
+        .sort((a, b) => {
+          if (a.time < b.time) {
+            return -1
+          }
+          if (a.time > b.time) {
+            return 1
+          }
+          return 0
+        })
+        .sort((a, b) => {
+          if (a.date + '' < b.date + '') {
+            return -1
+          }
+          if (a.date + '' > b.date + '') {
+            return 1
+          }
+          return 0
+        })
     },
     filteredCoasters () {
 
@@ -76,23 +87,23 @@ export default {
       }
 
       const withinSelectedDaysOfTheWeek = (coaster) => {
-        if (this.filters.days.length === 0) return true
+        if (this.myFilters.days.length === 0) return true
         let coasterDay = moment(coaster.date).day()
-        return this.filters.days.some((day) => {
+        return this.myFilters.days.some((day) => {
           return day === coasterDay
         })
       }
 
       const withinSelectedShiftTypes = (coaster) => {
-        if (this.filters.shiftTypes.length === 0) return true
-        return this.filters.shiftTypes.some((type) => {
+        if (this.myFilters.shiftTypes.length === 0) return true
+        return this.myFilters.shiftTypes.some((type) => {
           return type === coaster.shiftType
         })
       }
 
       const withinSelectedTimes = (coaster) => {
-        if (this.filters.times.length === 0) return true
-        return this.filters.times.some((time) => {
+        if (this.myFilters.times.length === 0) return true
+        return this.myFilters.times.some((time) => {
           return time === coaster.time
         })
       }
@@ -109,7 +120,6 @@ export default {
         let when = moment(coaster.date).format('dddd, MMM Do')
         days[when] = days[when] ? days[when] : []
         days[when].push(coaster)
-        // days[when] = _.sortBy(days[when], 'time')
         return days
       }, {})
 
@@ -125,7 +135,22 @@ export default {
     },
 
   },
+  mounted () {},
   methods: {
+    toggleFilter ({ filterType, filter, index}) {
+      if (index > -1) {
+          this.myFilters[filterType].splice(index)
+        } else {
+          this.myFilters[filterType].push(filter)
+      }
+    },
+    clearFilters () {
+      this.myFilters = {
+        days: [],
+        times: [],
+        shiftTypes: []
+      }
+    },
     clippedComment (comment) {
       const maxLength = 86
       if (comment.length > maxLength) {
@@ -135,7 +160,6 @@ export default {
       }
     }
   },
-  mounted () {},
 }
 </script>
 
@@ -145,7 +169,6 @@ export default {
     padding-top: .6em;
   }
   .day {
-    // padding-top: .6em;
     border-bottom: rgba(179, 182, 210, 0.29);
   }
 

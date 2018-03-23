@@ -1,4 +1,6 @@
+/* eslint-env node */
 'use strict'
+
 const admin = require("firebase-admin");
 const environment = process.env.NODE_ENV ? process.env.NODE_ENV : 'production';
 
