@@ -5,10 +5,16 @@
     <span class="icon-and-text" @click="picking = true">
       <i class="fa fa-calendar" />
       <slot name="range-text">
-        <span class="info">Shifts from {{ begString }}</span>
+        <span v-if="!jumpToDateIsSet" class="range-text">
+          Jump to date
+        </span>
+
+        <span v-if="jumpToDateIsSet" class="range-text">
+          Shifts from {{ beginning.format('MM-DD-YY') }} to {{ lastCoasterDateString }}
+          <i class="clear fa fa-times-circle" @click.stop="$emit('resetDate')"/>
+        </span>
       </slot>
     </span>
-
 
 		<datepicker
 			v-show="picking"
@@ -17,6 +23,7 @@
 			:format="'D, MMM ddsu'"
 			:inline="true"
 			@selected="onSelected"/>
+
 	</div>
 
 </template>
@@ -37,6 +44,12 @@ export default {
       validator (val) {
         return moment.isMoment(val)
       }
+    },
+    lastCoasterMoment: {
+      type: Object,
+      validator (val) {
+        return moment.isMoment(val)
+      }
     }
   },
 	data () {
@@ -49,13 +62,19 @@ export default {
 		}
 	},
   computed: {
+    jumpToDateIsSet () {
+      const today = moment()
+      return !this.beginning.isSame(today, 'day')
+    },
     begString () {
       return this.beginning.format('MM-DD-YY')
+    },
+    lastCoasterDateString () {
+      return this.lastCoasterMoment.format('MM-DD-YY')
     }
   },
   watch: {
     beginning (val) {
-      console.log('beginning prop changed ! ! ! ');
       this.localState.beginningDate = val.toDate()
     }
   },
@@ -63,9 +82,7 @@ export default {
 		onSelected () {
 			this.picking = null
 			Vue.nextTick(() => {
-
 				this.$emit('selected', moment(this.localState.beginningDate))
-
 			})
 		}
 	}
@@ -109,8 +126,8 @@ export default {
 	}
 	.datepicker {
 		position: absolute;
+		left: -4%;
 		z-index: 101;
-		width: 89%;
 		.calendar { width: 100%; }
 	}
 	.title { margin-bottom: .8em; }

@@ -146,6 +146,8 @@ export default {
       width: 11vw;
       height: 10vw;
       margin-right: .12em;
+      border-width: 2px;
+      &:hover:not(.is-active) { border-color: #dbdbdb}
     }
 
   }
@@ -163,12 +165,10 @@ export default {
   }
   .filters-applied { margin-top: .5em; }
   .tags-and-clear {
-    margin-top: .5em;
     display: flex;
     justify-content: space-between;
     .tag {
-      margin-right: .2em;
-
+      margin: .2em .1em;
     }
 
   }

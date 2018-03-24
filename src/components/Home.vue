@@ -7,19 +7,9 @@
 
     <date-range
       :beginning="beginning"
-      :last-coaster-date="lastCoasterDate"
-      @selected="onDateSelected">
-
-      <span v-if="!jumpToDateIsSet" class="range-text" slot="range-text">
-        Jump to date
-      </span>
-
-      <span v-if="jumpToDateIsSet" class="range-text" slot="range-text">
-        Shifts from {{ beginning.format('MM-DD-YY') }} to {{ lastCoasterDate }}
-        <i class="clear fa fa-times-circle" @click.stop="resetDate"/>
-      </span>
-
-    </date-range>
+      :last-coaster-moment="lastCoasterMoment"
+      @selected="onDateSelected"
+      @resetDate="resetDate" />
 
     <div v-if="days.length" class="list">
       <div v-for="day in days" class="day">
@@ -147,8 +137,9 @@ export default {
 
     },
 
-    lastCoasterDate () {
-      return this.filteredCoasters && moment(this.filteredCoasters[this.filteredCoasters.length -1].date).format('MM-DD-YY')
+    lastCoasterMoment () {
+      if (!this.filteredCoasters.length) return
+      return moment(this.filteredCoasters[this.filteredCoasters.length -1].date)
     },
     jumpToDateIsSet () {
       const today = moment()
@@ -162,9 +153,9 @@ export default {
   mounted () {},
   methods: {
     toggleFilter ({ filterType, filter, index }) {
-      console.log({ filterType, filter, index });
+      // console.log({ filterType, filter, index });
       if (index > -1) {
-          this.myFilters[filterType].splice(index)
+          this.myFilters[filterType].splice(index, 1)
         } else {
           this.myFilters[filterType].push(filter)
       }

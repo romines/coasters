@@ -2,7 +2,11 @@
   <div class="covered container">
     <h1 class="title header">Covered Shifts</h1>
 
-    <date-range @selected="onDateSelected"/>
+    <date-range
+      :beginning="beginning"
+      :last-coaster-moment="lastCoasterMoment"
+      @selected="onDateSelected"
+      @resetDate="resetDate" />
 
     <div class="list">
       <div v-for="day in days">
@@ -79,12 +83,11 @@ export default {
   },
 
   computed: {
-    pickedUp () {
+    filteredCoasters () {
 
       const withinDateRange = (coaster) => {
         let coasterMoment = moment(coaster.date)
-        let beginningMoment = moment(this.beginning)
-        return (coasterMoment.diff(beginningMoment, 'days') >= 0)
+        return (coasterMoment.diff(this.beginning, 'days') >= 0)
       }
 
       return this.$store.state.coasters.filter(coaster => coaster.history)
@@ -113,7 +116,7 @@ export default {
     days () {
       // coasters grouped by date of shift
       //
-      let obj = this.pickedUp.reduce((days, coaster) => {
+      let obj = this.filteredCoasters.reduce((days, coaster) => {
         let when = moment(coaster.date).format('dddd, MMM Do')
         days[when] = days[when] ? days[when] : []
         days[when].push(coaster)
@@ -126,15 +129,22 @@ export default {
       }, [])
 
     },
+    lastCoasterMoment () {
+      if (!this.filteredCoasters.length) return
+      return moment(this.filteredCoasters[this.filteredCoasters.length -1].date)
+    },
 
   },
 
   methods: {
-    onDateSelected (date) {
-      let selectedWasOlder = moment(date).isBefore(this.$store.state.coasters[0].date)
-      if (selectedWasOlder) this.$store.dispatch('getPromisedCoasters', {beginning: date})
+    onDateSelected (selectedMoment) {
+      let selectedWasOlder = selectedMoment.isBefore(this.$store.state.coasters[0].date)
+      if (selectedWasOlder) this.$store.dispatch('getPromisedCoasters', { beginning: selectedMoment.format('MM-DD-YY') })
 
-      this.beginning = moment(date)
+      this.beginning = selectedMoment
+    },
+    resetDate () {
+      this.beginning = moment()
     },
     shortDate (myDate) {
       return moment(myDate).format('ddd M/D')
