@@ -2,15 +2,15 @@
   <div id="app-container">
   <main>
 
-    <modal></modal>
+    <modal/>
 
-    <navigation></navigation>
+    <navigation/>
 
     <section class="section">
-      <router-view></router-view>
+      <router-view/>
     </section>
 
-    <bottom-nav></bottom-nav>
+    <bottom-nav/>
 
   </main>
 
@@ -19,26 +19,14 @@
 
 <script>
 
-// everyone should probably have
-//
-import { firebase } from '../libs'
-import moment from 'moment'
 
 // all components should probably have
 //
-import router from '../router'
 import Navigation from './widgets/Navigation.vue'
 import BottomNav from './widgets/BottomNav.vue'
 import Modal from './widgets/Modal.vue'
 // why doesn't this work???
 // import { Navigation, BottomNav, Modal } from './widgets'
-
-import mixins from '../mixins'
-
-
-const db = firebase.database()
-const coastersRef = db.ref('data/coasters')
-
 
 
 
@@ -49,14 +37,10 @@ export default {
     Modal,
     BottomNav
   },
-  created () {
-    this.$store.dispatch('listenToAuthState')
-  },
   data: function () {
     return {
     }
   },
-
   computed: {
 
     coasters () {
@@ -70,6 +54,10 @@ export default {
       }
     }
   },
+  created () {
+    this.$store.dispatch('listenToAuthState')
+  },
+
   methods: {
 
   }
@@ -85,6 +73,10 @@ export default {
 
 .coaster { @extend .box }
 .container { max-width: 1080px;}
+
+span {
+  user-select: none;
+}
 
 main {
 

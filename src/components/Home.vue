@@ -5,6 +5,22 @@
     <filters :my-filters="myFilters"
       @toggleFilter="toggleFilter" @clearFilters="clearFilters"/>
 
+    <date-range
+      :beginning="beginning"
+      :last-coaster-date="lastCoasterDate"
+      @selected="onDateSelected">
+
+      <span v-if="!jumpToDateIsSet" class="range-text" slot="range-text">
+        Jump to date
+      </span>
+
+      <span v-if="jumpToDateIsSet" class="range-text" slot="range-text">
+        Shifts from {{ beginning.format('MM-DD-YY') }} to {{ lastCoasterDate }}
+        <i class="clear fa fa-times-circle" @click.stop="resetDate"/>
+      </span>
+
+    </date-range>
+
     <div v-if="days.length" class="list">
       <div v-for="day in days" class="day">
 
@@ -38,11 +54,12 @@
 <script>
 
 import moment from 'moment'
-import Filters from './Filters.vue'
+import Filters from './widgets/Filters.vue'
+import DateRange from './widgets/DateRange.vue'
 import Coaster from './Coaster/Coaster.vue'
 
 export default {
-  components: { Filters, Coaster },
+  components: { Filters, DateRange, Coaster  },
   data () {
     return {
       beginning: moment(),
@@ -82,8 +99,8 @@ export default {
 
       const withinDateRange = (coaster) => {
         let coasterMoment = moment(coaster.date)
-        let beginningMoment = moment(this.beginning)
-        return (coasterMoment.diff(beginningMoment, 'days') >= 0)
+        // let beginningMoment = moment(this.beginning)
+        return (coasterMoment.diff(this.beginning, 'days') >= 0)
       }
 
       const withinSelectedDaysOfTheWeek = (coaster) => {
@@ -130,6 +147,13 @@ export default {
 
     },
 
+    lastCoasterDate () {
+      return this.filteredCoasters && moment(this.filteredCoasters[this.filteredCoasters.length -1].date).format('MM-DD-YY')
+    },
+    jumpToDateIsSet () {
+      const today = moment()
+      return !this.beginning.isSame(today, 'day')
+    },
     filters () {
       return this.$store.state.coasterFilters
     },
@@ -137,7 +161,8 @@ export default {
   },
   mounted () {},
   methods: {
-    toggleFilter ({ filterType, filter, index}) {
+    toggleFilter ({ filterType, filter, index }) {
+      console.log({ filterType, filter, index });
       if (index > -1) {
           this.myFilters[filterType].splice(index)
         } else {
@@ -150,6 +175,14 @@ export default {
         times: [],
         shiftTypes: []
       }
+    },
+    onDateSelected (selectedMoment) {
+      let selectedWasOlder = selectedMoment.isBefore(this.$store.state.coasters[0].date)
+      if (selectedWasOlder) this.$store.dispatch('getPromisedCoasters', { beginning: selectedMoment.format('MM-DD-YY') })
+      this.beginning = selectedMoment
+    },
+    resetDate () {
+      this.beginning = moment()
     },
     clippedComment (comment) {
       const maxLength = 86
@@ -165,9 +198,10 @@ export default {
 
 <style lang="scss">
 .home {
-  .list {
-    padding-top: .6em;
+  .date-range {
+    padding-top: 1.1em;
   }
+
   .day {
     border-bottom: rgba(179, 182, 210, 0.29);
   }

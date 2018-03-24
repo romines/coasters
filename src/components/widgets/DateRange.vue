@@ -1,16 +1,22 @@
 <template lang="html">
 	<div class="date-range">
-		<div class="mask" v-show="picking" @click="picking = false"></div>
-		<i @click="picking = true" class="fa fa-calendar"></i>
-		<span class="info">Showing from: {{begString}}</span>
+		<div v-show="picking" class="mask" @click.capture="picking = false"/>
+
+    <span class="icon-and-text" @click="picking = true">
+      <i class="fa fa-calendar" />
+      <slot name="range-text">
+        <span class="info">Shifts from {{ begString }}</span>
+      </slot>
+    </span>
+
 
 		<datepicker
-			v-model="beginning"
 			v-show="picking"
+			class="datepicker"
+			v-model="localState.beginningDate"
 			:format="'D, MMM ddsu'"
 			:inline="true"
-			v-on:selected="onSelected"
-			class="datepicker"></datepicker>
+			@selected="onSelected"/>
 	</div>
 
 </template>
@@ -24,32 +30,42 @@ import Vue from 'vue'
 export default {
 	components: {
 		Datepicker
-	},
+  },
+  props: {
+    beginning: {
+      type: Object,
+      validator (val) {
+        return moment.isMoment(val)
+      }
+    }
+  },
 	data () {
-		return {
-			beginning: new Date(),
+    return {
+      localState: {
+        beginningDate: new Date()
+      },
 			// end:       moment().add(6, 'months').format('YYYY-MM-DD'),
 			picking:   false
 		}
 	},
-	computed: {
-		begString () {
-			return moment(this.beginning).format('MM-DD-YY')
-		}
-	},
+  computed: {
+    begString () {
+      return this.beginning.format('MM-DD-YY')
+    }
+  },
+  watch: {
+    beginning (val) {
+      console.log('beginning prop changed ! ! ! ');
+      this.localState.beginningDate = val.toDate()
+    }
+  },
 	methods: {
 		onSelected () {
 			this.picking = null
-			let vm = this
-			Vue.nextTick(function () {
-				// console.log('selected date: ', moment(vm.beginning).format('YYYY-MM-DD'));
+			Vue.nextTick(() => {
 
-				vm.$emit('selected', moment(vm.beginning).format('YYYY-MM-DD'))
+				this.$emit('selected', moment(this.localState.beginningDate))
 
-				// vm.$store.dispatch('getPromisedCoasters', {
-				// 	beginning: moment(vm.beginning).format('YYYY-MM-DD'),
-				// 	ending: null
-				// }).then(() => console.log('new coasters fetched . . .'))
 			})
 		}
 	}
@@ -59,6 +75,29 @@ export default {
 <style lang="scss">
 .date-range {
 	padding-bottom: .8em;
+  .icon-and-text {
+    display: inline-flex;
+    align-items: center;
+    .fa-calendar { transform: translateY(-.1em); }
+    .range-text {
+      user-select: none;
+      display: inline-flex;
+      position: relative;
+      align-items: center;
+      padding: .3em .6em;
+      border: 1px solid #dbdbdb;
+      border-radius: 3px;
+      display: inline-block;
+      margin-left: 1em;
+      i.clear {
+        opacity: .9;
+        position: absolute;
+        right: 0;
+        top: 0;
+        transform: translate(60%, -50%)
+      }
+    }
+  }
 	div.mask {
 		background-color: rgba(108, 127, 233, 0.59);
 		position: fixed;
