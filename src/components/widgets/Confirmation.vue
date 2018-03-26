@@ -1,12 +1,12 @@
 <template lang="html">
   <div class="confirmation">
-		<h4 class="title is-4">{{contents.heading}}</h4>
+		<h4 class="title is-4">{{ contents.heading }}</h4>
 		<div class="question" v-if="contents.message && contents.message.length">
-			{{contents.message}}
+			{{ contents.message }}
 		</div>
 
     <div class="action-buttons">
-      <span v-for="button in contents.buttons" @click="button.action" :class="button.classList" class="button">{{button.label}}</span>
+      <span v-for="button in contents.buttons" @click="button.action" :class="button.classList" class="button">{{ button.label }}</span>
       <span @click="close" class="button" v-if="!contents.hideCancel">Cancel</span>
     </div>
 
@@ -15,12 +15,11 @@
 
 <script>
 export default {
+	props: ['contents'],
 
 	data () {
 		return {}
 	},
-	props: ['contents'],
-created () {console.log(this.contents);}, // TODO temp . . .
 	methods: {
     close () {
       this.$store.commit('CLOSE_MODAL')

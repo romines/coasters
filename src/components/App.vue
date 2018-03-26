@@ -77,6 +77,9 @@ export default {
 * {
   user-select: none;
 }
+textarea, input[type=text] {
+  user-select: auto;
+}
 
 main {
 

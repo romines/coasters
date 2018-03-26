@@ -78,19 +78,9 @@ export default {
   computed: {
     shouldBeRepostOf () {
       return this.getDupeFromList(this.$store.state.userData.holding)
-      // const dupes = Object.keys(this.coastersHeld).filter((key) => {
-      //   return this.coastersHeld[key].shiftType === this.shiftType && this.coastersHeld[key].date === moment(this.date).format('YYYY-MM-DD') && this.coastersHeld[key].time === this.time && !this.coastersHeld[key].inactive
-      // })
-      // return dupes && dupes[0]
     },
     isDupeOf () {
       return this.getDupeFromList(this.$store.state.userData.posted)
-      // if (myPostedCoasters) {
-      //   const dupes = Object.keys(myPostedCoasters).filter((key) => {
-      //     return myPostedCoasters[key].heldBy.uid === this.$store.state.authState.user.uid
-      //   })
-      //   return dupes && dupes[0]
-      // }
     },
     myDate () {
       return moment(this.date).format('YYYY-MM-DD')

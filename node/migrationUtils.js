@@ -1,3 +1,4 @@
+/* eslint-env node */
 'use strict';
 const database = require('./firebase.js').database();
 const admin = require('./firebase.js');
@@ -11,8 +12,35 @@ const authUsers = require('./users')['users']; //.filter(rmTestUsers);
 // mergeUsers();
 // rmTestUsers();
 
+
 // console.log(authUsers.length);
-module.exports = {mergeUsers, rmAllUsers}
+module.exports = {
+  mergeUsers,
+  rmAllUsers,
+  resetPosts
+}
+
+function resetPosts() {
+  if (database.app.options.databaseURL !== 'https://srb-coasters-dev.firebaseio.com') return
+
+  root.child('users').once('value').then(snap => {
+    const users = snap.val();
+    return Object.keys(users).reduce((acc, userKey) => {
+      let userData = {...users[userKey]};
+      userData.holding = null;
+      userData.posted = null;
+      userData.notifications = null;
+      userData.coastersCommentedOn = null;
+      acc[userKey] = userData;
+      return acc;
+    }, {});
+
+  }).then(updates => {
+    return root.child('users').update(updates)
+  }).then(() => {
+    root.child('coasters').remove()
+  })
+}
 
 function mergeUsers() {
   console.log('running mergeUsers . . .');

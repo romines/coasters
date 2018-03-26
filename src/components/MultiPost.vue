@@ -2,8 +2,19 @@
 
   <form class="multi-post" @submit.prevent="submitPending">
 
-    <div v-if="duplicateShifts.length" class="dupe-warnings warning">
+    <div v-if="attemptedReposts && attemptedReposts.length" class="dupe-warnings warning">
       One or more of the shifts below matches a shift you've picked up. Please repost instead.
+
+      <router-link
+        v-for="shift in attemptedReposts"
+        class="dupe-link"
+        :to="'/coasters/' + shift"
+        :key="shift">[duplicate shift]</router-link>
+
+    </div>
+
+    <div v-if="duplicateShifts && duplicateShifts.length" class="dupe-warnings warning">
+      One or more of the shifts below matches a shift you've already posted.
 
       <router-link
         v-for="shift in duplicateShifts"
@@ -28,7 +39,7 @@
       v-for="shift in shiftsPending"
       class="shift item-row"
       :key="shift.key"
-      :class="!!shouldBeRepostOf(shift) ? 'warning' : ''">
+      :class="(!!shouldBeRepostOf(shift) || isDupe(shift)) ? 'warning' : ''">
 
       <span class="date">
         <Datepicker
@@ -99,8 +110,11 @@ export default {
     disabledDates() {
       return { to: moment().subtract(1, 'days').toDate() }
     },
-    duplicateShifts () {
+    attemptedReposts () {
       return this.shiftsPending.map(this.shouldBeRepostOf).filter(shift => !!shift)
+      },
+    duplicateShifts () {
+      return this.shiftsPending.map(this.isDupe).filter(shift => !!shift)
     }
   },
   methods: {
@@ -153,9 +167,19 @@ export default {
       this.postAsUser = {}
     },
     shouldBeRepostOf (shift) {
-      let coastersHeld = this.$store.state.userData.holding ? this.$store.state.userData.holding : {}
-      let dupes = Object.keys(coastersHeld).filter((key) => {
-        return coastersHeld[key].shiftType === shift.shiftType && coastersHeld[key].date === moment(shift.date).format('YYYY-MM-DD') && coastersHeld[key].time === shift.time && !coastersHeld[key].inactive
+      return this.getDupeFromList(shift, this.$store.state.userData.holding)
+    },
+    isDupe (shift) {
+      return this.getDupeFromList(shift, this.$store.state.userData.posted)
+    },
+    getDupeFromList (shift, list) {
+      if (!list) return
+      const dupes = Object.keys(list).filter((key) => {
+        const coaster = list[key]
+        return coaster.shiftType === shift.shiftType
+          && coaster.date === moment(shift.date).format('YYYY-MM-DD')
+          && coaster.time === shift.time
+          && !coaster.inactive
       })
       return dupes && dupes[0]
     },

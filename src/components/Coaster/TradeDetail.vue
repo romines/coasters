@@ -12,7 +12,7 @@
 			</div>
 
 			<div class="media-content">
-				<p>Originally Posted:</p>
+				<p><span v-if="!!timeline">Originally </span>Posted:</p>
 				<h3 class="title is-4 posted-by">{{originalPoster.name}}</h3>
 				<span class="mini-top-level-comment">{{coaster.comment}}</span>
 			</div>
