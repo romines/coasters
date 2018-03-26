@@ -2,7 +2,7 @@
 	<div class="date-range">
 		<div v-show="picking" class="mask" @click.capture="picking = false"/>
 
-    <span class="icon-and-text" @click="picking = true">
+    <span class="icon-and-text" @click.stop="picking = true">
       <i class="fa fa-calendar" />
       <slot name="range-text">
         <span v-if="!jumpToDateIsSet" class="range-text">
@@ -57,7 +57,6 @@ export default {
       localState: {
         beginningDate: new Date()
       },
-			// end:       moment().add(6, 'months').format('YYYY-MM-DD'),
 			picking:   false
 		}
 	},
@@ -70,6 +69,7 @@ export default {
       return this.beginning.format('MM-DD-YY')
     },
     lastCoasterDateString () {
+      if (!this.lastCoasterMoment) return '...'
       return this.lastCoasterMoment.format('MM-DD-YY')
     }
   },
@@ -125,9 +125,14 @@ export default {
 		z-index: 100;
 	}
 	.datepicker {
-		position: absolute;
-		left: -4%;
+		position: fixed;
+		left: 2%;
+    top: 62px;
+    // width: 90%;
 		z-index: 101;
+    .vdp-datepicker__calendar {
+      width: 96vw;
+    }
 		.calendar { width: 100%; }
 	}
 	.title { margin-bottom: .8em; }

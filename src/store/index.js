@@ -10,9 +10,6 @@ import actions from './actions'
 import getters from './getters'
 
 
-import { firebase, moment } from '../libs'
-
-
 Vue.use(Vuex)
 
 
@@ -30,7 +27,7 @@ const store = new Vuex.Store({
       passwordResetError: '',
       isAdmin:            false
     },
-    count: 0,
+    loading: true,
     coasters: [],
     detailCoaster: {},
     userData: {
@@ -79,6 +76,9 @@ const store = new Vuex.Store({
     SET_USER_LOGGED_IN_STATUS (state, newStatus) {
       state.authState.status = newStatus
     },
+    SET_LOADING_STATE (state, isLoading) {
+      state.loading = isLoading
+    },
     AUTH_ERROR (state, error) {
       console.log(error);
       state.authState.error = error
@@ -94,7 +94,6 @@ const store = new Vuex.Store({
       state.authState.isAdmin = isAdmin
     },
     GET_COASTERS (state, coasters) {
-      state.count = coasters.length
       state.coasters = coasters
     },
     GET_USER_DATA (state, userData) {

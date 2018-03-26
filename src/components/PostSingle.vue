@@ -2,14 +2,18 @@
   <div class="post-single">
     <div class="form">
       <div v-if="!!shouldBeRepostOf" class="repost-warning warning">
-        This shift matches one you picked up. Please repost 
+        This shift matches one you picked up. Please repost
         <router-link :to="'/coasters/' + shouldBeRepostOf">that shift</router-link> instead.
+      </div>
+      <div v-if="!!isDupeOf" class="repost-warning warning">
+        Whoops. Looks like you've already posted
+        <router-link :to="'/coasters/' + isDupeOf">this shift</router-link>.
       </div>
       <div v-if="postAsUser.displayName" class="control posting-as">
         <span class="text">
-          Posting As: {{postAsUser.displayName}}
+          Posting As: {{ postAsUser.displayName }}
         </span>
-        <span @click="cancelPostAs" class="fa fa-close"></span>
+        <span @click="cancelPostAs" class="fa fa-close"/>
       </div>
       <p class="control">
         <Datepicker v-model="date" :format="'D, MMM dsu'" :disabled="disabledDates"/>
@@ -26,22 +30,22 @@
         </span>
       </p>
       <p class="control">
-        <span :class="{ 'is-active': isAM }" class="button" @click="time = 'AM'">AM</span>
-        <span :class="{ 'is-active': isPM }" class="button" @click="time = 'PM'">PM</span>
+        <span class="button" :class="{ 'is-active': isAM }" @click="time = 'AM'">AM</span>
+        <span class="button" :class="{ 'is-active': isPM }" @click="time = 'PM'">PM</span>
       </p>
       <span
-        @click="choosePostAsUser"
         v-if="$store.getters.isAdmin"
-        class="button control post-as-button">
+        class="button control post-as-button"
+        @click="choosePostAsUser">
         Post As &nbsp;
-        <span class="fa fa-user"></span>
+        <span class="fa fa-user"/>
       </span>
       <p class="control">
-        <textarea v-model="comment" class="textarea" placeholder="Comments or additional information"></textarea>
+        <textarea class="textarea" v-model="comment" placeholder="Comments or additional information"/>
       </p>
     </div>
 
-    <button @click="newCoaster" class="button submit-button" :disabled="!!shouldBeRepostOf">Submit</button>
+    <button class="button submit-button" :disabled="!!shouldBeRepostOf || !!isDupeOf" @click="newCoaster">Submit</button>
 
   </div>
 </template>
@@ -58,6 +62,9 @@ import Datepicker from 'vuejs-datepicker'
 
 export default {
 
+  components: {
+    Datepicker
+  },
   data () {
     return {
       date: new Date(), //moment().format('YYYY-MM-DD'), // add(1, 'day')
@@ -67,17 +74,23 @@ export default {
       postAsUser: {}
     }
   },
-  props: ['test'],
 
   computed: {
-    coastersHeld () {
-      return this.$store.state.userData.holding ? this.$store.state.userData.holding : {} 
-    },
     shouldBeRepostOf () {
-      let dupes = Object.keys(this.coastersHeld).filter((key) => {
-        return this.coastersHeld[key].shiftType === this.shiftType && this.coastersHeld[key].date === moment(this.date).format('YYYY-MM-DD') && this.coastersHeld[key].time === this.time && !this.coastersHeld[key].inactive
-      })
-      return dupes && dupes[0]
+      return this.getDupeFromList(this.$store.state.userData.holding)
+      // const dupes = Object.keys(this.coastersHeld).filter((key) => {
+      //   return this.coastersHeld[key].shiftType === this.shiftType && this.coastersHeld[key].date === moment(this.date).format('YYYY-MM-DD') && this.coastersHeld[key].time === this.time && !this.coastersHeld[key].inactive
+      // })
+      // return dupes && dupes[0]
+    },
+    isDupeOf () {
+      return this.getDupeFromList(this.$store.state.userData.posted)
+      // if (myPostedCoasters) {
+      //   const dupes = Object.keys(myPostedCoasters).filter((key) => {
+      //     return myPostedCoasters[key].heldBy.uid === this.$store.state.authState.user.uid
+      //   })
+      //   return dupes && dupes[0]
+      // }
     },
     myDate () {
       return moment(this.date).format('YYYY-MM-DD')
@@ -92,11 +105,12 @@ export default {
       return {to: moment().subtract(1, 'days').toDate()}
     }
   },
-  components: {
-    Datepicker
-  },
+
   methods: {
+
     newCoaster () {
+      this.$store.commit('SET_LOADING_STATE', true)
+
       this.$store.dispatch('newCoaster', {
           date:         this.myDate,
           time:         this.time,
@@ -111,11 +125,23 @@ export default {
               uid: this.$store.state.authState.user.uid
             }
           })
+          this.$store.commit('SET_LOADING_STATE', false)
         }, () => { alert('Something appears to have gone wrong. Please refresh and try again')}
-      )
-      // TODO: only redirect on successful persist
-    },
 
+      )
+
+    },
+    getDupeFromList (list) {
+      if (!list) return
+      const dupes = Object.keys(list).filter((key) => {
+        const coaster = list[key]
+        return coaster.shiftType === this.shiftType
+          && coaster.date === moment(this.date).format('YYYY-MM-DD')
+          && coaster.time === this.time
+          && !coaster.inactive
+      })
+      return dupes && dupes[0]
+    },
     choosePostAsUser () {
       this.$store.commit('SHOW_MODAL', {component: 'Loading'})
 
@@ -148,9 +174,9 @@ export default {
     border: 1px solid grey;
     padding: 1.4em;
     margin-bottom: 6em;
-    
+
     .repost-warning {
-      margin-bottom: .6em; 
+      margin-bottom: .6em;
       a {
         color: red;
         text-decoration: underline;
@@ -164,9 +190,11 @@ export default {
 
     @include mobile {
       .vdp-datepicker__calendar {
-        width: 100%;
+        width: 96%;
         position: fixed;
-        left: 0;
+        top: 20vh;
+        left: 2%;
+        z-index: 101;
       }
     }
 

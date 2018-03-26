@@ -144,7 +144,9 @@ export default {
 
     .button {
       width: 11vw;
-      height: 10vw;
+      max-width: 48px;
+      height: 9.2vw;
+      max-height: 42px;
       margin-right: .12em;
       border-width: 2px;
       &:hover:not(.is-active) { border-color: #dbdbdb}

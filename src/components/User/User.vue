@@ -2,14 +2,14 @@
   <div v-if="user" class="user container">
     <div class="title header">
       <span class="text">My Coasters</span>
-      <i @click="logOut" class="fa fa-power-off"></i>
+      <i @click="logOut" class="fa fa-power-off"/>
     </div>
 
     <div class="media">
       <div class="media-left">
         <figure class="user">
           <image-upload>
-            <span slot="title"></span>
+            <span slot="title"/>
           </image-upload>
 
         </figure>
@@ -17,8 +17,8 @@
 
       <div class="media-content">
         <ul>
-          <li>{{user.displayName}}</li>
-          <li>{{user.email}}</li>
+          <li>{{ user.displayName }}</li>
+          <li>{{ user.email }}</li>
           <!-- <li><a @click="logOut">Log out</a></li> -->
         </ul>
       </div>
@@ -26,15 +26,14 @@
 
     <section class="notifications">
       <div v-for="notification in notifications" :key="notification.key" class="notification is-primary">
-        <button @click="dismiss(notification.key)" class="delete"></button>
-        <span v-html="notification.message" class="notieLink"></span>
+        <button @click="dismiss(notification.key)" class="delete"/>
+        <span v-html="notification.message" class="notieLink"/>
       </div>
     </section>
 
     <section class="posted-shifts">
       <span class="title is-5">Posted Shifts</span>
       <ul>
-        <!-- <template v-if="myPostedCoasters.length"> -->
           <coaster
             :options="{ hideFor: true }"
             v-for="coaster in myPostedCoasters"
@@ -46,12 +45,11 @@
               REPOST
             </div>
             <div v-if="!!pickedUpBy(coaster)" class="success">
-              PICKED UP BY: {{pickedUpBy(coaster)}}
+              PICKED UP BY: {{ pickedUpBy(coaster) }}
             </div>
           </div>
 
         </coaster>
-      <!-- </template> -->
 
       </ul>
     </section>
@@ -59,10 +57,9 @@
     <section class="posted-shifts">
       <span class="title is-5">Shifts I'm Covering</span>
       <ul>
-        <!-- <template v-if="myPickedUpCoasters"> -->
           <coaster
-            :options="{}"
             v-for="coaster in myPickedUpCoasters"
+            :options="{}"
             :coaster="coaster"
             :key="coaster.key">
             <div slot="main">
@@ -71,16 +68,16 @@
                   <figure class="user">
                     <img v-if="coaster.postedBy.photoURL" :src="coaster.postedBy.photoURL" alt="">
                     <span v-if="!coaster.postedBy.photoURL" class="icon is-large">
-                      <i class="fa fa-user"></i>
+                      <i class="fa fa-user"/>
                     </span>
                   </figure>
                 </div>
 
                 <div class="media-content">
                   <ul>
-                    <li>{{getLongDateString(coaster.date)}}</li>
-                    <li><strong>{{coaster.time + ' ' + coaster.shiftType}}</strong></li>
-                    <li>for <strong>{{coaster.postedBy.name}}</strong></li>
+                    <li>{{ getLongDateString(coaster.date) }}</li>
+                    <li><strong>{{ coaster.time + ' ' + coaster.shiftType }}</strong></li>
+                    <li>for <strong>{{ coaster.postedBy.name }}</strong></li>
                     <!-- <li><small>[when picked up?]</small></li> -->
                   </ul>
                   <span class="desktop-comments">{{ coaster.comment }}</span>
@@ -98,7 +95,6 @@
             </div>
           </coaster>
 
-        <!-- </template> -->
       </ul>
     </section>
 
@@ -110,9 +106,15 @@ import Coaster from '../Coaster/Coaster.vue'
 import ImageUpload from '../widgets/ImageUpload.vue'
 import router from '../../router'
 import moment from 'moment'
-
+import mixins from '../../mixins'
 
 export default {
+
+  components: {
+    Coaster,
+    ImageUpload
+  },
+  mixins: [mixins],
   data () {
     return {
       beginning: moment()
@@ -138,6 +140,8 @@ export default {
       .filter(coaster => !coaster.inactive)
       .filter(this.notCancelledRepost)
       .filter(this.withinDateRange)
+      .sort(this.sortByTime)
+      .sort(this.sortByDate)
     },
 
     myPickedUpCoasters () {
@@ -150,12 +154,9 @@ export default {
       .filter(coaster => !coaster.inactive)
       .filter(this.withinDateRange)
       .filter(this.hasHistory)
+      .sort(this.sortByTime)
+      .sort(this.sortByDate)
     }
-  },
-
-  components: {
-    Coaster,
-    ImageUpload
   },
 
   methods: {

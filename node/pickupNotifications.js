@@ -1,3 +1,4 @@
+/* eslint-env node */
 'use strict';
 const moment = require('moment');
 const encode = require('firebase-encode').encode;

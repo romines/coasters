@@ -73,6 +73,7 @@ router.beforeEach((to, from, next) => {
     store.dispatch('getPromisedCoasters')
   ] // this can be added to
   Promise.all(promised).then(() => {
+    store.commit('SET_LOADING_STATE', false)
     next()
   })
 

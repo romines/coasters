@@ -6,7 +6,9 @@
 
     <navigation/>
 
-    <section class="section">
+    <loading-spinner v-if="$store.state.loading" />
+
+    <section class="section" v-if="!$store.state.loading">
       <router-view/>
     </section>
 
@@ -19,21 +21,19 @@
 
 <script>
 
-
-// all components should probably have
-//
 import Navigation from './widgets/Navigation.vue'
+import LoadingSpinner from './widgets/LoadingSpinner.vue'
 import BottomNav from './widgets/BottomNav.vue'
 import Modal from './widgets/Modal.vue'
 // why doesn't this work???
 // import { Navigation, BottomNav, Modal } from './widgets'
 
 
-
 export default {
 
   components: {
     Navigation,
+    LoadingSpinner,
     Modal,
     BottomNav
   },
@@ -74,7 +74,7 @@ export default {
 .coaster { @extend .box }
 .container { max-width: 1080px;}
 
-span {
+* {
   user-select: none;
 }
 

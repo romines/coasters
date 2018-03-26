@@ -4,10 +4,11 @@
   "author": "Adam Romines <adam.romines@gmail.com>",
   "private": true,
   "scripts": {
-    "dev": "myIP=$(ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'); NODE_ENV=development webpack-dev-server --inline --hot --host '0.0.0.0' --port '8081' --public --colors --open",
-    "staging": "myIP=$(ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'); NODE_ENV=staging webpack-dev-server --inline --hot --host '0.0.0.0' --port '8081' --public",
+    "dev": "myIP=$(ifconfig | grep -A 1 'wlx20689d5bc6a2' | tail -1 | cut -d ':' -f 2 | cut -d ' ' -f 1); NODE_ENV=development webpack-dev-server --inline --hot --host $myIP --port '8080' --public --colors --open",
+    "staging": "myIP=$(ifconfig | grep -A 1 'wlx20689d5bc6a2' | tail -1 | cut -d ':' -f 2 | cut -d ' ' -f 1); NODE_ENV=staging webpack-dev-server --inline --hot --host $myIP --port '8081' --public",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
-    "buildDev": "webpack --progress"
+    "buildDev": "webpack --progress",
+    "printIp": "myIP=$(ifconfig | grep -A 1 'wlx20689d5bc6a2' | tail -1 | cut -d ':' -f 2 | cut -d ' ' -f 1) && echo $myIP"
   },
   "dependencies": {
     "babel-runtime": "^6.23.0",

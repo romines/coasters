@@ -1,31 +1,43 @@
 <template>
 
-  <form @submit.prevent="submitPending" class="multi-post">
-    
+  <form class="multi-post" @submit.prevent="submitPending">
+
     <div v-if="duplicateShifts.length" class="dupe-warnings warning">
       One or more of the shifts below matches a shift you've picked up. Please repost instead.
-      <router-link class="dupe-link" v-for="shift in duplicateShifts" :to="'/coasters/' + shift" :key="shift">[duplicate shift]</router-link>
-      
+
+      <router-link
+        v-for="shift in duplicateShifts"
+        class="dupe-link"
+        :to="'/coasters/' + shift"
+        :key="shift">[duplicate shift]</router-link>
+
     </div>
+
     <div v-if="postAsUser.displayName" class="control posting-as">
       <span class="text">
-        Posting As: {{postAsUser.displayName}}
+        Posting As: {{ postAsUser.displayName }}
       </span>
-      <span @click="cancelPostAs" class="fa fa-close"></span>
+      <span class="fa fa-close" @click="cancelPostAs" />
     </div>
     <div class="title-bar item-row" @click="newPendingShift">
       <span class="text">Add Shift</span>
-      <i class="fa fa-plus"></i>
+      <i class="fa fa-plus"/>
     </div>
 
-    <div class="shift item-row" v-for="shift in shiftsPending" :key="shift.key" :class="!!shouldBeRepostOf(shift) ? 'warning' : ''">
+    <div
+      v-for="shift in shiftsPending"
+      class="shift item-row"
+      :key="shift.key"
+      :class="!!shouldBeRepostOf(shift) ? 'warning' : ''">
+
       <span class="date">
-        <Datepicker 
-          v-model="shift.date" 
-          :format="'D, MMM dsu'" 
-          :disabled="disabledDates" 
-          :wrapper-class="'datepicker-wrapper'"></Datepicker>
+        <Datepicker
+          v-model="shift.date"
+          :format="'D, MMM dsu'"
+          :disabled="disabledDates"
+          :wrapper-class="'datepicker-wrapper'"/>
       </span>
+
       <span class="shift-type-and-time">
         <span class="time">
           <select v-model="shift.time">
@@ -46,14 +58,14 @@
     </div>
 
     <span
-      @click="choosePostAsUser"
       v-if="$store.getters.isAdmin"
-      class="button control post-as-button">
+      class="button control post-as-button"
+      @click="choosePostAsUser">
       Post As &nbsp;
-      <span class="fa fa-user"></span>
+      <span class="fa fa-user"/>
     </span>
 
-    <textarea v-model="comment" class="textarea" placeholder="Comments or additional information"></textarea>
+    <textarea v-model="comment" class="textarea" placeholder="Comments or additional information"/>
     <!-- <span
       @click="choosePostAsUser"
       v-if="$store.getters.isAdmin"
@@ -72,15 +84,24 @@ import moment from 'moment'
 import router from '../router'
 
 export default {
+  components: {
+    Datepicker
+  },
   data() {
     return {
+      picking: false,
       shiftsPending: [],
       comment: '',
       postAsUser: {}
     }
   },
-  components: {
-    Datepicker
+  computed: {
+    disabledDates() {
+      return { to: moment().subtract(1, 'days').toDate() }
+    },
+    duplicateShifts () {
+      return this.shiftsPending.map(this.shouldBeRepostOf).filter(shift => !!shift)
+    }
   },
   methods: {
     newPendingShift() {
@@ -138,15 +159,10 @@ export default {
       })
       return dupes && dupes[0]
     },
-  },
-  computed: {
-    disabledDates() {
-      return { to: moment().subtract(1, 'days').toDate() }
-    },
-    duplicateShifts () {
-      return this.shiftsPending.map(this.shouldBeRepostOf).filter(shift => !!shift)
+    getFormattedDate(dt) {
+      return moment(dt).format('MM-DD')
     }
-  }
+  },
 }
 </script>
 
@@ -216,9 +232,11 @@ export default {
   }
   @include mobile {
     .vdp-datepicker__calendar {
-      width: 100%;
+      width: 96%;
       position: fixed;
-      left: 0;
+      top: 20vh;
+      left: 2%;
+      z-index: 101;
     }
   }
   .submit-button {

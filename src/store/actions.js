@@ -22,7 +22,7 @@ export default {
 
   , listenToAuthState ({ commit, state, dispatch }) {
 
-    
+
     firebase.auth().onAuthStateChanged(firebaseUser => {
       console.log('listenToAuthState');
 
@@ -36,7 +36,7 @@ export default {
             if (!firebaseUser.displayName) {
               promised.push(firebaseUser.updateProfile({displayName: userFromDatabase.displayName}))
             }
-            
+
             if (!userFromDatabase.photoURL && firebaseUser.photoURL) {
               let updates = {}
               updates[`/users/${firebaseUser.uid}/photoURL`] = firebaseUser.photoURL
@@ -44,7 +44,7 @@ export default {
             }
 
             return Promise.all(promised)
-        
+
         })
         .then(() => {
           commit('LOG_IN_USER', trimUser(firebaseUser))
@@ -52,7 +52,7 @@ export default {
         }, (e) => {
           console.log(e)
           commit('AUTH_ERROR', e.message)
-        
+
         })
 
       } else {
@@ -85,7 +85,7 @@ export default {
           onSuccess: state.modal.contents.onSuccess
         })
 
-        
+
       }) // , (e) => {console.log(e)})
       .catch(function (error) {
         console.log(error);
@@ -169,7 +169,7 @@ export default {
 
 
          return baseRef.update(updates)
-      
+
       }).then(() => {
 
         commit('CLOSE_MODAL')
@@ -218,7 +218,7 @@ export default {
   }
 
   , getPromisedCoasters ({ commit, state }, options) {
-    
+
     const defaults = {
       beginning: moment().format('YYYY-MM-DD'),
       ending: null
@@ -341,12 +341,14 @@ export default {
     }
 
     const user = (coasterData.postedAsUser && Object.keys(coasterData.postedAsUser).length) ? coasterData.postedAsUser : state.userData
-
+    // .postedBy holds original poster data
     coasterData.postedBy = {
       uid: user.uid,
       name: user.displayName,
       photoURL: user.photoURL ? user.photoURL : ''
     }
+
+    // .heldBy is kept up to date through trades
     coasterData.heldBy    = {...coasterData.postedBy}
     const key             = coastersRef.push().key
     coasterData.posted    = moment().format()
@@ -364,21 +366,21 @@ export default {
 
   , cancelCoaster ({ commit, state }, coaster) {
     if (!coaster.available) return
-    let updates = {}   
+    let updates = {}
     let coasterData = {...coaster}
     const user = state.userData
-    
+
     if (!coaster.history) {
       //
       // This coaster has no history, just blow it away
       //
       console.log('This coaster has no history, just blow it away . . .');
-      
+
       coasterData.inactive = true
       updates[`/users/${user.uid}/posted/${coaster.key}`] = null
 
     } else {
-      // 
+      //
       // This is a cancelled REPOST. Identify the relevant previous post
       // (the last history item before the REPOST). Reset the .posted (date)
       // to last uncancelled POST, reset postedBy to previous poster

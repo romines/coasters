@@ -47,9 +47,11 @@ import moment from 'moment'
 import Filters from './widgets/Filters.vue'
 import DateRange from './widgets/DateRange.vue'
 import Coaster from './Coaster/Coaster.vue'
+import mixins from '../mixins'
 
 export default {
   components: { Filters, DateRange, Coaster  },
+  mixins: [mixins],
   data () {
     return {
       beginning: moment(),
@@ -66,24 +68,8 @@ export default {
       return this.$store.state.coasters
         .filter(coaster => coaster.available)
         .filter(coaster => !coaster.inactive)
-        .sort((a, b) => {
-          if (a.time < b.time) {
-            return -1
-          }
-          if (a.time > b.time) {
-            return 1
-          }
-          return 0
-        })
-        .sort((a, b) => {
-          if (a.date + '' < b.date + '') {
-            return -1
-          }
-          if (a.date + '' > b.date + '') {
-            return 1
-          }
-          return 0
-        })
+        .sort(this.sortByTime)
+        .sort(this.sortByDate)
     },
     filteredCoasters () {
 
