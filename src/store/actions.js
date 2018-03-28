@@ -138,7 +138,7 @@ export default {
   }
 
   , watchPhotoURL ({dispatch}, uid) {
-    const userRef = baseRef.child(`users/${uid}/photoURL`).on('value', (snap) => {
+    baseRef.child(`users/${uid}/photoURL`).on('value', (snap) => {
       if (!snap.val()) return
       dispatch('updateUserPhotoURL', snap.val())
     })

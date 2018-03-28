@@ -20,7 +20,7 @@ admin.initializeApp({
   databaseURL: databaseURL[environment]
 });
 
-console.log(`Firebase connection established to0000 ${environment} . . .`);
+console.log(`Firebase connection established to ${environment} . . .`);
 // console.log(`Firebase connection established to ${process.env.NODE_ENV ? process.env.NODE_ENV : 'development' } . . .`);
 
 module.exports = admin;

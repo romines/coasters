@@ -143,7 +143,7 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
 
               getUpdates.then((updates) => {
                 return root.update(updates);
-              }, e => console.log);
+              }, e => console.error(e));
 
             })
 
