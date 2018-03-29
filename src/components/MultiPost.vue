@@ -28,7 +28,7 @@
       <span class="text">
         Posting As: {{ postAsUser.displayName }}
       </span>
-      <span class="fa fa-close" @click="cancelPostAs" />
+      <span class="fa fa-times" @click="cancelPostAs" />
     </div>
     <div class="title-bar item-row" @click="newPendingShift">
       <span class="text">Add Shift</span>

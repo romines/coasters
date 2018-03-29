@@ -1,19 +1,17 @@
 <template lang="html">
   <div class="image-upload">
 
-    <slot name="title">
-      <span class='title'>User Image</span>
-    </slot>
+    <slot name="title" />
     <div class="message-text">
-      <slot name="message"></slot>
+      <slot name="message" />
     </div>
 
 
     <div class="prompt" @click="updating = !updating">
       <div class="user-image">
-        <img v-if="user.photoURL" :src="user.photoURL" class="user-photo">
-        <div v-if="!user.photoURL" class="icon is-large placeholder">
-          <i class="fa fa-user"></i>
+        <img v-if="user.photoURL" class="user-photo":src="user.photoURL">
+        <div v-if="!user.photoURL" class="icon user-icon is-large placeholder">
+          <i class="fa fa-user" />
         </div>
       </div>
 
@@ -22,7 +20,7 @@
       </a>
     </div>
 
-    <input v-show="updating" @change="onFileAdded" type="file" name="image-upload" class="add-image">
+    <input v-show="updating" type="file" name="image-upload" class="add-image" accept="image/*" @change="onFileAdded">
     <progress v-show="uploading" :value="uploadProgress" max="100" class="progress is-primary">0%</progress>
 
     <!-- <div v-show="updating" class="buttons">
@@ -104,19 +102,28 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+  // .image-upload {
+  //   max-width: 100px;
+  // }
   .message-text {
     margin-bottom: .5em;
     background-color: transparent;
   }
   .user-image {
+
+    text-align: center;
     margin-bottom: .3em;
     .user-photo {
       max-width: 230px;
     }
   }
-  .prompt { margin: .5em 0; }
+  .prompt {
+    margin: .5em 0;
+    text-align: center;
+  }
   .placeholder {
+    text-align: center;
     border: 1px solid grey;
   }
   input.add-image {

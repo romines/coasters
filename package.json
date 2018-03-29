@@ -18,6 +18,7 @@
     "lodash": "^4.17.4",
     "moment": "^2.21.0",
     "vue": "^2.2.6",
+    "vue-cleave-component": "^1.0.2",
     "vue-router": "^2.4.0",
     "vuejs-datepicker": "^0.7.11",
     "vuex": "^2.2.1",

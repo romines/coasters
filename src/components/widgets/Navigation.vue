@@ -28,7 +28,7 @@
 
           <span :class="{ 'is-active': navState.history }" class="nav-item">
             <a @click.stop="toHistory" class="title">
-              <span class="icon"><i class="fa fa-handshake-o"></i></span>
+              <span class="icon"><i class="fa fa-handshake"></i></span>
               <span class="text-only">Picked Up</span>
             </a>
           </span>
@@ -138,11 +138,11 @@ export default {
 					heading: 'Please Login/Sign Up',
 					message: 'You must login before viewing this page',
 					onSuccess () {
-						router.push({ 
-              name: 'user', 
+						router.push({
+              name: 'user',
               params: {
                 uid: this.$store.state.authState.user.uid
-                } 
+                }
               }
             )
 					}

@@ -10,7 +10,7 @@
           </p>
 
           <a v-if="isDetailView" @click.stop="closeDetailView" class="card-header-icon">
-            <i class="fa fa-close"></i>
+            <i class="fa fa-times"></i>
           </a>
         </header>
 
@@ -134,13 +134,11 @@ export default {
       return this.coaster.history && this.coaster.available
     },
     datePosted () {
-      // if (!this.coaster) return
       return moment(this.coaster.posted).fromNow()
     },
 
     timeIcon () {
-      // if (!this.coaster) return
-      return (this.coaster.time === 'PM') ? 'fa-moon-o' : 'fa-sun-o'
+      return (this.coaster.time === 'PM') ? 'fa-moon' : 'fa-sun'
     },
 
     isDetailView () {
@@ -148,12 +146,10 @@ export default {
     },
 
     longDateString () {
-      // if (!this.coaster) return
       return moment(this.coaster.date).format('dddd, MMM Do')
     },
 
     mediumDateString () {
-      // if (!this.coaster) return
       return moment(this.coaster.date).format('ddd, MMM Do')
     }
 

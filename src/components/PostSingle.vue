@@ -13,7 +13,7 @@
         <span class="text">
           Posting As: {{ postAsUser.displayName }}
         </span>
-        <span @click="cancelPostAs" class="fa fa-close"/>
+        <span @click="cancelPostAs" class="fa fa-times"/>
       </div>
       <p class="control">
         <Datepicker v-model="date" :format="'D, MMM dsu'" :disabled="disabledDates"/>

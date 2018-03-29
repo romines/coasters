@@ -16,11 +16,11 @@ const trimUser = ({uid, photoURL, email}) => {
 
 export default {
 
-  addFilter({ commit }, filter) {
-    commit('ADD_FILTER', filter)
-  }
+  /*
+    USER actions
+  */
 
-  , listenToAuthState ({ commit, state, dispatch }) {
+  listenToAuthState ({ commit, state, dispatch }) {
 
 
     firebase.auth().onAuthStateChanged(firebaseUser => {
@@ -93,57 +93,6 @@ export default {
       });
   }
 
-  , watchUserNotifications ({commit}, uid) {
-    const userRef = baseRef.child(`users/${uid}/notifications`).on('value', (snap) => {
-      if (!snap.val()) return
-      // dispatch('updateUserPhotoURL', snap.val())
-      let notifications = []
-      snap.forEach((childSnap) => {
-        let notification = childSnap.val()
-        if (!notification.key) notification.key = childSnap.key
-        notification.message = decode(notification.message)
-        notifications.push(notification)
-      })
-      commit('GET_NOTIFICATIONS', notifications)
-    })
-  }
-
-  , setAdminStatus ({commit}, user) {
-    if ([
-      'faraday@snakeriverbrewing.com'
-      ,'melissa@snakeriverbrewing.com'
-      ,'christine@snakeriverbrewing.com'
-      ,'lisa@snakeriverbrewing.com'
-      ,'thom.penn@yahoo.com'
-      ,'050803@email.com'              // DEV: lenny
-    ].includes(user.email)) {
-      console.log('this is an admin user')
-      commit('SET_ADMIN', true)
-    }
-  }
-
-  , updateUserPhotoURL ({ commit }, photoURL) {
-    let currentUser = firebase.auth().currentUser;
-    if (!currentUser) return console.log('no fb user to update photo for')
-    currentUser.updateProfile({
-      photoURL
-    })
-    .then(function () {
-      commit('UPDATE_PHOTO_URL', photoURL)
-    })
-    .catch(function(error) {
-      commit('AUTH_ERROR', error.message)
-    });
-
-  }
-
-  , watchPhotoURL ({dispatch}, uid) {
-    baseRef.child(`users/${uid}/photoURL`).on('value', (snap) => {
-      if (!snap.val()) return
-      dispatch('updateUserPhotoURL', snap.val())
-    })
-  }
-
   , logInUser ({ commit, state }, user) {
 
     auth.signInWithEmailAndPassword(user.email, user.password).then((user) => {
@@ -197,6 +146,129 @@ export default {
       commit('PASSWORD_RESET_ERROR', getLoginError(e))
     });
   }
+
+  , watchUserNotifications ({commit}, uid) {
+    baseRef.child(`users/${uid}/notifications`).on('value', (snap) => {
+      if (!snap.val()) return
+      // dispatch('updateUserPhotoURL', snap.val())
+      let notifications = []
+      snap.forEach((childSnap) => {
+        let notification = childSnap.val()
+        if (!notification.key) notification.key = childSnap.key
+        notification.message = decode(notification.message)
+        notifications.push(notification)
+      })
+      commit('GET_NOTIFICATIONS', notifications)
+    })
+  }
+
+  , setAdminStatus ({commit}, user) {
+    if ([
+      'faraday@snakeriverbrewing.com'
+      ,'melissa@snakeriverbrewing.com'
+      ,'christine@snakeriverbrewing.com'
+      ,'lisa@snakeriverbrewing.com'
+      ,'thom.penn@yahoo.com'
+      ,'050803@email.com'              // DEV: lenny
+    ].includes(user.email)) {
+      console.log('this is an admin user')
+      commit('SET_ADMIN', true)
+    }
+  }
+
+  , updateUserPhotoURL ({ commit }, photoURL) {
+    let currentUser = firebase.auth().currentUser;
+    if (!currentUser) return console.log('no fb user to update photo for')
+    currentUser.updateProfile({
+      photoURL
+    })
+    .then(function () {
+      commit('UPDATE_PHOTO_URL', photoURL)
+    })
+    .catch(function(error) {
+      commit('AUTH_ERROR', error.message)
+    });
+
+  }
+
+  , watchPhotoURL ({dispatch}, uid) {
+    baseRef.child(`users/${uid}/photoURL`).on('value', (snap) => {
+      if (!snap.val()) return
+      dispatch('updateUserPhotoURL', snap.val())
+    })
+  }
+
+  , getUserData ({ commit, state }, uid) {
+    let userRef = usersRef.child(uid)
+    return userRef.on('value', (snap) => {
+      let userData = snap.val()
+      if (userData) commit('GET_USER_DATA', userData)
+    })
+  }
+
+  , getUserPostedAndHoldingShifts ({commit, state}, uid) {
+    if (!uid) debugger
+    let currentUser = firebase.auth().currentUser
+    if (!currentUser) {
+      return new Promise ((resolve, reject) => {
+        return reject('No current firebase user')
+      })
+    } else {
+      return new Promise ((resolve, reject) => {
+        let userRef = usersRef.child(uid)
+        userRef.on('value', (snap) => {
+          let userData = snap.val()
+          if (!userData) {
+            console.log('hit ref and no data . . .');
+            return resolve({})
+          }
+          commit('GET_USER_DATA', userData)
+          resolve(userData)
+        })
+      })
+
+    }
+  }
+
+
+
+  , getPromisedUsers ({ commit, state }) {
+    console.log('getting all users . . . ');
+
+    return new Promise((resolve, reject) => {
+      let usersRef = baseRef.child('users')
+      usersRef.on('value', (snap) => {
+        let users = snap.val()
+        let mappedUsers = Object.keys(users).map((key) => {
+          let user = users[key]
+          user.uid = key
+          return user
+        })
+
+        commit('GET_ALL_USERS', mappedUsers)
+        resolve()
+      })
+
+    })
+  }
+
+  , dismissNotification ({ state }, notieKey) {
+    let updates = {}
+    const userKey = state.authState.user.uid
+    updates[`/users/${userKey}/notifications/${notieKey}/status`] = 'read'
+    return baseRef.update(updates);
+  }
+
+  , saveSMS ({ state }, sms) {
+    let updates = {}
+    const userKey = state.authState.user.uid
+    updates[`/users/${userKey}/sms`] = sms
+    return baseRef.update(updates);
+  }
+
+  /*
+    COASTER actions
+  */
 
   , getCoasters ({ commit, state }) {
 
@@ -253,68 +325,6 @@ export default {
 
   }
 
-  , getUserData ({ commit, state }, uid) {
-    let userRef = usersRef.child(uid)
-    return userRef.on('value', (snap) => {
-      let userData = snap.val()
-      if (userData) commit('GET_USER_DATA', userData)
-    })
-  }
-
-  , getUserPostedAndHoldingShifts ({commit, state}, uid) {
-    if (!uid) debugger
-    let currentUser = firebase.auth().currentUser
-    if (!currentUser) {
-      return new Promise ((resolve, reject) => {
-        return reject('No current firebase user')
-      })
-    } else {
-      return new Promise ((resolve, reject) => {
-        let userRef = usersRef.child(uid)
-        userRef.on('value', (snap) => {
-          let userData = snap.val()
-          if (!userData) {
-            console.log('hit ref and no data . . .');
-            return resolve({})
-          }
-          commit('GET_USER_DATA', userData)
-          resolve(userData)
-        })
-      })
-
-    }
-  }
-
-//   , getPromisedUserData ({ commit, state }, uid) {
-// console.log('getPromisedUserData');
-
-//     return new Promise((resolve, reject) => {
-//       if (!firebase.auth().currentUser) return resolve(null)
-//       let firebaseUser = firebase.auth().currentUser
-
-
-//     })
-//   }
-
-  , getPromisedUsers ({ commit, state }) {
-    console.log('getting all users . . . ');
-
-    return new Promise((resolve, reject) => {
-      let usersRef = baseRef.child('users')
-      usersRef.on('value', (snap) => {
-        let users = snap.val()
-        let mappedUsers = Object.keys(users).map((key) => {
-          let user = users[key]
-          user.uid = key
-          return user
-        })
-
-        commit('GET_ALL_USERS', mappedUsers)
-        resolve()
-      })
-
-    })
-  }
 
   , getPromisedDetailCoaster ({ commit, state }, key) {
 
@@ -554,13 +564,6 @@ export default {
     updates[`/coasters/${coaster.key}/flagged`] = coaster.flagged
     return baseRef.update(updates);
 
-  }
-
-  , dismissNotification ({ state }, notieKey) {
-    let updates = {}
-    const userKey = state.authState.user.uid
-    updates[`/users/${userKey}/notifications/${notieKey}/status`] = 'read'
-    return baseRef.update(updates);
   }
 
 }

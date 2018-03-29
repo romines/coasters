@@ -149,7 +149,7 @@ export default {
 
     timeIcon (coaster) {
       // if (!coaster) return
-      return (coaster.time === 'PM') ? 'fa-moon-o' : 'fa-sun-o'
+      return (coaster.time === 'PM') ? 'fa-moon' : 'fa-sun'
     }
   }
 }

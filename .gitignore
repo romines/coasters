@@ -12,5 +12,6 @@ node/node_modules/
 functions/firebase_account_key-development.json
 functions/firebase_account_key-production.json
 node/*.txt
+node/twilioConfig.js
 **/users.json
 **/*.bak

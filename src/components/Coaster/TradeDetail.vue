@@ -25,7 +25,7 @@
 			<div v-if="viewingHistory" class="timeline">
 				<div class="history-title-bar">
 					<div class="history-title title is-5">Trade History</div>
-					<div class="fa fa-close" @click.stop="viewingHistory = false" ></div>
+					<div class="fa fa-times" @click.stop="viewingHistory = false" ></div>
 				</div>
 				<div v-for="entry in timeline" class="entry">
 					<div class="text">

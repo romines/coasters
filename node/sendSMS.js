@@ -1,10 +1,9 @@
 /* eslint-env node */
 // TODO: add Twilio Credentials to environment variable
-const accountSid = '';
-const authToken = '';
+const config = require('./twilioConfig.js');
 
 // require the Twilio module and create a REST client
-const client = require('twilio')(accountSid, authToken);
+const client = require('twilio')(config.sid, config.token);
 
 module.exports = function (to, message, recipient) {
 
@@ -24,7 +23,7 @@ module.exports = function (to, message, recipient) {
       body: message,
     },
     (err, message) => {
-      console.log(err, message);
+      err && console.log(err, message);
     }
   );
 }

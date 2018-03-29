@@ -6,7 +6,7 @@
 		</span>
 
 		<span @click="toHistory" class="bottom-nav-item"  :class="{ 'is-active': navState.history }">
-			<i class="fa fa-handshake-o"></i>
+			<i class="fa fa-handshake"></i>
 		</span>
 
 		<span @click="toNew" class="bottom-nav-item"  :class="{ 'is-active': navState.post }">
