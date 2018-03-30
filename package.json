@@ -4,10 +4,10 @@
   "author": "Adam Romines <adam.romines@gmail.com>",
   "private": true,
   "scripts": {
-    "dev": "myIP=$(ifconfig | grep -A 1 'wlx20689d5bc6a2' | tail -1 | cut -d ':' -f 2 | cut -d ' ' -f 1); NODE_ENV=development webpack-dev-server --inline --hot --host $myIP --port '8080' --public --colors --open",
+    "dev": "myIP=$(ifconfig | grep -A 1 'wlx20689d5bc6a2' | tail -1 | cut -d ':' -f 2 | cut -d ' ' -f 1); NODE_ENV=development webpack-dev-server --mode=development --inline --hot --host $myIP --port '8080' --public --colors --open",
     "staging": "myIP=$(ifconfig | grep -A 1 'wlx20689d5bc6a2' | tail -1 | cut -d ':' -f 2 | cut -d ' ' -f 1); NODE_ENV=staging webpack-dev-server --inline --hot --host $myIP --port '8081' --public",
     "build": "cross-env NODE_ENV=production webpack --mode=production --progress --hide-modules",
-    "buildStage": "cross-env NODE_ENV=staging webpack --progress --hide-modules",
+    "buildStage": "cross-env FIREBASE=staging webpack --progress --hide-modules",
     "buildDev": "webpack --progress",
     "printIp": "myIP=$(ifconfig | grep -A 1 'wlx20689d5bc6a2' | tail -1 | cut -d ':' -f 2 | cut -d ' ' -f 1) && echo $myIP"
   },

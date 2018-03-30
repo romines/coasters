@@ -41,13 +41,12 @@
           </span>
 
           <span class="nav-item user" >
-            <a @click="toUserHome" class="">
-              <span class="icon"><i class="fa fa-user"></i></span>
-
-              <span v-show="!authState.user" @click.stop="launchLoginModal" class="text-only title">Login</span>
-              <span v-show="authState.user" class="text-only">{{displayName ? displayName : userEmail}}</span>
+            <a class="title" @click="toUserHome">
+              <span class="icon"><i class="fa fa-user" /></span>
+              <span v-show="!authState.user" class="text-only" @click.stop="launchLoginModal">Login</span>
+              <span v-show="authState.user" class="text-only">My Coasters</span>
             </a>
-            <i v-show="authState.user" @click="logOut" class="fa fa-power-off"></i>
+            <i v-show="authState.user" class="fa fa-power-off" @click="logOut" />
 
           </span>
 
@@ -215,12 +214,12 @@ export default {
     .nav-item {
       text-align: left;
       .title:not(:last-child) {
-        margin-bottom: 10px;
+        // margin-bottom: 10px;
       }
     }
     .fa-power-off {
-      position: absolute;
-      right: 1em;
+      // position: absolute;
+      // right: 1em;
     }
   }
 
@@ -231,13 +230,12 @@ export default {
   @include mobile {
     .nav-item {
 
-      display: flex;
-      align-items: center;
-      & > * {
-        // line-height: 0.8em;
-        vertical-align: middle;
-
+      .title {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0;
       }
+
       .icon {
         width: 2.5em;
         border-right: 1px solid grey;
@@ -247,7 +245,13 @@ export default {
       }
       .text-only {
         font-size: .8em;
-        // display: none;
+      }
+      &.user {
+        position: relative;
+        .fa-power-off {
+          position: relative;
+          right: .6em;
+        }
       }
 
     }
@@ -260,12 +264,12 @@ export default {
     }
     .user {
       font-size: 28px;
-      & > a {padding-top: .14em;}
       .icon{
         float: right;
       }
       .fa-power-off {
-        margin-left: .6em;
+        position: static;
+        margin-left: 1.2em;
       }
     }
   }
@@ -276,9 +280,6 @@ export default {
     }
     .icon {
       display: none;
-    }
-    .user .icon {
-      display: flex;
     }
   }
 }

@@ -60,7 +60,7 @@
     </form>
 
     <div class="social-providers">
-      <span class="icon is-small" @click="startFacebookLogin"><i class="fas fa-facebook" aria-hidden="true" /></span>
+      <span class="icon is-small" @click="startFacebookLogin"><i class="fab fa-facebook" aria-hidden="true" /></span>
     </div>
   </div>
 </template>
