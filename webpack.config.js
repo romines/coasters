@@ -1,6 +1,8 @@
+/* eslint-env node */
 var path = require('path')
 var webpack = require('webpack')
-// var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+var UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 // var HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
@@ -64,33 +66,8 @@ module.exports = {
 
 }
 
-if (process.env.NODE_ENV === 'production') {
-  module.exports.devtool = '#eval-source-map'
-  // http://vue-loader.vuejs.org/en/workflow/production.html
-  module.exports.plugins = (module.exports.plugins || []).concat([
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: '"production"',
-        FIREBASE: '"production"'
-      }
-    }),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
-      }
-    })
-  ])
-} else if (process.env.NODE_ENV === 'staging') {
-  module.exports.plugins = (module.exports.plugins || []).concat([
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: '"development"',
-        FIREBASE: '"staging"'
-      }
-    })
-  ])
-
-} else {
+if (process.env.NODE_ENV === 'development') {
+  // dev has no uglify
   module.exports.plugins = (module.exports.plugins || []).concat([
     new webpack.DefinePlugin({
       'process.env': {
@@ -99,4 +76,39 @@ if (process.env.NODE_ENV === 'production') {
       }
     })
   ])
+} else {
+  module.exports.devtool = '#source-map'
+
+  const base = [
+    new UglifyJSPlugin({
+      sourceMap: true
+    }),
+    new webpack.LoaderOptionsPlugin({
+      minimize: true
+    })
+  ];
+
+  const stagingEnvVars = [
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: '"staging"',
+        FIREBASE: '"staging"'
+      }
+    })
+  ]
+
+  const productionEnvVars = [
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: '"production"',
+        FIREBASE: '"production"'
+      }
+    })
+  ]
+
+  if (process.env.FIREBASE === 'staging') {
+    module.exports.plugins = (module.exports.plugins || []).concat(...stagingEnvVars, ...base)
+  } else {
+    module.exports.plugins = (module.exports.plugins || []).concat(...productionEnvVars, ...base)
+  }
 }

@@ -289,7 +289,6 @@ export default {
     phoneIsValid (sms) {
       if (sms) {
         const withoutSpaces = sms.replace(/ /g, '')
-        console.log(withoutSpaces)
         return withoutSpaces.length === 10 || withoutSpaces.length === 11
       }
     },

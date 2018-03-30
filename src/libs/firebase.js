@@ -5,6 +5,7 @@ import { production, development, staging } from '../fbConfig'
  * Exposes full firebase library
  *
  */
+console.log(process.env.FIREBASE);
 let environment = process.env.FIREBASE ? process.env.FIREBASE : 'production'
 console.log(`Firebase connection established to ${environment} . . .`);
 const fbConfig = {
