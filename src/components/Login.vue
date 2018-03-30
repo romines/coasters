@@ -60,7 +60,7 @@
     </form>
 
     <div class="social-providers">
-      <span @click="startFacebookLogin"><i class="fa fa-facebook-square" aria-hidden="true"></i></span>
+      <span @click="startFacebookLogin"><i class="fa fa-facebook" aria-hidden="true"></i></span>
     </div>
   </div>
 </template>
@@ -104,8 +104,8 @@
       },
       signUp () {
         this.$store.dispatch('signUpUser', {
-          email: this.email, 
-          password: this.password, 
+          email: this.email,
+          password: this.password,
           displayName: this.displayName
         })
       },

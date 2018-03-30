@@ -74,7 +74,7 @@ export default {
 .coaster { @extend .box }
 .container { max-width: 1080px;}
 
-* {
+*:not(.selectable) {
   user-select: none;
 }
 textarea, input[type=text] {

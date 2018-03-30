@@ -1,5 +1,5 @@
 <template lang="html">
-  <div v-if="coaster" @click="makeDetail()" class="coaster card is-fullwidth" :class="{ flagged : coaster.flagged && this.$store.state.authState.isAdmin }">
+  <div v-if="coaster" @click="makeDetail($event)" class="coaster card is-fullwidth" :class="{ flagged : coaster.flagged && this.$store.state.authState.isAdmin }">
 
       <slot name="cardHeader">
 
@@ -62,6 +62,14 @@
 
           <slot name="newComment"></slot>
 
+          <span v-clipboard:copy="coasterUrl"
+            v-clipboard:success="onCopy"
+            v-clipboard:error="onCopyError"
+            class="icon click-to-copy">
+            <i class="fa fa-link" />
+          </span>
+          <span v-show="showCopySuccess" class="copy-success copy-status-message">Link copied to clipboard!</span>
+          <span v-show="showCopyError" class="copy-error copy-status-message">Link not copied. Try manually selecting/copying:  <span class="selectable">{{ coasterUrl }}</span> </span>
         </div>
 
 
@@ -85,7 +93,9 @@ export default {
   data () {
     return {
       localComment: '',
-      isCommenting: false
+      isCommenting: false,
+      showCopySuccess: false,
+      showCopyError: false
     }
   },
   props: ['coaster', 'options'],
@@ -136,6 +146,9 @@ export default {
     datePosted () {
       return moment(this.coaster.posted).fromNow()
     },
+    coasterUrl () {
+      return `${window.location.host}/#/coasters/${this.coaster.key}`
+    },
 
     timeIcon () {
       return (this.coaster.time === 'PM') ? 'fa-moon' : 'fa-sun'
@@ -157,7 +170,10 @@ export default {
   },
   methods: {
 
-    makeDetail (coaster) {
+    makeDetail (e) {
+      // OK...it's weird to have makeDetail in the coaster component rather than the parent coaster lists
+      // but this way it's only written once?
+      if (e.target.closest('.icon') && e.target.closest('.icon').classList.contains('click-to-copy')) return
       if (!this.coaster || this.isDetailView) return
       router.push({ name: 'detail', params: { id: this.coaster.key }})
     },
@@ -171,11 +187,23 @@ export default {
     cancelComment () {
       this.isCommenting = false;
     },
-    getTitle:  function (coaster) {
+    getTitle (coaster) {
       if (coaster) {
         return moment(coaster.date).format('dddd, MMM Do') + ' | ' + coaster.time + ' | ' + coaster.shiftType
       }
     },
+    onCopy () {
+      this.showCopySuccess = true
+      setTimeout(() => {
+        this.showCopySuccess = false
+      }, 3200);
+    },
+    onCopyError () {
+      this.showCopyError = true
+      setTimeout(() => {
+        this.showCopyError = false
+      }, 15000);
+    }
 
   }
 }
@@ -186,6 +214,7 @@ export default {
 
 .coaster {
   padding: 0;
+  border: 1px solid grey;
   &:hover {
     cursor: pointer;
   }
@@ -198,10 +227,12 @@ export default {
       justify-content: space-between;
     }
     img.shift-icon {
+      opacity: .8;
       width: 14vw;
       max-height: 40px;
     }
     .time i.fa {
+      opacity: .87;
       font-size: 2.3em;
     }
     @include tablet {
@@ -271,6 +302,26 @@ export default {
   .media-content {
     font-size: 1.1em;
     padding-left: .8em;
+  }
+  .bottom {
+    position: relative;
+    .click-to-copy {
+      position: absolute;
+      font-size: 18px;
+      right: -10px;
+      bottom: -12px;
+    }
+    .copy-status-message {
+      font-size: .8em;
+    }
+    .copy-success {
+      position: absolute;
+      bottom: -.9em;
+      right: 2em;
+    }
+    .copy-error {
+      user-select: auto;
+    }
   }
   .desktop-comments {
     display: none;
