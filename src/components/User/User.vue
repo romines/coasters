@@ -64,7 +64,7 @@
     </section>
 
     <section class="posted-shifts">
-      <span class="title is-5">Posted Shifts</span>
+      <div class="title is-4 section-headers">Posted Shifts</div>
       <ul>
         <coaster
           v-for="coaster in myPostedCoasters"
@@ -87,7 +87,7 @@
     </section>
 
     <section class="posted-shifts">
-      <span class="title is-5">Shifts I'm Covering</span>
+      <div class="title is-4 section-headers">Shifts I'm Covering</div>
       <ul>
         <coaster
           v-for="coaster in myPickedUpCoasters"
@@ -381,7 +381,7 @@ export default {
   .media-left {
     max-width: 50%;
   }
-
+  .section-headers { margin-bottom: 15px; }
   .posted-shifts {
     padding-top: 1em;
     margin-top: 1em;
