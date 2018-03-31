@@ -1,11 +1,12 @@
 #!/bin/bash
+echo 'running post-recieve . . .'
 while read oldrev newrev ref
 do
     # only if master
     if [[ $ref =~ .*/master$ ]];
     then
         echo "Master ref received.  Deploying master branch to production..."
-        git --work-tree=/home/webapps/coasters/ --git-dir=/home/webapps/git/coasters.git/ checkout -f
+        git --work-tree=/home/webapps/coasters/ --git-dir=/home/webapps/git/coasters-node.git/ checkout -f
     else
         echo "Ref $ref successfully received.  Doing nothing: only the master branch may be deployed on this server."
     fi
