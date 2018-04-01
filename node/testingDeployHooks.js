@@ -1,7 +1,11 @@
 /* eslint-env node */
 'use strict'
-
+const credentials = require('./credentials.js');
 const admin = require("firebase-admin");
+admin.initializeApp(credentials);
+admin.database().ref('data').on('child_changed', (refData) => {
+  console.log('there was a change to data . . .');
+})
 const environment = 'production';
 
 const serviceAccountKey = {
