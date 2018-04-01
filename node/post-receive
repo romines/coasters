@@ -11,7 +11,7 @@ do
         echo "Ref $ref successfully received.  Doing nothing: only the master branch may be deployed on this server."
     fi
 
-changed_files="$(git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD)"
+changed_files="$(git diff-tree -r --name-only --no-commit-id HEAD^ HEAD)"
 
 check_run() {
 	echo "$changed_files" | grep --quiet "$1" && eval "$2"
